@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{06EF9DE0-FECA-4704-97A9-CA37A4BFE086}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>EuroSoundExplorer2</RootNamespace>
+    <AssemblyName>EuroSoundExplorer2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>cd_audio_cd_a.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.1.6643.41644, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WeifenLuo.WinFormsUI.Docking.2.1.0\lib\net20\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\Audio\AudioFunctions.cs" />
+    <Compile Include="Classes\GenericMethods.cs" />
+    <Compile Include="Classes\HashcodeParser.cs" />
+    <Compile Include="Classes\Audio\LoopStream.cs" />
+    <Compile Include="Classes\Objects\SampleForPropGrid.cs" />
+    <Compile Include="Classes\Objects\SoundFile.cs" />
+    <Compile Include="CustomControls\UserControl_ListViewColumnSortingClick.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\UserControl_ListViewColumnSortingClick.Designer.cs">
+      <DependentUpon>UserControl_ListViewColumnSortingClick.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\UserControl_WaveViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\UserControl_WaveViewer.Designer.cs">
+      <DependentUpon>UserControl_WaveViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDataViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDataViewer.Designer.cs">
+      <DependentUpon>FrmDataViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmFileRefUsage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmFileRefUsage.Designer.cs">
+      <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\Misc\FormMediaPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\Misc\FormMediaPlayer.Designer.cs">
+      <DependentUpon>FormMediaPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\Misc\FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\Misc\FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\AppConfig.cs" />
+    <Compile Include="PanelDocks\Misc\FormSoundBankFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\Misc\FormSoundBankFiles.Designer.cs">
+      <DependentUpon>FormSoundBankFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\MusicBanks\FormMusicData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\MusicBanks\FormMusicData.Designer.cs">
+      <DependentUpon>FormMusicData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\SBI\FormSBiMusicBanks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\SBI\FormSBiMusicBanks.Designer.cs">
+      <DependentUpon>FormSBiMusicBanks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\SBI\FormSBiSoundBanks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\SBI\FormSBiSoundBanks.Designer.cs">
+      <DependentUpon>FormSBiSoundBanks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_HashCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_HashCodes.Designer.cs">
+      <DependentUpon>FormSB_HashCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_SamplePool.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_SamplePool.Designer.cs">
+      <DependentUpon>FormSB_SamplePool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_SampleProps.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_SampleProps.Designer.cs">
+      <DependentUpon>FormSB_SampleProps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_WavHeaderData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\SoundBanks\FormSB_WavHeaderData.Designer.cs">
+      <DependentUpon>FormSB_WavHeaderData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\StreamBanks\FormMarkers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\StreamBanks\FormMarkers.Designer.cs">
+      <DependentUpon>FormMarkers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\StreamBanks\FormStartMarkers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\StreamBanks\FormStartMarkers.Designer.cs">
+      <DependentUpon>FormStartMarkers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\StreamBanks\FormStreamBank.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\StreamBanks\FormStreamBank.Designer.cs">
+      <DependentUpon>FormStreamBank.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FrmDataViewer.resx">
+      <DependentUpon>FrmDataViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmFileRefUsage.resx">
+      <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\Misc\FormMediaPlayer.resx">
+      <DependentUpon>FormMediaPlayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\Misc\FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\Misc\FormSoundBankFiles.resx">
+      <DependentUpon>FormSoundBankFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\MusicBanks\FormMusicData.resx">
+      <DependentUpon>FormMusicData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\SBI\FormSBiMusicBanks.resx">
+      <DependentUpon>FormSBiMusicBanks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\SBI\FormSBiSoundBanks.resx">
+      <DependentUpon>FormSBiSoundBanks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_HashCodes.resx">
+      <DependentUpon>FormSB_HashCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_SamplePool.resx">
+      <DependentUpon>FormSB_SamplePool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_SampleProps.resx">
+      <DependentUpon>FormSB_SampleProps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_WavHeaderData.resx">
+      <DependentUpon>FormSB_WavHeaderData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\StreamBanks\FormMarkers.resx">
+      <DependentUpon>FormMarkers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\StreamBanks\FormStartMarkers.resx">
+      <DependentUpon>FormStartMarkers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\StreamBanks\FormStreamBank.resx">
+      <DependentUpon>FormStreamBank.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioDecoders\AudioDecoders.csproj">
+      <Project>{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}</Project>
+      <Name>AudioDecoders</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MusX\MusX.csproj">
+      <Project>{f176f5ac-1b44-436f-add6-bf12399e8c18}</Project>
+      <Name>MusX</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cd_audio_cd_a.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
