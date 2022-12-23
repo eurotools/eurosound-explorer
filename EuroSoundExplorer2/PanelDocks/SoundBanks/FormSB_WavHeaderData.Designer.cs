@@ -32,7 +32,7 @@ namespace EuroSoundExplorer2
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.listView1 = new ListView_ColumnSortingClick();
+            this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.Col_No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Flags = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Address = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -46,6 +46,7 @@ namespace EuroSoundExplorer2
             this.MenuItem_Play = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_ItemUsage = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -180,5 +181,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Play;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_ItemUsage;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }

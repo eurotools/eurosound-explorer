@@ -43,6 +43,9 @@ namespace EuroSoundExplorer2
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_Usage = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SendToMediaPlayer = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.MenuItem_SaveSound = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,11 +109,13 @@ namespace EuroSoundExplorer2
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem_Usage,
-            this.MenuItem_SendToMediaPlayer});
+            this.MenuItem_SaveSound,
+            this.MenuItem_SendToMediaPlayer,
+            this.toolStripSeparator1,
+            this.MenuItem_Usage});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 76);
             // 
             // MenuItem_Usage
             // 
@@ -125,6 +130,18 @@ namespace EuroSoundExplorer2
             this.MenuItem_SendToMediaPlayer.Size = new System.Drawing.Size(186, 22);
             this.MenuItem_SendToMediaPlayer.Text = "Send To Media Player";
             this.MenuItem_SendToMediaPlayer.Click += new System.EventHandler(this.MenuItem_SendToMediaPlayer_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(183, 6);
+            // 
+            // MenuItem_SaveSound
+            // 
+            this.MenuItem_SaveSound.Name = "MenuItem_SaveSound";
+            this.MenuItem_SaveSound.Size = new System.Drawing.Size(186, 22);
+            this.MenuItem_SaveSound.Text = "Save Sound";
+            this.MenuItem_SaveSound.Click += new System.EventHandler(this.MenuItem_SaveSound_Click);
             // 
             // FormSB_SamplePool
             // 
@@ -155,5 +172,8 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Usage;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SendToMediaPlayer;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_SaveSound;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }

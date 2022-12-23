@@ -1,7 +1,9 @@
 ﻿using EuroSoundExplorer2.Classes;
 using MusX.Objects;
+using NAudio.Wave;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -65,7 +67,37 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------
         private void MenuItem_Save_Click(object sender, System.EventArgs e)
         {
+            //Output selected samples
+            if (listView1.SelectedItems.Count > 0)
+            {
+                //Ask user for an output path
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
 
+                    //Start output
+                    foreach (ListViewItem selectedItem in listView1.SelectedItems)
+                    {
+                        SampleData selectedSample = wavesList[(short)selectedItem.Tag];
+
+                        //Create object music
+                        byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions);
+                        if (decodedData != null)
+                        {
+                            SoundFile soundToPlay = new SoundFile();
+                            soundToPlay.PcmData[0] = decodedData;
+                            soundToPlay.loopOffset = selectedSample.LoopStartOffset;
+                            soundToPlay.isLooped = selectedSample.Flags == 1;
+                            soundToPlay.sampleRate = selectedSample.Frequency;
+                            soundToPlay.channels = selectedSample.Channels;
+
+                            //Create Wav File
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume);
+                            WaveFileWriter.CreateWaveFile(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".wav")), wavFile);
+                        }
+                    }
+                }
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

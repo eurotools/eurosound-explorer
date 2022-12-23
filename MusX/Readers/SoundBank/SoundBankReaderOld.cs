@@ -110,7 +110,7 @@ namespace MusX.Readers
                     wavHeaderData.EncodedData = BReader.ReadBytes(wavHeaderData.SampleSize);
 
                     //Read coeffs
-                    if (headerData.Platform.Contains("GC"))
+                    if (headerData.SpecialSampleInfoLength > 0)
                     {
                         BReader.BaseStream.Seek(headerData.SpecialSampleInfoStart + wavHeaderData.PsiSampleHeader, SeekOrigin.Begin);
                         BReader.BaseStream.Seek(28, SeekOrigin.Current);

@@ -23,9 +23,11 @@ namespace MusX.Readers
                     case "PS2":
                         musicObj = oldReader.ReadMusicFile(filePath, headerData, 128);
                         break;
+                    case "GameCube":
                     case "GC":
                         musicObj = oldReader.ReadMusicFile(filePath, headerData, 1);
                         break;
+                    case "Xbox":
                     case "XB":
                         musicObj = oldReader.ReadMusicFile(filePath, headerData, 4);
                         break;

@@ -36,19 +36,17 @@ namespace MusX.Readers
                         BlockPosition = storedElements[i],
                         MarkerSize = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
                         AudioOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        AudioSize = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)
+                        AudioSize = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        StartMarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        MarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        StartMarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        MarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        BaseVolume = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)
                     };
 
-                    //Stream marker header data 
-                    uint StartMarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian);
-                    uint MarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian);
-                    StreamSoundToAdd.StartMarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian);
-                    StreamSoundToAdd.MarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian);
-                    StreamSoundToAdd.BaseVolume = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian);
-
                     //Stream marker start data
-                    StreamSoundToAdd.StartMarkers = new StartMarker[StartMarkersCount];
-                    for (int j = 0; j < StartMarkersCount; j++)
+                    StreamSoundToAdd.StartMarkers = new StartMarker[StreamSoundToAdd.StartMarkersCount];
+                    for (int j = 0; j < StreamSoundToAdd.StartMarkersCount; j++)
                     {
                         StartMarker StartMarker = new StartMarker
                         {
@@ -74,8 +72,8 @@ namespace MusX.Readers
                     }
 
                     //Stream marker data 
-                    StreamSoundToAdd.Markers = new Marker[MarkersCount];
-                    for (int k = 0; k < MarkersCount; k++)
+                    StreamSoundToAdd.Markers = new Marker[StreamSoundToAdd.MarkersCount];
+                    for (int k = 0; k < StreamSoundToAdd.MarkersCount; k++)
                     {
                         Marker DataMarker = new Marker
                         {

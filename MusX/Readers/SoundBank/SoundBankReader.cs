@@ -45,7 +45,7 @@ namespace MusX.Readers
                     }
 
                     //Big endian
-                    if (headerData.Platform.Contains("GC"))
+                    if (headerData.Platform.Contains("GC") || headerData.Platform.Contains("GameCube"))
                     {
                         headerData.IsBigEndian = true;
                     }

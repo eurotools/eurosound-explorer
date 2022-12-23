@@ -72,13 +72,13 @@ namespace EuroSoundExplorer2
                         int hashCode = reader.GetFileHashCode(files[i]);
 
                         //Get version of MusX Files
-                        FileType fileType = GetFileType(hashCode, selectedVersion, files[i], selectedTitle);
+                        FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, files[i], selectedTitle);
 
                         //Create item
                         ListViewItem itemToAdd = new ListViewItem(new string[]
                         {
                             string.Format("0x{0:X8}", hashCode),
-                            hashTable.GetHashCodeLabel((uint)GetHashCodeWithSection(fileType, hashCode, selectedVersion, selectedTitle)),
+                            hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(fileType, hashCode, selectedVersion, selectedTitle)),
                             files[i].Substring(folder.Length),
                             "Unloaded",
                             GenericMethods.GetFileSize(files[i]),
@@ -131,18 +131,21 @@ namespace EuroSoundExplorer2
                 {
                     case FileType.SoundBank:
                         LoadSelectedSfx(filePath);
+                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                         break;
                     case FileType.Stream:
                         LoadSelectedStream(filePath);
+                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                         break;
                     case FileType.Music:
                         LoadSelectedMusic(filePath);
+                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                         break;
                     case FileType.SBI:
                         LoadSelectedSbi(filePath);
+                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                         break;
-                }
-                lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                }                
             }
         }
 
@@ -279,113 +282,6 @@ namespace EuroSoundExplorer2
                     break;
             }
             return total;
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        private int GetHashCodeWithSection(FileType fileType, int hashCode, int selectedVersion, Title selectedTitle)
-        {
-            if (selectedVersion == 201 && (selectedTitle == Title.Sphinx || selectedTitle == Title.Buffy))
-            {
-                if (fileType == FileType.Music)
-                {
-                    hashCode |= 0x1BE00000;
-                }
-            }
-            else if (selectedVersion == 1 && selectedTitle == Title.Athens)
-            {
-                if (fileType == FileType.Music)
-                {
-                    hashCode = 0x1B000000 | (0x00000FFF & hashCode);
-                }
-                else if (fileType == FileType.SoundBank)
-                {
-                    hashCode = 0x1AE00000 | (0x00000FFF & hashCode);
-                }
-            }
-
-            return hashCode;
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        private FileType GetFileType(int hashCode, int selectedVersion, string filePath, Title selectedTitle)
-        {
-            if (selectedVersion == 201 && (selectedTitle == Title.Sphinx || selectedTitle == Title.Buffy))
-            {
-                int sectionHashCode = (hashCode & 0x00F00000) >> 20;
-                if (sectionHashCode == 0xE)
-                {
-                    return FileType.Music;
-                }
-                else if (filePath.IndexOf("stream") >= 0 || hashCode == 0x0000FFFF)
-                {
-                    return FileType.Stream;
-                }
-                else if (hashCode == 0x00FFFFFF)
-                {
-                    return FileType.SBI;
-                }
-                else
-                {
-                    return FileType.SoundBank;
-                }
-            }
-            else if (selectedVersion == 1 && selectedTitle == Title.Athens)
-            {
-                int sectionHashCode = (hashCode & 0x0000F000) >> 12;
-                switch (sectionHashCode)
-                {
-                    case 0xF:
-                        return FileType.Music;
-                    case 0xE:
-                        return FileType.SoundBank;
-                    case 0xD:
-                        return FileType.Stream;
-                    case 0xB:
-                        return FileType.SoundDetails;
-                    case 0xA:
-                        return FileType.MusicDetails;
-                }
-            }
-            else
-            {
-                if (selectedVersion < 6)
-                {
-                    int sectionHashCode = (hashCode & 0x0000F000) >> 12;
-                    switch (sectionHashCode)
-                    {
-                        case 0xF:
-                            return FileType.Music;
-                        case 0xE:
-                            return FileType.SoundBank;
-                        case 0xD:
-                            return FileType.Stream;
-                        case 0xB:
-                            return FileType.SoundDetails;
-                        case 0xA:
-                            return FileType.MusicDetails;
-                        default:
-                            return FileType.ProjectDetails;
-                    }
-                }
-                else
-                {
-                    int sectionHashCode = (hashCode & 0x00F00000) >> 20;
-                    switch (sectionHashCode)
-                    {
-                        case 0x6:
-                            return FileType.Music;
-                        case 0x5:
-                            return FileType.SoundBank;
-                        case 0x4:
-                            return FileType.Stream;
-                        case 0x2:
-                            return FileType.SoundDetails;
-                        case 0x3:
-                            return FileType.ProjectDetails;
-                    }
-                }
-            }
-            return FileType.Unknown;
         }
     }
 

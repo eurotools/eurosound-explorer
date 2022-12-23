@@ -70,7 +70,6 @@ namespace EuroSoundExplorer2
 
                     //Check for errors
                     int streamLenght = sampleToDisplay.EncodedData.Length * 4;
-
                     if (musicMarkerStartData.Position > streamLenght)
                     {
                         errors |= (1 << 2);
@@ -150,8 +149,7 @@ namespace EuroSoundExplorer2
                     listViewItem.SubItems[5].Text = musicMarkerStartData.LoopMarkerCount.ToString();
 
                     //Check for errors
-                    int streamLenght = sampleToDisplay.EncodedData.Length * 4;
-
+                    int streamLenght = (sampleToDisplay.EncodedData[0].Length + sampleToDisplay.EncodedData[1].Length) * 4;
                     if (musicMarkerStartData.Position > streamLenght)
                     {
                         errors |= (1 << 2);

@@ -33,6 +33,10 @@ namespace EuroSoundExplorer2
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStreamBank));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonValidateAllStreams = new System.Windows.Forms.ToolStripButton();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.MenuItem_Save = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_SendToMediaPlayer = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.Col_No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Adpcm = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -41,9 +45,6 @@ namespace EuroSoundExplorer2
             this.Col_AudioOffset = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_AudioLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_BaseVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.MenuItem_Save = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItem_SendToMediaPlayer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -62,11 +63,36 @@ namespace EuroSoundExplorer2
             // ButtonValidateAllStreams
             // 
             this.ButtonValidateAllStreams.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ButtonValidateAllStreams.Enabled = false;
             this.ButtonValidateAllStreams.Image = ((System.Drawing.Image)(resources.GetObject("ButtonValidateAllStreams.Image")));
             this.ButtonValidateAllStreams.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonValidateAllStreams.Name = "ButtonValidateAllStreams";
             this.ButtonValidateAllStreams.Size = new System.Drawing.Size(114, 22);
             this.ButtonValidateAllStreams.Text = "Validate All Streams";
+            this.ButtonValidateAllStreams.Click += new System.EventHandler(this.ButtonValidateAllStreams_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_Save,
+            this.MenuItem_SendToMediaPlayer});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 48);
+            // 
+            // MenuItem_Save
+            // 
+            this.MenuItem_Save.Name = "MenuItem_Save";
+            this.MenuItem_Save.Size = new System.Drawing.Size(186, 22);
+            this.MenuItem_Save.Text = "Save";
+            this.MenuItem_Save.Click += new System.EventHandler(this.MenuItem_Save_Click);
+            // 
+            // MenuItem_SendToMediaPlayer
+            // 
+            this.MenuItem_SendToMediaPlayer.Name = "MenuItem_SendToMediaPlayer";
+            this.MenuItem_SendToMediaPlayer.Size = new System.Drawing.Size(186, 22);
+            this.MenuItem_SendToMediaPlayer.Text = "Send To Media Player";
+            this.MenuItem_SendToMediaPlayer.Click += new System.EventHandler(this.MenuItem_SendToMediaPlayer_Click);
             // 
             // listView1
             // 
@@ -128,29 +154,6 @@ namespace EuroSoundExplorer2
             this.Col_BaseVolume.Text = "Base Volume";
             this.Col_BaseVolume.Width = 90;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem_Save,
-            this.MenuItem_SendToMediaPlayer});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 48);
-            // 
-            // MenuItem_Save
-            // 
-            this.MenuItem_Save.Name = "MenuItem_Save";
-            this.MenuItem_Save.Size = new System.Drawing.Size(186, 22);
-            this.MenuItem_Save.Text = "Save";
-            this.MenuItem_Save.Click += new System.EventHandler(this.MenuItem_Save_Click);
-            // 
-            // MenuItem_SendToMediaPlayer
-            // 
-            this.MenuItem_SendToMediaPlayer.Name = "MenuItem_SendToMediaPlayer";
-            this.MenuItem_SendToMediaPlayer.Size = new System.Drawing.Size(186, 22);
-            this.MenuItem_SendToMediaPlayer.Text = "Send To Media Player";
-            this.MenuItem_SendToMediaPlayer.Click += new System.EventHandler(this.MenuItem_SendToMediaPlayer_Click);
-            // 
             // FormStreamBank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -185,5 +188,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Save;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SendToMediaPlayer;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using MusX.Objects;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using static EuroSoundExplorer2.AppConfig;
+using static MusX.Readers.SfxFunctions;
 
 namespace EuroSoundExplorer2
 {
@@ -19,7 +21,13 @@ namespace EuroSoundExplorer2
         public void DisplayHashCodes()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            SbiFile dictToShow = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sbiFileData;
+            SbiFile dictToShow = parentForm.pnlSoundBankFiles.sbiFileData;
+
+            //Get Game and Version
+            int selectedVersion = parentForm.configuration.FileVersion;
+            Title selectedTitle = parentForm.configuration.TitleSelected;
+
+            //Print Data
             for (int i = 0; i < dictToShow.projectMusicBanks.Length; i++)
             {
                 if (dictToShow.projectMusicBanks[i] == -1)
@@ -29,7 +37,7 @@ namespace EuroSoundExplorer2
                 ListViewItem itemToAdd = new ListViewItem(new string[]
                 {
                     string.Format("0x{0:X8}", dictToShow.projectMusicBanks[i]),
-                    parentForm.hashTable.GetHashCodeLabel((uint)dictToShow.projectMusicBanks[i])
+                    parentForm.hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(FileType.Music, dictToShow.projectMusicBanks[i], selectedVersion, selectedTitle))
                 })
                 {
                     UseItemStyleForSubItems = false

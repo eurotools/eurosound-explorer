@@ -29,32 +29,15 @@ namespace EuroSoundExplorer2
         /// </summary>
         private void InitializeComponent()
         {
-            this.ButtonMediaPlayer = new System.Windows.Forms.Button();
-            this.buttonDisplayMarkers = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMusicData));
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.ButtonSendMediaPlayer = new System.Windows.Forms.ToolStripButton();
+            this.ButtonDisplayMusicMarkers = new System.Windows.Forms.ToolStripButton();
+            this.labelAdpcmStatus = new System.Windows.Forms.ToolStripLabel();
+            this.textboxAdpcmStatus = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // ButtonMediaPlayer
-            // 
-            this.ButtonMediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonMediaPlayer.Location = new System.Drawing.Point(274, 12);
-            this.ButtonMediaPlayer.Name = "ButtonMediaPlayer";
-            this.ButtonMediaPlayer.Size = new System.Drawing.Size(124, 23);
-            this.ButtonMediaPlayer.TabIndex = 4;
-            this.ButtonMediaPlayer.Text = "Send to Media Player";
-            this.ButtonMediaPlayer.UseVisualStyleBackColor = true;
-            this.ButtonMediaPlayer.Click += new System.EventHandler(this.ButtonMediaPlayer_Click);
-            // 
-            // buttonDisplayMarkers
-            // 
-            this.buttonDisplayMarkers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDisplayMarkers.Location = new System.Drawing.Point(274, 41);
-            this.buttonDisplayMarkers.Name = "buttonDisplayMarkers";
-            this.buttonDisplayMarkers.Size = new System.Drawing.Size(124, 23);
-            this.buttonDisplayMarkers.TabIndex = 5;
-            this.buttonDisplayMarkers.Text = "Display Markers";
-            this.buttonDisplayMarkers.UseVisualStyleBackColor = true;
-            this.buttonDisplayMarkers.Click += new System.EventHandler(this.ButtonDisplayMarkers_Click);
             // 
             // propertyGrid1
             // 
@@ -62,31 +45,84 @@ namespace EuroSoundExplorer2
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 28);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(268, 340);
+            this.propertyGrid1.Size = new System.Drawing.Size(410, 312);
             this.propertyGrid1.TabIndex = 6;
             this.propertyGrid1.ToolbarVisible = false;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ButtonSendMediaPlayer,
+            this.ButtonDisplayMusicMarkers,
+            this.labelAdpcmStatus,
+            this.textboxAdpcmStatus});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(410, 25);
+            this.toolStrip1.TabIndex = 7;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // ButtonSendMediaPlayer
+            // 
+            this.ButtonSendMediaPlayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ButtonSendMediaPlayer.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSendMediaPlayer.Image")));
+            this.ButtonSendMediaPlayer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSendMediaPlayer.Name = "ButtonSendMediaPlayer";
+            this.ButtonSendMediaPlayer.Size = new System.Drawing.Size(122, 22);
+            this.ButtonSendMediaPlayer.Text = "Send to Media Player";
+            this.ButtonSendMediaPlayer.Click += new System.EventHandler(this.ButtonSendMediaPlayer_Click);
+            // 
+            // ButtonDisplayMusicMarkers
+            // 
+            this.ButtonDisplayMusicMarkers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ButtonDisplayMusicMarkers.Image = ((System.Drawing.Image)(resources.GetObject("ButtonDisplayMusicMarkers.Image")));
+            this.ButtonDisplayMusicMarkers.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonDisplayMusicMarkers.Name = "ButtonDisplayMusicMarkers";
+            this.ButtonDisplayMusicMarkers.Size = new System.Drawing.Size(94, 22);
+            this.ButtonDisplayMusicMarkers.Text = "Display Markers";
+            this.ButtonDisplayMusicMarkers.Click += new System.EventHandler(this.ButtonDisplayMusicMarkers_Click);
+            // 
+            // labelAdpcmStatus
+            // 
+            this.labelAdpcmStatus.Name = "labelAdpcmStatus";
+            this.labelAdpcmStatus.Size = new System.Drawing.Size(87, 22);
+            this.labelAdpcmStatus.Text = "ADPCM Status:";
+            // 
+            // textboxAdpcmStatus
+            // 
+            this.textboxAdpcmStatus.BackColor = System.Drawing.SystemColors.Window;
+            this.textboxAdpcmStatus.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.textboxAdpcmStatus.Name = "textboxAdpcmStatus";
+            this.textboxAdpcmStatus.ReadOnly = true;
+            this.textboxAdpcmStatus.Size = new System.Drawing.Size(100, 23);
             // 
             // FormMusicData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(410, 340);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.propertyGrid1);
-            this.Controls.Add(this.buttonDisplayMarkers);
-            this.Controls.Add(this.ButtonMediaPlayer);
             this.HideOnClose = true;
             this.Name = "FormMusicData";
             this.TabText = "Music Data";
             this.Text = "Music Data";
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button ButtonMediaPlayer;
-        private System.Windows.Forms.Button buttonDisplayMarkers;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton ButtonSendMediaPlayer;
+        private System.Windows.Forms.ToolStripButton ButtonDisplayMusicMarkers;
+        private System.Windows.Forms.ToolStripLabel labelAdpcmStatus;
+        private System.Windows.Forms.ToolStripTextBox textboxAdpcmStatus;
     }
 }

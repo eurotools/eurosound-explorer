@@ -25,6 +25,12 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void FormMediaPlayer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopSound();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadSoundData(SoundFile soundData)
         {
             //Stop previous instances
@@ -90,7 +96,7 @@ namespace EuroSoundExplorer2
                     }
                     else
                     {
-                        WaveFileWriter.CreateWaveFile(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.pan, soundToPlay.volume));
+                        WaveFileWriter.CreateWaveFile(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume));
                     }
                     MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -109,6 +115,7 @@ namespace EuroSoundExplorer2
             if (WaveOut.DeviceCount > 0)
             {
                 //Create a new instance and start playing
+                StopSound();
                 _waveOut = new WaveOut();
                 if (soundToPlay.channels > 1)
                 {
@@ -117,7 +124,7 @@ namespace EuroSoundExplorer2
                 }
                 else
                 {
-                    _waveOut.Init(audioFunctions.CreateMonoLoopWav(soundToPlay.startPos, soundToPlay.loopOffset, soundToPlay.isLooped, soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.pan, soundToPlay.volume));
+                    _waveOut.Init(audioFunctions.CreateMonoLoopWav(soundToPlay.startPos, soundToPlay.loopOffset, soundToPlay.isLooped, soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume));
                     _waveOut.Play();
                 }
             }
@@ -131,7 +138,6 @@ namespace EuroSoundExplorer2
                 _waveOut.Stop();
             }
         }
-
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

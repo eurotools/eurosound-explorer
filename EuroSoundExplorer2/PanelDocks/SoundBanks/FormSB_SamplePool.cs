@@ -1,9 +1,11 @@
 ﻿using EuroSoundExplorer2.Classes;
 using MusX;
 using MusX.Objects;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -21,6 +23,48 @@ namespace EuroSoundExplorer2
         public FormSB_SamplePool()
         {
             InitializeComponent();
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  CONTEXT MENU
+        //-------------------------------------------------------------------------------------------
+        private void MenuItem_SaveSound_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (ListViewItem selectedItem in listView1.SelectedItems)
+                    {
+                        short fileRef = (short)selectedItem.Tag;
+                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem);
+                        if (soundToPlay != null)
+                        {
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume);
+                            WaveFileWriter.CreateWaveFile(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, fileRef + ".wav")), wavFile);
+                        }
+                    }
+                }
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------- 
+        private void MenuItem_SendToMediaPlayer_Click(object sender, EventArgs e)
+        {
+            SendToMediaPlayer();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------- 
+        private void MenuItem_Usage_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                SortedDictionary<uint, Sample> samplesDisct = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxSamples;
+                using (FrmFileRefUsage formUsage = new FrmFileRefUsage((short)listView1.SelectedItems[0].Tag, soundSampleData, samplesDisct))
+                {
+                    formUsage.ShowDialog();
+                }
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -129,87 +173,87 @@ namespace EuroSoundExplorer2
             listView1.EndUpdate();
         }
 
-        //-------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------
+        //  LISTVIEW FUNCTIONS
+        //-------------------------------------------------------------------------------------------
         private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             SendToMediaPlayer();
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------- 
-        private void MenuItem_Usage_Click(object sender, EventArgs e)
-        {
-            if (listView1.SelectedItems.Count > 0)
-            {
-                SortedDictionary<uint, Sample> samplesDisct = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxSamples;
-                using (FrmFileRefUsage formUsage = new FrmFileRefUsage((short)listView1.SelectedItems[0].Tag, soundSampleData, samplesDisct))
-                {
-                    formUsage.ShowDialog();
-                }
-            }
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------- 
-        private void MenuItem_SendToMediaPlayer_Click(object sender, EventArgs e)
-        {
-            SendToMediaPlayer();
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------- 
+        //-------------------------------------------------------------------------------------------
+        //  FUNCTIONS
+        //-------------------------------------------------------------------------------------------
         private void SendToMediaPlayer()
         {
             if (listView1.SelectedItems.Count == 1)
             {
-                short fileRef = (short)listView1.SelectedItems[0].Tag;
-                byte[] decodedData = null;
-                SoundFile soundToPlay = new SoundFile();
-
-                //SoundBanks
-                if (fileRef >= 0 && ((soundSampleData.Flags >> 10) & 1) == 0)
+                SoundFile soundToPlay = GetSoundFileFromListViewItem(listView1.SelectedItems[0]);
+                if (soundToPlay != null)
                 {
-                    List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
-                    SampleData selectedSample = wavesList[fileRef];
-
-                    //Decode Data
-                    decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions);
-
-                    //Set settings
-                    soundToPlay.loopOffset = selectedSample.LoopStartOffset;
-                    soundToPlay.isLooped = selectedSample.Flags == 1;
-                    soundToPlay.sampleRate = selectedSample.Frequency;
-                }
-                else if (fileRef < 0 && ((soundSampleData.Flags >> 10) & 1) == 0) //Streambanks
-                {
-                    fileRef = (short)(Math.Abs(fileRef) - 1);
-                    List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
-
-                    if ((fileRef >= 0) && (fileRef < streamedSamples.Count))
-                    {
-                        StreamSample selectedSample = streamedSamples[fileRef];
-
-                        //Decode Data
-                        decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions);
-
-                        //Set settings
-                        soundToPlay.sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Could not decode the selected stream sample. Ensure that the stream bank is loaded.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-
-                //Create music object and play
-                if (decodedData != null)
-                {
-                    soundToPlay.PcmData[0] = decodedData;
-                    soundToPlay.volume = float.Parse(listView1.SelectedItems[0].SubItems[1].Text) / 100;
-                    soundToPlay.pan = float.Parse(listView1.SelectedItems[0].SubItems[5].Text);
-                    soundToPlay.pitch = float.Parse(listView1.SelectedItems[0].SubItems[3].Text);
-                    soundToPlay.channels = 1;
-
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
                 }
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private SoundFile GetSoundFileFromListViewItem(ListViewItem selectedItem)
+        {
+            short fileRef = (short)selectedItem.Tag;
+            byte[] decodedData = null;
+            SoundFile soundToPlay = null;
+
+            //SoundBanks
+            if (fileRef >= 0 && ((soundSampleData.Flags >> 10) & 1) == 0)
+            {
+                List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
+                SampleData selectedSample = wavesList[fileRef];
+
+                //Decode Data
+                decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions);
+                if (decodedData != null)
+                {
+                    //Set settings
+                    soundToPlay = new SoundFile();
+                    soundToPlay.PcmData[0] = decodedData;
+                    soundToPlay.sampleRate = selectedSample.Frequency;
+                    soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
+                    soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                    soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
+                    soundToPlay.channels = 1;
+                    soundToPlay.loopOffset = selectedSample.LoopStartOffset;
+                    soundToPlay.isLooped = selectedSample.Flags == 1;
+                }
+            }
+            else if (fileRef < 0 && ((soundSampleData.Flags >> 10) & 1) == 0) //Streambanks
+            {
+                fileRef = (short)(Math.Abs(fileRef) - 1);
+                List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+
+                if ((fileRef >= 0) && (fileRef < streamedSamples.Count))
+                {
+                    StreamSample selectedSample = streamedSamples[fileRef];
+
+                    //Decode Data
+                    decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions);
+                    if (decodedData != null)
+                    {
+                        soundToPlay = new SoundFile();
+                        soundToPlay.PcmData[0] = decodedData;
+                        soundToPlay.sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                        soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
+                        soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                        soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
+                        soundToPlay.channels = 1;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Could not decode the selected stream sample. Ensure that the stream bank is loaded.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return soundToPlay;
         }
     }
 

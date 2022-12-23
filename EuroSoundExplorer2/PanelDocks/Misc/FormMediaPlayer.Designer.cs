@@ -167,6 +167,7 @@ namespace EuroSoundExplorer2
             this.Name = "FormMediaPlayer";
             this.TabText = "Media Player";
             this.Text = "Media Player";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMediaPlayer_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

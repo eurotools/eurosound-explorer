@@ -75,7 +75,6 @@ namespace EuroSoundExplorer2
             "UserFlags15",
             "UserFlags16"});
             this.checkedListBox1.Location = new System.Drawing.Point(3, 3);
-            this.checkedListBox1.MultiColumn = true;
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.checkedListBox1.Size = new System.Drawing.Size(515, 391);
@@ -103,7 +102,6 @@ namespace EuroSoundExplorer2
             "UserFlags15",
             "UserFlags16"});
             this.checkedListBox2.Location = new System.Drawing.Point(3, 3);
-            this.checkedListBox2.MultiColumn = true;
             this.checkedListBox2.Name = "checkedListBox2";
             this.checkedListBox2.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.checkedListBox2.Size = new System.Drawing.Size(515, 391);

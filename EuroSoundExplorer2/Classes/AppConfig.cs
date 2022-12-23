@@ -222,7 +222,7 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            return new StandardValuesCollection(new int[] { 201, 4, 5, 7 });
+            return new StandardValuesCollection(AppConfig.SfxFileVersion);
         }
     }
 

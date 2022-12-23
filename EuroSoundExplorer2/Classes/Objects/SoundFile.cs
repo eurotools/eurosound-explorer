@@ -13,7 +13,7 @@
         public int channels;
         public float volume = 1;
         public float pitch;
-        public float pan;
+        public float panning;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
