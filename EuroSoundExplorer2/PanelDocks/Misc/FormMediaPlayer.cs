@@ -92,11 +92,11 @@ namespace EuroSoundExplorer2
                 {
                     if (soundToPlay.channels > 1)
                     {
-                        WaveFileWriter.CreateWaveFile(filePath, audioFunctions.CreateStereoWav(soundToPlay.PcmData, soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.volume));
+                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateStereoWav(soundToPlay.PcmData, soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.volume).ToSampleProvider());
                     }
                     else
                     {
-                        WaveFileWriter.CreateWaveFile(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume));
+                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume).ToSampleProvider());
                     }
                     MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

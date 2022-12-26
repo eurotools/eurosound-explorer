@@ -30,19 +30,23 @@ namespace EuroSoundExplorer2
             propertyGrid1.SelectedObject = musicData;
 
             //ADPCM Validate
-            if ((headerFileData.Platform.Contains("PC") || headerFileData.Platform.Contains("GC")) && headerFileData.FileVersion > 3 && headerFileData.FileVersion < 10)
+            if (headerFileData.FileVersion > 3 && headerFileData.FileVersion < 10)
             {
-                byte[] ImaDataLeft = musicData.EncodedData[0];
-                byte[] ImaDataRight = musicData.EncodedData[1];
-                if (ImaDataLeft[3] == 65 && ImaDataRight[3] == 65)
+                if (headerFileData.Platform.Contains("PC") || headerFileData.Platform.Contains("GC") || headerFileData.Platform.Equals("XB__") || headerFileData.Platform.Equals("XB1_"))
                 {
-                    textboxAdpcmStatus.Text = "ADPCM data is Valid";
-                    textboxAdpcmStatus.ForeColor = SystemColors.ControlText;
-                }
-                else
-                {
-                    textboxAdpcmStatus.Text = "ADPCM data is *INVALID*";
-                    textboxAdpcmStatus.ForeColor = Color.Red;
+                    bool leftChannelStatus = audioFunctions.CheckIfEurocomImaIsInvalid(musicData.EncodedData[0]);
+                    bool rightChannelStatus = audioFunctions.CheckIfEurocomImaIsInvalid(musicData.EncodedData[1]);
+
+                    if (leftChannelStatus || rightChannelStatus)
+                    {
+                        textboxAdpcmStatus.Text = "ADPCM data is *INVALID*";
+                        textboxAdpcmStatus.ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        textboxAdpcmStatus.Text = "ADPCM data is Valid";
+                        textboxAdpcmStatus.ForeColor = SystemColors.ControlText;
+                    }
                 }
             }
             else
@@ -65,9 +69,9 @@ namespace EuroSoundExplorer2
             {
                 if (headerFileData.Platform.Equals("PC") || headerFileData.Platform.Contains("GC") || headerFileData.Platform.Contains("GameCube"))
                 {
-                    ImaAdpcm eurocomDAT = new ImaAdpcm();
-                    decodedDataL = audioFunctions.ShortArrayToByteArray(eurocomDAT.Decode(musicData.EncodedData[0], musicData.EncodedData[0].Length * 2));
-                    decodedDataR = audioFunctions.ShortArrayToByteArray(eurocomDAT.Decode(musicData.EncodedData[1], musicData.EncodedData[1].Length * 2));
+                    ImaAdpcm imaDecoder = new ImaAdpcm();
+                    decodedDataL = audioFunctions.ShortArrayToByteArray(imaDecoder.Decode(musicData.EncodedData[0], musicData.EncodedData[0].Length * 2));
+                    decodedDataR = audioFunctions.ShortArrayToByteArray(imaDecoder.Decode(musicData.EncodedData[1], musicData.EncodedData[1].Length * 2));
                 }
                 else if (headerFileData.Platform.Equals("PS2"))
                 {

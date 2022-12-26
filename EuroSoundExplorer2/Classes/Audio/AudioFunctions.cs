@@ -23,7 +23,7 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public IWaveProvider CreateMonoLoopWav(int startPos, int _startLoop, bool flags, byte[] _pcmData, int _frequency, float _pitch, float _pan, float _volume)
+        internal IWaveProvider CreateMonoLoopWav(int startPos, int _startLoop, bool flags, byte[] _pcmData, int _frequency, float _pitch, float _pan, float _volume)
         {
             RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
             LoopStream loop = new LoopStream(provider, _startLoop) { EnableLooping = flags, Position = startPos };
@@ -34,7 +34,7 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public IWaveProvider CreateMonoWav(byte[] _pcmData, int _frequency, float _pitch, float _pan, float _volume)
+        internal IWaveProvider CreateMonoWav(byte[] _pcmData, int _frequency, float _pitch, float _pan, float _volume)
         {
             RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
             PanningSampleProvider panProvider = new PanningSampleProvider(provider.ToSampleProvider()) { Pan = _pan };
@@ -44,7 +44,7 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public IWaveProvider CreateStereoLoopWav(int startPos, int _startLoop, bool flags, byte[][] _pcmData, int _frequency, float _pitch, float _volume)
+        internal IWaveProvider CreateStereoLoopWav(int startPos, int _startLoop, bool flags, byte[][] _pcmData, int _frequency, float _pitch, float _volume)
         {
             RawSourceWaveStream providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
             LoopStream loopLeft = new LoopStream(providerLeft, _startLoop) { EnableLooping = flags, Position = startPos };
@@ -57,7 +57,7 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public IWaveProvider CreateStereoWav(byte[][] _pcmData, int _frequency, float _pitch, float _volume)
+        internal IWaveProvider CreateStereoWav(byte[][] _pcmData, int _frequency, float _pitch, float _volume)
         {
             IWaveProvider providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
             IWaveProvider providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
@@ -68,12 +68,41 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public byte[] ShortArrayToByteArray(short[] inputArray)
+        internal byte[] ShortArrayToByteArray(short[] inputArray)
         {
             byte[] byteArray = new byte[inputArray.Length * 2];
             Buffer.BlockCopy(inputArray, 0, byteArray, 0, byteArray.Length);
 
             return byteArray;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal bool CheckIfEurocomImaIsInvalid(byte[] ImaData)
+        {
+            bool invalidData = false;
+            byte chunckId = 65;
+            for (int j = 0; j < ImaData.Length; j += 32)
+            {
+                byte[] chunckData = new byte[32];
+                Buffer.BlockCopy(ImaData, j, chunckData, 0, chunckData.Length);
+                if (j == 0 && chunckData[3] != 65)
+                {
+                    invalidData = true;
+                    break;
+                }
+                else if (chunckData[3] != chunckId)
+                {
+                    invalidData = true;
+                    break;
+                }
+                chunckId++;
+                if (chunckId > 90)
+                {
+                    chunckId = 65;
+                }
+            }
+
+            return invalidData;
         }
     }
 

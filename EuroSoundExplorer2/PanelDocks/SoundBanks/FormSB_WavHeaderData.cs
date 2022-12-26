@@ -65,6 +65,29 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------
         //  CONTEXT MENU
         //-------------------------------------------------------------------------------------------
+        private void MenuItem_SaveRaw_Click(object sender, System.EventArgs e)
+        {
+            //Output selected samples
+            if (listView1.SelectedItems.Count > 0)
+            {
+                //Ask user for an output path
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
+
+                    //Start output
+                    foreach (ListViewItem selectedItem in listView1.SelectedItems)
+                    {
+                        SampleData selectedSample = wavesList[(short)selectedItem.Tag];
+
+                        //Save raw data
+                        File.WriteAllBytes(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".raw")), selectedSample.EncodedData);
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_Save_Click(object sender, System.EventArgs e)
         {
             //Output selected samples
@@ -93,7 +116,7 @@ namespace EuroSoundExplorer2
 
                             //Create Wav File
                             IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume);
-                            WaveFileWriter.CreateWaveFile(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".wav")), wavFile);
+                            WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".wav")), wavFile.ToSampleProvider());
                         }
                     }
                 }

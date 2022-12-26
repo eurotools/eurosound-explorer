@@ -84,7 +84,7 @@ namespace EuroSoundExplorer2
             else
             {
                 //Enable validation tool - Only For Custom EuroCom ADPCM
-                if (streamHeader.Platform.Contains("PC"))
+                if (streamHeader.Platform.Equals("PC__") || streamHeader.Platform.Equals("XB__") || streamHeader.Platform.Equals("GC__"))
                 {
                     ButtonValidateAllStreams.Enabled = true;
                 }
@@ -125,7 +125,7 @@ namespace EuroSoundExplorer2
                         {
                             //Create Wav File
                             IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume);
-                            WaveFileWriter.CreateWaveFile(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (int)selectedItem.Tag + ".wav")), wavFile);
+                            WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (int)selectedItem.Tag + ".wav")), wavFile.ToSampleProvider());
                         }
                     }
                 }
@@ -180,18 +180,20 @@ namespace EuroSoundExplorer2
             {
                 for (int i = 0; i < listView1.Items.Count; i++)
                 {
-                    //Check files
+                    //Get item and IMA Data
                     ListViewItem currentItem = listView1.Items[i];
                     byte[] ImaData = streamedSamples[(int)currentItem.Tag].EncodedData;
-                    if (ImaData[3] == 65)
-                    {
-                        currentItem.SubItems[1].Text = "OK";
-                        currentItem.ForeColor = SystemColors.ControlText;
-                    }
-                    else
+
+                    //Show Results
+                    if (audioFunctions.CheckIfEurocomImaIsInvalid(ImaData))
                     {
                         currentItem.SubItems[1].Text = "INVALID";
                         currentItem.ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        currentItem.SubItems[1].Text = "OK";
+                        currentItem.ForeColor = SystemColors.ControlText;
                     }
                 }
             }

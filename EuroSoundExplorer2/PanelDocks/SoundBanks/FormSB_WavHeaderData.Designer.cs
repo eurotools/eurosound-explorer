@@ -47,6 +47,8 @@ namespace EuroSoundExplorer2
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_ItemUsage = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.MenuItem_SaveRaw = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,13 +118,15 @@ namespace EuroSoundExplorer2
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_SaveRaw,
+            this.toolStripSeparator2,
             this.MenuItem_Save,
             this.MenuItem_Play,
             this.toolStripSeparator1,
             this.MenuItem_ItemUsage});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 98);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 126);
             // 
             // MenuItem_Save
             // 
@@ -149,6 +153,18 @@ namespace EuroSoundExplorer2
             this.MenuItem_ItemUsage.Size = new System.Drawing.Size(186, 22);
             this.MenuItem_ItemUsage.Text = "Item Usage";
             this.MenuItem_ItemUsage.Click += new System.EventHandler(this.MenuItem_ItemUsage_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(183, 6);
+            // 
+            // MenuItem_SaveRaw
+            // 
+            this.MenuItem_SaveRaw.Name = "MenuItem_SaveRaw";
+            this.MenuItem_SaveRaw.Size = new System.Drawing.Size(186, 22);
+            this.MenuItem_SaveRaw.Text = "Save Raw Data";
+            this.MenuItem_SaveRaw.Click += new System.EventHandler(this.MenuItem_SaveRaw_Click);
             // 
             // FormSB_WavHeaderData
             // 
@@ -182,5 +198,7 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_ItemUsage;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_SaveRaw;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

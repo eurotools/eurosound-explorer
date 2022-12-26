@@ -109,12 +109,7 @@ namespace EuroSoundExplorer2
             }
             else
             {
-                if (headerData.Platform.Equals("PC__") || headerData.Platform.Equals("XB__"))
-                {
-                    Eurocom_ImaAdpcm eurocomDAT = new Eurocom_ImaAdpcm();
-                    decodedData = audioFunctions.ShortArrayToByteArray(eurocomDAT.Decode(selectedSample.EncodedData));
-                }
-                if (headerData.Platform.Equals("GC__"))
+                if (headerData.Platform.Equals("PC__") || headerData.Platform.Equals("XB__") || headerData.Platform.Equals("GC__"))
                 {
                     Eurocom_ImaAdpcm eurocomDAT = new Eurocom_ImaAdpcm();
                     decodedData = audioFunctions.ShortArrayToByteArray(eurocomDAT.Decode(selectedSample.EncodedData));
