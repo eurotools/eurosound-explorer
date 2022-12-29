@@ -1,4 +1,4 @@
-#EuroSound Explorer
+# EuroSound Explorer
 
 The EuroSound Explorer is a tool that can be used to open and see the SFX files form the Eurocom games, you can see the parameters of each sound and also play them. Is compatible with:
 - Soundbanks
