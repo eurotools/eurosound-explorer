@@ -57,8 +57,8 @@ namespace MusX.Readers
                         SampleInfo samplePoolItem = new SampleInfo()
                         {
                             FileRef = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                            Pitch = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                            PitchOffset = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
+                            Pitch = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian) / 1024.0f,
+                            PitchOffset = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian) / 1024.0f,
                             Volume = BReader.ReadSByte(),
                             VolumeOffset = BReader.ReadSByte(),
                             Pan = BReader.ReadSByte(),

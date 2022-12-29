@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using MusX.Objects;
+using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
 using System.IO;
@@ -10,6 +11,8 @@ namespace EuroSoundExplorer2.Classes
     //-------------------------------------------------------------------------------------------------------------------------------
     internal class AudioFunctions
     {
+        private readonly Random random = new Random();
+
         //-------------------------------------------------------------------------------------------------------------------------------
         private int SemitonesToFreq(int Frequency, float Semitone)
         {
@@ -65,6 +68,48 @@ namespace EuroSoundExplorer2.Classes
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = _volume };
 
             return volumeProvider.ToWaveProvider();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal float GetPitch(SampleInfo sampleInfo)
+        {
+            switch (random.Next(0, 3))
+            {
+                case 0:
+                    return sampleInfo.Pitch + sampleInfo.PitchOffset;
+                case 1:
+                    return sampleInfo.Pitch + (sampleInfo.PitchOffset * -1);
+                default:
+                    return sampleInfo.Pitch;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal float GetPan(SampleInfo sampleInfo)
+        {
+            switch (random.Next(0, 3))
+            {
+                case 0:
+                    return sampleInfo.Pan + sampleInfo.PanOffset;
+                case 1:
+                    return sampleInfo.Pan + (sampleInfo.PanOffset * -1);
+                default:
+                    return sampleInfo.Pan;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal float GetVolume(SampleInfo sampleInfo)
+        {
+            switch (random.Next(0, 3))
+            {
+                case 0:
+                    return sampleInfo.Volume + sampleInfo.VolumeOffset;
+                case 1:
+                    return sampleInfo.Volume + (sampleInfo.VolumeOffset * -1);
+                default:
+                    return sampleInfo.Volume;
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

@@ -6,12 +6,12 @@
     public class SampleInfo
     {
         public short FileRef;
-        public short Pitch;
-        public short PitchOffset;
-        public sbyte Volume;
-        public sbyte VolumeOffset;
-        public sbyte Pan;
-        public sbyte PanOffset;
+        public float Pitch;
+        public float PitchOffset;
+        public float Volume;
+        public float VolumeOffset;
+        public float Pan;
+        public float PanOffset;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

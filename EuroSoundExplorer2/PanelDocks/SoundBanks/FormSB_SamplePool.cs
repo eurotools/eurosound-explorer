@@ -172,19 +172,8 @@ namespace EuroSoundExplorer2
                 }
                 listViewItem.SubItems[1].Text = samplePoolItem.Volume.ToString();
                 listViewItem.SubItems[2].Text = samplePoolItem.VolumeOffset.ToString();
-                if (MusXheaderData.FileVersion == 201 || MusXheaderData.FileVersion == 1)
-                {
-                    listViewItem.SubItems[3].Text = decimal.Divide(samplePoolItem.Pitch, 1024).ToString();
-                    listViewItem.SubItems[4].Text = decimal.Divide(samplePoolItem.PitchOffset, 1024).ToString();
-                }
-                else
-                {
-                    float finalPitch = samplePoolItem.Pitch * 0.2f;
-                    listViewItem.SubItems[3].Text = finalPitch.ToString();
-
-                    float finalPitchOffset = samplePoolItem.PitchOffset * 0.1f;
-                    listViewItem.SubItems[4].Text = finalPitchOffset.ToString();
-                }
+                listViewItem.SubItems[3].Text = samplePoolItem.Pitch.ToString();
+                listViewItem.SubItems[4].Text = samplePoolItem.PitchOffset.ToString();
                 listViewItem.SubItems[5].Text = samplePoolItem.Pan.ToString();
                 listViewItem.SubItems[6].Text = samplePoolItem.PanOffset.ToString();
                 listViewItem.Tag = finalFileRef;
