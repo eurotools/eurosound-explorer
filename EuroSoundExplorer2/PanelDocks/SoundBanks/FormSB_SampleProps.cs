@@ -98,7 +98,7 @@ namespace EuroSoundExplorer2
             if (MusXheaderData.FileVersion == 201 || MusXheaderData.FileVersion == 1)
             {
                 checkedListBox1.Items.Clear();
-                checkedListBox1.Items.AddRange(new string[] { "MaxReject", "NextFreeOneToUse", "IgnoreAge", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInNis", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "UserFlags14", "UserFlags15", "UserFlags16" });
+                checkedListBox1.Items.AddRange(new string[] { "MaxReject", "Doppler", "IgnoreAge", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInNis", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "UserFlags14", "UserFlags15", "UserFlags16" });
             }
             else
             {
