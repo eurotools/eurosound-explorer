@@ -124,7 +124,7 @@ namespace EuroSoundExplorer2
                         if (soundToPlay != null)
                         {
                             //Create Wav File
-                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume);
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay);
                             WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (int)selectedItem.Tag + ".wav")), wavFile.ToSampleProvider());
                         }
                     }

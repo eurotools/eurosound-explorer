@@ -145,7 +145,7 @@ namespace EuroSoundExplorer2
                         LoadSelectedSbi(filePath);
                         lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                         break;
-                }                
+                }
             }
         }
 

@@ -92,11 +92,11 @@ namespace EuroSoundExplorer2
                 {
                     if (soundToPlay.channels > 1)
                     {
-                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateStereoWav(soundToPlay.PcmData, soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.volume).ToSampleProvider());
+                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateStereoWav(soundToPlay.PcmData, soundToPlay).ToSampleProvider());
                     }
                     else
                     {
-                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume).ToSampleProvider());
+                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay).ToSampleProvider());
                     }
                     MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -119,12 +119,12 @@ namespace EuroSoundExplorer2
                 _waveOut = new WaveOut();
                 if (soundToPlay.channels > 1)
                 {
-                    _waveOut.Init(audioFunctions.CreateStereoWav(soundToPlay.PcmData, soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.volume));
+                    _waveOut.Init(audioFunctions.CreateStereoLoopWav(soundToPlay.PcmData, soundToPlay));
                     _waveOut.Play();
                 }
                 else
                 {
-                    _waveOut.Init(audioFunctions.CreateMonoLoopWav(soundToPlay.startPos, soundToPlay.loopOffset, soundToPlay.isLooped, soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume));
+                    _waveOut.Init(audioFunctions.CreateMonoLoopWav(soundToPlay.PcmData[0], soundToPlay));
                     _waveOut.Play();
                 }
             }

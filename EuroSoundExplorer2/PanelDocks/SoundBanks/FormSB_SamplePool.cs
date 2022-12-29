@@ -37,7 +37,7 @@ namespace EuroSoundExplorer2
                     foreach (ListViewItem selectedItem in listView1.SelectedItems)
                     {
                         short fileRef = (short)selectedItem.Tag;
-                        
+
                         //Get Sample data 
                         List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
                         SampleData selectedSample = wavesList[fileRef];
@@ -62,7 +62,7 @@ namespace EuroSoundExplorer2
                         SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem);
                         if (soundToPlay != null)
                         {
-                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay.sampleRate, soundToPlay.pitch, soundToPlay.panning, soundToPlay.volume);
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay);
                             WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, fileRef + ".wav")), wavFile.ToSampleProvider());
                         }
                     }
@@ -229,8 +229,11 @@ namespace EuroSoundExplorer2
                     soundToPlay.PcmData[0] = decodedData;
                     soundToPlay.sampleRate = selectedSample.Frequency;
                     soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
-                    soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                    soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
                     soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
+                    soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
+                    soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                    soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                     soundToPlay.channels = 1;
                     soundToPlay.loopOffset = selectedSample.LoopStartOffset;
                     soundToPlay.isLooped = selectedSample.Flags == 1;
@@ -253,8 +256,11 @@ namespace EuroSoundExplorer2
                         soundToPlay.PcmData[0] = decodedData;
                         soundToPlay.sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
                         soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
-                        soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                        soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
                         soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
+                        soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
+                        soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                        soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                         soundToPlay.channels = 1;
                     }
                 }

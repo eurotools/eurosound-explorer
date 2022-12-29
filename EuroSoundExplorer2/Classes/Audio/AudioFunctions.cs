@@ -1,5 +1,4 @@
-﻿using MusX.Objects;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
 using System.IO;
@@ -26,89 +25,89 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateMonoLoopWav(int startPos, int _startLoop, bool flags, byte[] _pcmData, int _frequency, float _pitch, float _pan, float _volume)
+        internal IWaveProvider CreateMonoLoopWav(byte[] _pcmData, SoundFile _soundToPlay)
         {
-            RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
-            LoopStream loop = new LoopStream(provider, _startLoop) { EnableLooping = flags, Position = startPos };
-            PanningSampleProvider panProvider = new PanningSampleProvider(loop.ToSampleProvider()) { Pan = _pan };
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = _volume };
+            RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            LoopStream loop = new LoopStream(provider, _soundToPlay.loopOffset) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
+            PanningSampleProvider panProvider = new PanningSampleProvider(loop.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
 
             return volumeProvider.ToWaveProvider();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateMonoWav(byte[] _pcmData, int _frequency, float _pitch, float _pan, float _volume)
+        internal IWaveProvider CreateMonoWav(byte[] _pcmData, SoundFile _soundToPlay)
         {
-            RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
-            PanningSampleProvider panProvider = new PanningSampleProvider(provider.ToSampleProvider()) { Pan = _pan };
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = _volume };
+            RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            PanningSampleProvider panProvider = new PanningSampleProvider(provider.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
 
             return volumeProvider.ToWaveProvider();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateStereoLoopWav(int startPos, int _startLoop, bool flags, byte[][] _pcmData, int _frequency, float _pitch, float _volume)
+        internal IWaveProvider CreateStereoLoopWav(byte[][] _pcmData, SoundFile _soundToPlay)
         {
-            RawSourceWaveStream providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
-            LoopStream loopLeft = new LoopStream(providerLeft, _startLoop) { EnableLooping = flags, Position = startPos };
-            RawSourceWaveStream providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
-            LoopStream loopRight = new LoopStream(providerRight, _startLoop) { EnableLooping = flags, Position = startPos };
+            RawSourceWaveStream providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            LoopStream loopLeft = new LoopStream(providerLeft, _soundToPlay.loopOffset) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
+            RawSourceWaveStream providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            LoopStream loopRight = new LoopStream(providerRight, _soundToPlay.loopOffset) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
             MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { loopLeft, loopRight }, 2);
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = _volume };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
 
             return volumeProvider.ToWaveProvider();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateStereoWav(byte[][] _pcmData, int _frequency, float _pitch, float _volume)
+        internal IWaveProvider CreateStereoWav(byte[][] _pcmData, SoundFile _soundToPlay)
         {
-            IWaveProvider providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
-            IWaveProvider providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_frequency, _pitch), 16, 1));
+            IWaveProvider providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            IWaveProvider providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
             MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { providerLeft, providerRight }, 2);
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = _volume };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
 
             return volumeProvider.ToWaveProvider();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal float GetPitch(SampleInfo sampleInfo)
+        internal float GetPitch(SoundFile sampleInfo)
         {
             switch (random.Next(0, 3))
             {
                 case 0:
-                    return sampleInfo.Pitch + sampleInfo.PitchOffset;
+                    return sampleInfo.pitch + sampleInfo.pitchOffset;
                 case 1:
-                    return sampleInfo.Pitch + (sampleInfo.PitchOffset * -1);
+                    return sampleInfo.pitch + (sampleInfo.pitchOffset * -1);
                 default:
-                    return sampleInfo.Pitch;
+                    return sampleInfo.pitch;
             }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal float GetPan(SampleInfo sampleInfo)
+        internal float GetPan(SoundFile sampleInfo)
         {
             switch (random.Next(0, 3))
             {
                 case 0:
-                    return sampleInfo.Pan + sampleInfo.PanOffset;
+                    return sampleInfo.panning + sampleInfo.panningOffset;
                 case 1:
-                    return sampleInfo.Pan + (sampleInfo.PanOffset * -1);
+                    return sampleInfo.panning + (sampleInfo.panningOffset * -1);
                 default:
-                    return sampleInfo.Pan;
+                    return sampleInfo.panning;
             }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal float GetVolume(SampleInfo sampleInfo)
+        internal float GetVolume(SoundFile sampleInfo)
         {
             switch (random.Next(0, 3))
             {
                 case 0:
-                    return sampleInfo.Volume + sampleInfo.VolumeOffset;
+                    return sampleInfo.volume + sampleInfo.volumeOffset;
                 case 1:
-                    return sampleInfo.Volume + (sampleInfo.VolumeOffset * -1);
+                    return sampleInfo.volume + (sampleInfo.volumeOffset * -1);
                 default:
-                    return sampleInfo.Volume;
+                    return sampleInfo.volume;
             }
         }
 

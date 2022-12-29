@@ -14,6 +14,9 @@
         public float volume = 1;
         public float pitch;
         public float panning;
+        public float volumeOffset;
+        public float pitchOffset;
+        public float panningOffset;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
