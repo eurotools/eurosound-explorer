@@ -36,6 +36,7 @@ namespace EuroSoundExplorer2
             this.userControl_WaveViewer2 = new EuroSoundExplorer2.CustomControls.UserControl_WaveViewer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.ButtonAutoPlay = new System.Windows.Forms.ToolStripButton();
             this.ButtonPlay = new System.Windows.Forms.ToolStripButton();
             this.ButtonPause = new System.Windows.Forms.ToolStripButton();
             this.ButtonStop = new System.Windows.Forms.ToolStripButton();
@@ -46,7 +47,6 @@ namespace EuroSoundExplorer2
             this.SaveFileDlg_SaveFile = new System.Windows.Forms.SaveFileDialog();
             this.trackBarPosition = new System.Windows.Forms.TrackBar();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ButtonAutoPlay = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -60,7 +60,8 @@ namespace EuroSoundExplorer2
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 30);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -71,7 +72,7 @@ namespace EuroSoundExplorer2
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.userControl_WaveViewer2);
-            this.splitContainer1.Size = new System.Drawing.Size(565, 259);
+            this.splitContainer1.Size = new System.Drawing.Size(486, 259);
             this.splitContainer1.SplitterDistance = 123;
             this.splitContainer1.TabIndex = 14;
             // 
@@ -85,7 +86,7 @@ namespace EuroSoundExplorer2
             this.userControl_WaveViewer1.Name = "userControl_WaveViewer1";
             this.userControl_WaveViewer1.PenWidth = 1F;
             this.userControl_WaveViewer1.SamplesPerPixel = 128;
-            this.userControl_WaveViewer1.Size = new System.Drawing.Size(565, 123);
+            this.userControl_WaveViewer1.Size = new System.Drawing.Size(486, 123);
             this.userControl_WaveViewer1.StartPosition = ((long)(0));
             this.userControl_WaveViewer1.TabIndex = 0;
             this.userControl_WaveViewer1.WaveStream = null;
@@ -100,7 +101,7 @@ namespace EuroSoundExplorer2
             this.userControl_WaveViewer2.Name = "userControl_WaveViewer2";
             this.userControl_WaveViewer2.PenWidth = 1F;
             this.userControl_WaveViewer2.SamplesPerPixel = 128;
-            this.userControl_WaveViewer2.Size = new System.Drawing.Size(565, 132);
+            this.userControl_WaveViewer2.Size = new System.Drawing.Size(486, 132);
             this.userControl_WaveViewer2.StartPosition = ((long)(0));
             this.userControl_WaveViewer2.TabIndex = 1;
             this.userControl_WaveViewer2.WaveStream = null;
@@ -120,7 +121,7 @@ namespace EuroSoundExplorer2
             this.labelTotalTime});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(565, 30);
+            this.toolStrip1.Size = new System.Drawing.Size(486, 30);
             this.toolStrip1.TabIndex = 15;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -134,6 +135,17 @@ namespace EuroSoundExplorer2
             this.ButtonSave.Size = new System.Drawing.Size(25, 27);
             this.ButtonSave.Text = "Save";
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
+            // 
+            // ButtonAutoPlay
+            // 
+            this.ButtonAutoPlay.CheckOnClick = true;
+            this.ButtonAutoPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonAutoPlay.Image = ((System.Drawing.Image)(resources.GetObject("ButtonAutoPlay.Image")));
+            this.ButtonAutoPlay.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonAutoPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonAutoPlay.Name = "ButtonAutoPlay";
+            this.ButtonAutoPlay.Size = new System.Drawing.Size(33, 27);
+            this.ButtonAutoPlay.Text = "Auto Play";
             // 
             // ButtonPlay
             // 
@@ -202,12 +214,12 @@ namespace EuroSoundExplorer2
             this.trackBarPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarPosition.LargeChange = 10;
-            this.trackBarPosition.Location = new System.Drawing.Point(0, 293);
+            this.trackBarPosition.Location = new System.Drawing.Point(0, 292);
             this.trackBarPosition.Maximum = 100;
             this.trackBarPosition.Name = "trackBarPosition";
-            this.trackBarPosition.Size = new System.Drawing.Size(565, 45);
+            this.trackBarPosition.Size = new System.Drawing.Size(486, 45);
             this.trackBarPosition.TabIndex = 17;
-            this.trackBarPosition.TickFrequency = 3;
+            this.trackBarPosition.TickFrequency = 2;
             this.trackBarPosition.Scroll += new System.EventHandler(this.TrackBarPosition_Scroll);
             // 
             // timer1
@@ -216,22 +228,11 @@ namespace EuroSoundExplorer2
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // ButtonAutoPlay
-            // 
-            this.ButtonAutoPlay.CheckOnClick = true;
-            this.ButtonAutoPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonAutoPlay.Image = ((System.Drawing.Image)(resources.GetObject("ButtonAutoPlay.Image")));
-            this.ButtonAutoPlay.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.ButtonAutoPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonAutoPlay.Name = "ButtonAutoPlay";
-            this.ButtonAutoPlay.Size = new System.Drawing.Size(33, 27);
-            this.ButtonAutoPlay.Text = "Auto Play";
-            // 
             // FormMediaPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 340);
+            this.ClientSize = new System.Drawing.Size(486, 327);
             this.Controls.Add(this.trackBarPosition);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.splitContainer1);

@@ -39,6 +39,7 @@ namespace EuroSoundExplorer2
                     //Create item and add it to list
                     ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), waveData.Address.ToString(), waveData.MemorySize.ToString(), waveData.SampleSize.ToString(), waveData.Frequency.ToString(), waveData.LoopStartOffset.ToString(), waveData.Duration.ToString() })
                     {
+                        ImageIndex = 0,
                         Tag = index
                     };
                     if (waveData.LoopStartOffset > waveData.MemorySize)
@@ -61,6 +62,32 @@ namespace EuroSoundExplorer2
         private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             SendToMediaPlayer();
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  TOOLBAR BUTTONS
+        //-------------------------------------------------------------------------------------------
+        private void ButtonSaveRawData_Click(object sender, System.EventArgs e)
+        {
+            MenuItem_SaveRaw_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSaveAudio_Click(object sender, System.EventArgs e)
+        {
+            MenuItem_Save_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSaveToMediaPlayer_Click(object sender, System.EventArgs e)
+        {
+            MenuItem_Play_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonItemUsage_Click(object sender, System.EventArgs e)
+        {
+            MenuItem_ItemUsage_Click(sender, e);
         }
 
         //-------------------------------------------------------------------------------------------

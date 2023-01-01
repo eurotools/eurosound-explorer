@@ -40,8 +40,8 @@ namespace EuroSoundExplorer2
             this.MenuItem_Separator = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_DataViewer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnTreeView = new System.Windows.Forms.ToolStripButton();
             this.btnListView = new System.Windows.Forms.ToolStripButton();
+            this.btnTreeView = new System.Windows.Forms.ToolStripButton();
             this.btnReloadList = new System.Windows.Forms.ToolStripButton();
             this.btnReloadHashCodes = new System.Windows.Forms.ToolStripButton();
             this.labelTotal = new System.Windows.Forms.ToolStripLabel();
@@ -128,18 +128,6 @@ namespace EuroSoundExplorer2
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // btnTreeView
-            // 
-            this.btnTreeView.CheckOnClick = true;
-            this.btnTreeView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnTreeView.Image = ((System.Drawing.Image)(resources.GetObject("btnTreeView.Image")));
-            this.btnTreeView.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnTreeView.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnTreeView.Name = "btnTreeView";
-            this.btnTreeView.Size = new System.Drawing.Size(26, 27);
-            this.btnTreeView.Text = "Tree View";
-            this.btnTreeView.Click += new System.EventHandler(this.BtnTreeView_Click);
-            // 
             // btnListView
             // 
             this.btnListView.Checked = true;
@@ -153,6 +141,18 @@ namespace EuroSoundExplorer2
             this.btnListView.Size = new System.Drawing.Size(26, 27);
             this.btnListView.Text = "List View";
             this.btnListView.Click += new System.EventHandler(this.BtnListView_Click);
+            // 
+            // btnTreeView
+            // 
+            this.btnTreeView.CheckOnClick = true;
+            this.btnTreeView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnTreeView.Image = ((System.Drawing.Image)(resources.GetObject("btnTreeView.Image")));
+            this.btnTreeView.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnTreeView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnTreeView.Name = "btnTreeView";
+            this.btnTreeView.Size = new System.Drawing.Size(26, 27);
+            this.btnTreeView.Text = "Tree View";
+            this.btnTreeView.Click += new System.EventHandler(this.BtnTreeView_Click);
             // 
             // btnReloadList
             // 
@@ -196,6 +196,7 @@ namespace EuroSoundExplorer2
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
             this.treeView1.ImageIndex = 0;
             this.treeView1.ImageList = this.imageList1;
             this.treeView1.Location = new System.Drawing.Point(0, 30);
@@ -205,11 +206,15 @@ namespace EuroSoundExplorer2
             this.treeView1.StateImageList = this.imageList1;
             this.treeView1.TabIndex = 2;
             this.treeView1.Visible = false;
+            this.treeView1.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.TreeView1_BeforeCollapse);
+            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.TreeView1_BeforeExpand);
+            this.treeView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TreeView1_MouseDoubleClick);
+            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TreeView1_MouseDown);
             // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
             this.imageList1.Images.SetKeyName(0, "folderClosed.png");
             this.imageList1.Images.SetKeyName(1, "folderOpen.png");
             this.imageList1.Images.SetKeyName(2, "SoundBankIcon.png");
@@ -235,6 +240,7 @@ namespace EuroSoundExplorer2
             this.lvwFiles.Margin = new System.Windows.Forms.Padding(0);
             this.lvwFiles.Name = "lvwFiles";
             this.lvwFiles.Size = new System.Drawing.Size(437, 343);
+            this.lvwFiles.SmallImageList = this.imageList1;
             this.lvwFiles.TabIndex = 0;
             this.lvwFiles.UseCompatibleStateImageBehavior = false;
             this.lvwFiles.View = System.Windows.Forms.View.Details;

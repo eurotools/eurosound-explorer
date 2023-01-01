@@ -1,4 +1,5 @@
 ﻿using EuroSoundExplorer2.Classes;
+using EuroSoundExplorer2.CustomControls;
 using MusX;
 using MusX.Objects;
 using NAudio.Wave;
@@ -33,8 +34,8 @@ namespace EuroSoundExplorer2
             List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
 
             //Print Samples Info
-            listView1.BeginUpdate();
-            listView1.Items.Clear();
+            lvwStreamData.BeginUpdate();
+            lvwStreamData.Items.Clear();
             for (int i = 0; i < streamedSamples.Count; i++)
             {
                 StreamSample currentSample = streamedSamples[i];
@@ -43,6 +44,7 @@ namespace EuroSoundExplorer2
                 //Create item and add it to list
                 ListViewItem listViewItem2 = new ListViewItem(new string[] { i.ToString(), "??", currentSample.BlockPosition.ToString(), currentSample.MarkerSize.ToString(), currentSample.AudioOffset.ToString(), currentSample.AudioSize.ToString(), currentSample.BaseVolume.ToString() })
                 {
+                    ImageIndex = 0,
                     Tag = i
                 };
 
@@ -72,9 +74,9 @@ namespace EuroSoundExplorer2
                         listViewItem2.SubItems[j].ForeColor = Color.Red;
                     }
                 }
-                listView1.Items.Add(listViewItem2);
+                lvwStreamData.Items.Add(listViewItem2);
             }
-            listView1.EndUpdate();
+            lvwStreamData.EndUpdate();
 
             //Enable or disable button
             SfxHeaderData streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
@@ -110,7 +112,7 @@ namespace EuroSoundExplorer2
         private void MenuItem_Save_Click(object sender, EventArgs e)
         {
             //Output Selected Files
-            if (listView1.SelectedItems.Count > 0)
+            if (lvwStreamData.SelectedItems.Count > 0)
             {
                 //Ask user for an output file
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
@@ -119,7 +121,7 @@ namespace EuroSoundExplorer2
                     List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
 
                     //Output samples
-                    foreach (ListViewItem selectedItem in listView1.SelectedItems)
+                    foreach (ListViewItem selectedItem in lvwStreamData.SelectedItems)
                     {
                         SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem, streamedSamples, sampleRate);
                         if (soundToPlay != null)
@@ -136,13 +138,13 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_SendToMediaPlayer_Click(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 1)
+            if (lvwStreamData.SelectedItems.Count == 1)
             {
                 int sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
                 List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
 
                 //Get Sound data and play
-                SoundFile soundToPlay = GetSoundFileFromListViewItem(listView1.SelectedItems[0], streamedSamples, sampleRate);
+                SoundFile soundToPlay = GetSoundFileFromListViewItem(lvwStreamData.SelectedItems[0], streamedSamples, sampleRate);
                 if (soundToPlay != null)
                 {
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
@@ -155,18 +157,22 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------
         private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 1)
+            //If the flag is on execute this method
+            if (ButtonDisplayMarkers.Checked)
             {
-                //Get sample
-                List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
-                int selectedItemIndex = (int)listView1.SelectedItems[0].Tag;
-
-                //Display Data
-                if (selectedItemIndex <= streamedSamples.Count)
+                if (lvwStreamData.SelectedItems.Count == 1)
                 {
-                    StreamSample sampleToDisplay = streamedSamples[selectedItemIndex];
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(sampleToDisplay);
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(sampleToDisplay);
+                    //Get sample
+                    List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+                    int selectedItemIndex = (int)lvwStreamData.SelectedItems[0].Tag;
+
+                    //Display Data
+                    if (selectedItemIndex <= streamedSamples.Count)
+                    {
+                        StreamSample sampleToDisplay = streamedSamples[selectedItemIndex];
+                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(sampleToDisplay);
+                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(sampleToDisplay);
+                    }
                 }
             }
         }
@@ -179,10 +185,10 @@ namespace EuroSoundExplorer2
             List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
             if (streamedSamples.Count > 0)
             {
-                for (int i = 0; i < listView1.Items.Count; i++)
+                for (int i = 0; i < lvwStreamData.Items.Count; i++)
                 {
                     //Get item and IMA Data
-                    ListViewItem currentItem = listView1.Items[i];
+                    ListViewItem currentItem = lvwStreamData.Items[i];
                     byte[] ImaData = streamedSamples[(int)currentItem.Tag].EncodedData;
 
                     //Show Results
@@ -190,14 +196,29 @@ namespace EuroSoundExplorer2
                     {
                         currentItem.SubItems[1].Text = "INVALID";
                         currentItem.ForeColor = Color.Red;
+                        ListView_ColumnSortingClick.AddImageToSubItem(currentItem, 1, 2, lvwStreamData.Handle);
                     }
                     else
                     {
                         currentItem.SubItems[1].Text = "OK";
                         currentItem.ForeColor = SystemColors.ControlText;
+                        ListView_ColumnSortingClick.AddImageToSubItem(currentItem, 1, 1, lvwStreamData.Handle);
+
                     }
                 }
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSaveFile_Click(object sender, EventArgs e)
+        {
+            MenuItem_Save_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSendToMediaPlayer_Click(object sender, EventArgs e)
+        {
+            MenuItem_SendToMediaPlayer_Click(sender, e);
         }
 
         //-------------------------------------------------------------------------------------------

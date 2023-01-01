@@ -25,6 +25,31 @@ namespace EuroSoundExplorer2
         {
             InitializeComponent();
         }
+        //-------------------------------------------------------------------------------------------
+        //  TOOLBAR BUTTONS
+        //-------------------------------------------------------------------------------------------
+        private void ButtonSaveRawData_Click(object sender, EventArgs e)
+        {
+            MenuItem_SaveRaw_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSaveAudio_Click(object sender, EventArgs e)
+        {
+            MenuItem_SaveSound_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonPlayWithoutEffects_Click(object sender, EventArgs e)
+        {
+            MenuItem_SendToMediaPlayer_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonItemUsage_Click(object sender, EventArgs e)
+        {
+            MenuItem_Usage_Click(sender, e);
+        }
 
         //-------------------------------------------------------------------------------------------
         //  CONTEXT MENU
@@ -103,7 +128,10 @@ namespace EuroSoundExplorer2
             listView1.Items.Clear();
             foreach (SampleInfo samplePoolItem in sampleData.samplesList)
             {
-                ListViewItem listViewItem = new ListViewItem(new string[] { "", "", "", "", "", "", "" });
+                ListViewItem listViewItem = new ListViewItem(new string[] { "", "", "", "", "", "", "" })
+                {
+                    ImageIndex = 0
+                };
                 short finalFileRef = samplePoolItem.FileRef;
 
                 //Check for SubSFX
@@ -229,12 +257,15 @@ namespace EuroSoundExplorer2
                     soundToPlay = new SoundFile();
                     soundToPlay.PcmData[0] = decodedData;
                     soundToPlay.sampleRate = selectedSample.Frequency;
-                    soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
-                    soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
-                    soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
-                    soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
-                    soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
-                    soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
+                    if (ButtonApplyEffects.Checked)
+                    {
+                        soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
+                        soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
+                        soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
+                        soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
+                        soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                        soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
+                    }
                     soundToPlay.channels = 1;
                     soundToPlay.loopOffset = selectedSample.LoopStartOffset;
                     soundToPlay.isLooped = selectedSample.Flags == 1;
@@ -256,12 +287,15 @@ namespace EuroSoundExplorer2
                         soundToPlay = new SoundFile();
                         soundToPlay.PcmData[0] = decodedData;
                         soundToPlay.sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
-                        soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
-                        soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
-                        soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
-                        soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
-                        soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
-                        soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
+                        if (ButtonApplyEffects.Checked)
+                        {
+                            soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
+                            soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
+                            soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
+                            soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
+                            soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
+                            soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
+                        }
                         soundToPlay.channels = 1;
                     }
                 }

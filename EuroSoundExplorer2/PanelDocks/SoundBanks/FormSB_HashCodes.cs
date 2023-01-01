@@ -1,4 +1,5 @@
-﻿using MusX.Objects;
+﻿using EuroSoundExplorer2.CustomControls;
+using MusX.Objects;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -44,9 +45,11 @@ namespace EuroSoundExplorer2
                         itemToAdd.ForeColor = Color.Red;
                         itemToAdd.SubItems[1].Text = "Not Found";
                     }
-
                     //Add item to listview
                     listView1.Items.Add(itemToAdd);
+
+                    //Add another imageIndex
+                    ListView_ColumnSortingClick.AddImageToSubItem(itemToAdd, 1, 2, listView1.Handle);
                 }
                 listView1.EndUpdate();
             }
@@ -55,38 +58,34 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         private void ListView1_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            SortedDictionary<uint, Sample> dictToShow = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxSamples;
-
-            if (listView1.SelectedItems.Count == 1)
+            //If one of these options is checked, execute this method
+            if (ButtonListProperties.Checked || ButtonSendToSamplePool.Checked)
             {
-                uint hashCode = (uint)listView1.SelectedItems[0].Tag;
-                if (dictToShow.ContainsKey(hashCode))
+                FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+                SortedDictionary<uint, Sample> dictToShow = parentForm.pnlSoundBankFiles.sfxSamples;
+
+                //Ensure that we have one item selected in the listview
+                if (listView1.SelectedItems.Count == 1)
                 {
-                    Sample sampleData = dictToShow[hashCode];
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbSamplePool.ShowSampleData(sampleData);
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbSampleProps.ShowSampleData(sampleData);
+                    uint hashCode = (uint)listView1.SelectedItems[0].Tag;
+                    if (dictToShow.ContainsKey(hashCode))
+                    {
+                        Sample sampleData = dictToShow[hashCode];
+
+                        //Show Samples
+                        if (ButtonSendToSamplePool.Checked)
+                        {
+                            parentForm.pnlSbSamplePool.ShowSampleData(sampleData);
+                        }
+
+                        //Show SFX properties
+                        if (ButtonListProperties.Checked)
+                        {
+                            parentForm.pnlSbSampleProps.ShowSampleData(sampleData);
+                        }
+                    }
                 }
             }
-        }
-
-        private void listView1_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
-        {
-            e.DrawBackground();
-            Size sz = listView1.SmallImageList.ImageSize;
-            int idx = 1;
-            if (e.SubItem.Tag != null) idx = (int)e.SubItem.Tag;
-            Bitmap bmp = (Bitmap)listView1.SmallImageList.Images[idx];
-            Rectangle rTgt = new Rectangle(e.Bounds.Location, sz);
-            bool selected = e.ItemState.HasFlag(ListViewItemStates.Selected);
-            // optionally show selection:
-            if (selected) e.Graphics.FillRectangle(Brushes.CornflowerBlue, e.Bounds);
-
-            if (bmp != null) e.Graphics.DrawImage(bmp, rTgt);
-
-            // optionally draw text
-            e.Graphics.DrawString(e.SubItem.Text, listView1.Font,
-                                  selected ? Brushes.White : Brushes.Black,
-                                  e.Bounds.X + sz.Width + 2, e.Bounds.Y + 2);
         }
     }
 

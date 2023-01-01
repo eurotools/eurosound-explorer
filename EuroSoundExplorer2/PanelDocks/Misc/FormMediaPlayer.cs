@@ -134,7 +134,7 @@ namespace EuroSoundExplorer2
         {
             if (_waveOut != null)
             {
-                TimeSpan streamPos = TimeSpan.FromSeconds(providerRight.TotalTime.TotalSeconds * trackBarPosition.Value / 100.0);
+                TimeSpan streamPos = TimeSpan.FromSeconds(providerLeft.TotalTime.TotalSeconds * trackBarPosition.Value / 100.0);
                 if (soundToPlay.channels > 1)
                 {
                     providerRight.CurrentTime = streamPos;

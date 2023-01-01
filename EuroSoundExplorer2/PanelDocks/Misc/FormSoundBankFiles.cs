@@ -135,11 +135,74 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------
+        //  TREEVIEW EVENTS
+        //-------------------------------------------------------------------------------------------
+        private void TreeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node != null && e.Node.Tag == null)
+            {
+                e.Node.ImageIndex = 1;
+                e.Node.SelectedImageIndex = 1;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void TreeView1_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (e.Node != null && e.Node.Tag == null)
+            {
+                e.Node.ImageIndex = 0;
+                e.Node.SelectedImageIndex = 0;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void TreeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (treeView1.SelectedNode != null && treeView1.SelectedNode.Tag != null)
+            {
+                //Get folder path
+                string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
+                string filePath = Path.Combine(parentFolder, treeView1.SelectedNode.Name);
+
+                //Get type of file
+                FileType fileType = (FileType)treeView1.SelectedNode.Tag;
+                switch (fileType)
+                {
+                    case FileType.SoundBank:
+                        LoadSelectedSfx(filePath);
+                        break;
+                    case FileType.Stream:
+                        LoadSelectedStream(filePath);
+                        break;
+                    case FileType.Music:
+                        LoadSelectedMusic(filePath);
+                        break;
+                    case FileType.SBI:
+                        LoadSelectedSbi(filePath);
+                        break;
+                    case FileType.ProjectDetails:
+                        LoadSelectedProjectDetails(filePath);
+                        break;
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void TreeView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (treeView1.SelectedNode != null)
+            {
+                treeView1.SelectedNode = treeView1.GetNodeAt(e.X, e.Y);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------
         //  CONTEXT MENU
         //-------------------------------------------------------------------------------------------
         private void MenuItem_Load_Click(object sender, EventArgs e)
         {
-            if (lvwFiles.SelectedItems.Count == 1)
+            if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
             {
                 //Get folder path
                 string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
@@ -171,14 +234,22 @@ namespace EuroSoundExplorer2
                         break;
                 }
             }
+            else if (treeView1.SelectedNode != null)
+            {
+                TreeView1_MouseDoubleClick(sender, null);
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_Reload_Click(object sender, EventArgs e)
         {
-            if (lvwFiles.SelectedItems.Count == 1)
+            if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
             {
                 MenuItem_Load_Click(sender, e);
+            }
+            else if (treeView1.SelectedNode != null)
+            {
+                MenuItem_Load_Click(sender, null);
             }
         }
 
@@ -191,6 +262,10 @@ namespace EuroSoundExplorer2
                 {
                     ClearLoadedData((FileType)itemToUnload.Tag);
                 }
+            }
+            else if (treeView1.SelectedNode != null && treeView1.SelectedNode.Tag != null)
+            {
+                ClearLoadedData((FileType)treeView1.SelectedNode.Tag);
             }
         }
 
@@ -274,10 +349,20 @@ namespace EuroSoundExplorer2
                     soundBankHeaderData = new SfxHeaderData();
                     sfxSamples.Clear();
                     sfxStoredData.Clear();
+
+                    //Clear UI
+                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbHashCodes.listView1.Items.Clear();
+                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlWavHeaderData.listView1.Items.Clear();
+                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbSamplePool.listView1.Items.Clear();
                     break;
                 case FileType.Stream:
                     streamBankHeaderData = new SfxHeaderData();
                     streamSamples.Clear();
+
+                    //Clear UI
+                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.lvwMarkers.Items.Clear();
+                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.lvwStartMarkers.Items.Clear();
+                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStreamData.lvwStreamData.Items.Clear();
                     break;
                 case FileType.Music:
                     musicBankHeaderData = new SfxHeaderData();
@@ -352,7 +437,7 @@ namespace EuroSoundExplorer2
                             GetNumberOfSFXs(files[i], fileType).ToString(),
                             fileType.ToString()
                     })
-                    { UseItemStyleForSubItems = false, Tag = fileType };
+                    { UseItemStyleForSubItems = false, Tag = fileType, ImageIndex = 2 };
 
                     //Check if we need to highlight this item
                     if (itemToAdd.SubItems[1].Text.StartsWith("**"))
@@ -401,6 +486,8 @@ namespace EuroSoundExplorer2
                     //Create Node
                     TreeNode fileNode = new TreeNode(file.Name)
                     {
+                        Name = file.FullName,
+                        Text = file.Name,
                         Tag = fileType,
                         ImageIndex = 2,
                         SelectedImageIndex = 2

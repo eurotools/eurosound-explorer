@@ -147,7 +147,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox Textbox_StartMarkers_Count;
-        private CustomControls.ListView_ColumnSortingClick lvwStartMarkers;
         private System.Windows.Forms.ColumnHeader colNo;
         private System.Windows.Forms.ColumnHeader colIndex;
         private System.Windows.Forms.ColumnHeader colPosition;
@@ -155,5 +154,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ColumnHeader colLoopStart;
         private System.Windows.Forms.ColumnHeader colLoopMarkerIndex;
         private System.Windows.Forms.ColumnHeader colMarkerPosition;
+        protected internal CustomControls.ListView_ColumnSortingClick lvwStartMarkers;
     }
 }

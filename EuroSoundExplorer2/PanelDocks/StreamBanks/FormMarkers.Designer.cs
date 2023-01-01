@@ -138,8 +138,6 @@ namespace EuroSoundExplorer2
         }
 
         #endregion
-
-        private CustomControls.ListView_ColumnSortingClick lvwMarkers;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox txtMarkerCount;
@@ -149,5 +147,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ColumnHeader colMarkerType;
         private System.Windows.Forms.ColumnHeader colLoopStart;
         private System.Windows.Forms.ColumnHeader colLoopMarkerIndex;
+        protected internal CustomControls.ListView_ColumnSortingClick lvwMarkers;
     }
 }

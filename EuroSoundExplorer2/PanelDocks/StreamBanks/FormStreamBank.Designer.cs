@@ -33,11 +33,16 @@ namespace EuroSoundExplorer2
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStreamBank));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonValidateAllStreams = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ButtonSaveFile = new System.Windows.Forms.ToolStripButton();
+            this.ButtonSendToMediaPlayer = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ButtonDisplayMarkers = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SendToMediaPlayer = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.lvwStreamData = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.Col_No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Adpcm = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_MarkerOffset = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -45,6 +50,7 @@ namespace EuroSoundExplorer2
             this.Col_AudioOffset = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_AudioLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_BaseVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,10 +59,15 @@ namespace EuroSoundExplorer2
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ButtonValidateAllStreams});
+            this.ButtonValidateAllStreams,
+            this.toolStripSeparator2,
+            this.ButtonSaveFile,
+            this.ButtonSendToMediaPlayer,
+            this.toolStripSeparator1,
+            this.ButtonDisplayMarkers});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(590, 28);
+            this.toolStrip1.Size = new System.Drawing.Size(590, 35);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -68,9 +79,54 @@ namespace EuroSoundExplorer2
             this.ButtonValidateAllStreams.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonValidateAllStreams.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonValidateAllStreams.Name = "ButtonValidateAllStreams";
-            this.ButtonValidateAllStreams.Size = new System.Drawing.Size(26, 25);
+            this.ButtonValidateAllStreams.Size = new System.Drawing.Size(31, 32);
             this.ButtonValidateAllStreams.Text = "Validate All Streams";
             this.ButtonValidateAllStreams.Click += new System.EventHandler(this.ButtonValidateAllStreams_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 35);
+            // 
+            // ButtonSaveFile
+            // 
+            this.ButtonSaveFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonSaveFile.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSaveFile.Image")));
+            this.ButtonSaveFile.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonSaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSaveFile.Name = "ButtonSaveFile";
+            this.ButtonSaveFile.Size = new System.Drawing.Size(25, 32);
+            this.ButtonSaveFile.Text = "Save File";
+            this.ButtonSaveFile.Click += new System.EventHandler(this.ButtonSaveFile_Click);
+            // 
+            // ButtonSendToMediaPlayer
+            // 
+            this.ButtonSendToMediaPlayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonSendToMediaPlayer.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSendToMediaPlayer.Image")));
+            this.ButtonSendToMediaPlayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonSendToMediaPlayer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSendToMediaPlayer.Name = "ButtonSendToMediaPlayer";
+            this.ButtonSendToMediaPlayer.Size = new System.Drawing.Size(34, 32);
+            this.ButtonSendToMediaPlayer.Text = "Send To Media Player";
+            this.ButtonSendToMediaPlayer.Click += new System.EventHandler(this.ButtonSendToMediaPlayer_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 35);
+            // 
+            // ButtonDisplayMarkers
+            // 
+            this.ButtonDisplayMarkers.Checked = true;
+            this.ButtonDisplayMarkers.CheckOnClick = true;
+            this.ButtonDisplayMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ButtonDisplayMarkers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonDisplayMarkers.Image = ((System.Drawing.Image)(resources.GetObject("ButtonDisplayMarkers.Image")));
+            this.ButtonDisplayMarkers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonDisplayMarkers.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonDisplayMarkers.Name = "ButtonDisplayMarkers";
+            this.ButtonDisplayMarkers.Size = new System.Drawing.Size(35, 32);
+            this.ButtonDisplayMarkers.Text = "Show Markers";
             // 
             // contextMenuStrip1
             // 
@@ -98,12 +154,12 @@ namespace EuroSoundExplorer2
             this.MenuItem_SendToMediaPlayer.Text = "Send To Media Player";
             this.MenuItem_SendToMediaPlayer.Click += new System.EventHandler(this.MenuItem_SendToMediaPlayer_Click);
             // 
-            // listView1
+            // lvwStreamData
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.lvwStreamData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvwStreamData.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Col_No,
             this.Col_Adpcm,
             this.Col_MarkerOffset,
@@ -111,19 +167,20 @@ namespace EuroSoundExplorer2
             this.Col_AudioOffset,
             this.Col_AudioLength,
             this.Col_BaseVolume});
-            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
-            this.listView1.FullRowSelect = true;
-            this.listView1.GridLines = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 28);
-            this.listView1.Margin = new System.Windows.Forms.Padding(0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(590, 498);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.ListView1_SelectedIndexChanged);
-            this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_MouseDoubleClick);
+            this.lvwStreamData.ContextMenuStrip = this.contextMenuStrip1;
+            this.lvwStreamData.FullRowSelect = true;
+            this.lvwStreamData.GridLines = true;
+            this.lvwStreamData.HideSelection = false;
+            this.lvwStreamData.Location = new System.Drawing.Point(0, 35);
+            this.lvwStreamData.Margin = new System.Windows.Forms.Padding(0);
+            this.lvwStreamData.Name = "lvwStreamData";
+            this.lvwStreamData.Size = new System.Drawing.Size(590, 491);
+            this.lvwStreamData.SmallImageList = this.imageList1;
+            this.lvwStreamData.TabIndex = 0;
+            this.lvwStreamData.UseCompatibleStateImageBehavior = false;
+            this.lvwStreamData.View = System.Windows.Forms.View.Details;
+            this.lvwStreamData.SelectedIndexChanged += new System.EventHandler(this.ListView1_SelectedIndexChanged);
+            this.lvwStreamData.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_MouseDoubleClick);
             // 
             // Col_No
             // 
@@ -159,13 +216,21 @@ namespace EuroSoundExplorer2
             this.Col_BaseVolume.Text = "Base Volume";
             this.Col_BaseVolume.Width = 90;
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "File.png");
+            this.imageList1.Images.SetKeyName(1, "SatusOK.png");
+            this.imageList1.Images.SetKeyName(2, "SatusError.png");
+            // 
             // FormStreamBank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 526);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.lvwStreamData);
             this.HideOnClose = true;
             this.Name = "FormStreamBank";
             this.TabText = "Stream Data";
@@ -179,8 +244,6 @@ namespace EuroSoundExplorer2
         }
 
         #endregion
-
-        private CustomControls.ListView_ColumnSortingClick listView1;
         private System.Windows.Forms.ColumnHeader Col_No;
         private System.Windows.Forms.ColumnHeader Col_Adpcm;
         private System.Windows.Forms.ColumnHeader Col_MarkerOffset;
@@ -194,5 +257,12 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Save;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SendToMediaPlayer;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ToolStripButton ButtonSaveFile;
+        private System.Windows.Forms.ToolStripButton ButtonSendToMediaPlayer;
+        protected internal CustomControls.ListView_ColumnSortingClick lvwStreamData;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton ButtonDisplayMarkers;
     }
 }
