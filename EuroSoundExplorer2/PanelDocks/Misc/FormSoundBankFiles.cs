@@ -23,6 +23,7 @@ namespace EuroSoundExplorer2
         private readonly StreamBankReader streamReader = new StreamBankReader();
         private readonly MusicBankReader musicReader = new MusicBankReader();
         private readonly SbiReader sbiReader = new SbiReader();
+        private readonly ProjectDetailsReader projDetailsReader = new ProjectDetailsReader();
 
         //SoundBanks
         public SfxHeaderData soundBankHeaderData = new SfxHeaderData();
@@ -41,6 +42,10 @@ namespace EuroSoundExplorer2
         public SfxHeaderData sbiBankHeaderData = new SfxHeaderData();
         public SbiFile sbiFileData = new SbiFile();
 
+        //Project Details
+        public SfxHeaderData projDetailsHeaderData = new SfxHeaderData();
+        public ProjectDetails projDetailsData = new ProjectDetails();
+
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
         //-------------------------------------------------------------------------------------------
@@ -49,10 +54,8 @@ namespace EuroSoundExplorer2
             InitializeComponent();
         }
 
-        //-------------------------------------------------------------------------------------------
-        //  FORM BUTTONS
-        //-------------------------------------------------------------------------------------------
-        private void BtnReloadList_Click(object sender, EventArgs e)
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public void LoadData()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
             HashcodeParser hashTable = parentForm.hashTable;
@@ -62,43 +65,58 @@ namespace EuroSoundExplorer2
 
             if (Directory.Exists(folder))
             {
-                string[] files = Directory.GetFiles(folder, "*.sfx", SearchOption.AllDirectories);
-                if (files.Length > 0)
+                if (btnListView.Checked)
                 {
-                    lvwFiles.BeginUpdate();
-                    lvwFiles.Items.Clear();
-                    for (int i = 0; i < files.Length; i++)
-                    {
-                        int hashCode = reader.GetFileHashCode(files[i]);
-
-                        //Get version of MusX Files
-                        FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, files[i], selectedTitle);
-
-                        //Create item
-                        ListViewItem itemToAdd = new ListViewItem(new string[]
-                        {
-                            string.Format("0x{0:X8}", hashCode),
-                            hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(fileType, hashCode, selectedVersion, selectedTitle)),
-                            files[i].Substring(folder.Length),
-                            "Unloaded",
-                            GenericMethods.GetFileSize(files[i]),
-                            GetNumberOfSFXs(files[i], fileType).ToString(),
-                            fileType.ToString()
-                        })
-                        { UseItemStyleForSubItems = false, Tag = fileType };
-
-                        //Check if we need to highlight this item
-                        if (itemToAdd.SubItems[1].Text.StartsWith("**"))
-                        {
-                            itemToAdd.SubItems[1].ForeColor = Color.Red;
-                        }
-
-                        //Add item to listview
-                        lvwFiles.Items.Add(itemToAdd);
-                    }
-                    lvwFiles.EndUpdate();
+                    FillListView(folder, selectedVersion, selectedTitle, hashTable);
+                    txtTotal.Text = lvwFiles.Items.Count.ToString();
                 }
-                txtTotal.Text = lvwFiles.Items.Count.ToString();
+                else
+                {
+                    FillTreeView(folder, selectedVersion, selectedTitle);
+                    txtTotal.Text = treeView1.GetNodeCount(true).ToString();
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  FORM BUTTONS
+        //-------------------------------------------------------------------------------------------
+        private void BtnReloadList_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void BtnTreeView_Click(object sender, EventArgs e)
+        {
+            if (btnListView.Checked)
+            {
+                btnListView.Checked = false;
+                lvwFiles.Visible = false;
+                lvwFiles.Items.Clear();
+                treeView1.Visible = true;
+                BtnReloadList_Click(sender, e);
+            }
+            else
+            {
+                btnTreeView.Checked = true;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void BtnListView_Click(object sender, EventArgs e)
+        {
+            if (btnTreeView.Checked)
+            {
+                btnTreeView.Checked = false;
+                treeView1.Visible = false;
+                treeView1.Nodes.Clear();
+                lvwFiles.Visible = true;
+                BtnReloadList_Click(sender, e);
+            }
+            else
+            {
+                btnListView.Checked = true;
             }
         }
 
@@ -108,7 +126,9 @@ namespace EuroSoundExplorer2
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).hashTable.LoadHashTable();
         }
 
-        //-------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------
+        //  LISTVIEW EVENTS
+        //-------------------------------------------------------------------------------------------
         private void LvwFiles_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             MenuItem_Load_Click(sender, e);
@@ -143,6 +163,10 @@ namespace EuroSoundExplorer2
                         break;
                     case FileType.SBI:
                         LoadSelectedSbi(filePath);
+                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                        break;
+                    case FileType.ProjectDetails:
+                        LoadSelectedProjectDetails(filePath);
                         lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                         break;
                 }
@@ -227,6 +251,20 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void LoadSelectedProjectDetails(string filePath)
+        {
+            ClearLoadedData(FileType.ProjectDetails);
+
+            //Load data
+            projDetailsHeaderData = projDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            projDetailsData = projDetailsReader.ReadProjectFile(filePath, projDetailsHeaderData);
+
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlProjDetailsMemSlots.ShowData();
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlProjDetailsSoundBanks.ShowData();
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlProjDetailsData.ShowData();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void ClearLoadedData(FileType fileType)
         {
             //Clear loaded data
@@ -248,6 +286,10 @@ namespace EuroSoundExplorer2
                 case FileType.SBI:
                     sbiBankHeaderData = new SfxHeaderData();
                     sbiFileData = new SbiFile();
+                    break;
+                case FileType.ProjectDetails:
+                    projDetailsHeaderData = new SfxHeaderData();
+                    projDetailsData = new ProjectDetails();
                     break;
             }
 
@@ -282,6 +324,91 @@ namespace EuroSoundExplorer2
                     break;
             }
             return total;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void FillListView(string folder, int selectedVersion, Title selectedTitle, HashcodeParser hashTable)
+        {
+            string[] files = Directory.GetFiles(folder, "*.sfx", SearchOption.AllDirectories);
+            if (files.Length > 0)
+            {
+                lvwFiles.BeginUpdate();
+                lvwFiles.Items.Clear();
+                for (int i = 0; i < files.Length; i++)
+                {
+                    int hashCode = reader.GetFileHashCode(files[i]);
+
+                    //Get version of MusX Files
+                    FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, files[i], selectedTitle);
+
+                    //Create item
+                    ListViewItem itemToAdd = new ListViewItem(new string[]
+                    {
+                            string.Format("0x{0:X8}", hashCode),
+                            hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(fileType, hashCode, selectedVersion, selectedTitle)),
+                            files[i].Substring(folder.Length),
+                            "Unloaded",
+                            GenericMethods.GetFileSize(files[i]),
+                            GetNumberOfSFXs(files[i], fileType).ToString(),
+                            fileType.ToString()
+                    })
+                    { UseItemStyleForSubItems = false, Tag = fileType };
+
+                    //Check if we need to highlight this item
+                    if (itemToAdd.SubItems[1].Text.StartsWith("**"))
+                    {
+                        itemToAdd.SubItems[1].ForeColor = Color.Red;
+                    }
+
+                    //Add item to listview
+                    lvwFiles.Items.Add(itemToAdd);
+                }
+                lvwFiles.EndUpdate();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void FillTreeView(string folder, int selectedVersion, Title selectedTitle)
+        {
+            treeView1.BeginUpdate();
+            DirectoryInfo rootDirectoryInfo = new DirectoryInfo(folder);
+            treeView1.Nodes.Add(CreateDirectoryNode(rootDirectoryInfo, selectedVersion, selectedTitle));
+            treeView1.EndUpdate();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo, int selectedVersion, Title selectedTitle)
+        {
+            TreeNode directoryNode = new TreeNode(directoryInfo.Name);
+            foreach (DirectoryInfo directory in directoryInfo.GetDirectories())
+            {
+                //Create node and set image
+                TreeNode nodeData = CreateDirectoryNode(directory, selectedVersion, selectedTitle);
+                nodeData.ImageIndex = 0;
+                nodeData.SelectedImageIndex = 0;
+                //Add node
+                directoryNode.Nodes.Add(nodeData);
+            }
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                if (Path.GetExtension(file.Name).Equals(".sfx", StringComparison.OrdinalIgnoreCase))
+                {
+                    int hashCode = reader.GetFileHashCode(file.FullName);
+
+                    //Get version of MusX Files
+                    FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, file.FullName, selectedTitle);
+
+                    //Create Node
+                    TreeNode fileNode = new TreeNode(file.Name)
+                    {
+                        Tag = fileType,
+                        ImageIndex = 2,
+                        SelectedImageIndex = 2
+                    };
+                    directoryNode.Nodes.Add(fileNode);
+                }
+            }
+            return directoryNode;
         }
     }
 

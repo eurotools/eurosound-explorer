@@ -33,9 +33,9 @@ namespace EuroSoundExplorer2
         {
             using (StreamWriter sw = new StreamWriter(File.Open("ESEx\\General Settings.ini", FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
+                sw.WriteLine("SoundhFile={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile);
                 sw.WriteLine("FilesFolder={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder);
                 sw.WriteLine("Platform={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected);
-                sw.WriteLine("SoundhFile={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile);
                 sw.WriteLine("Title={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.TitleSelected);
             }
         }
@@ -46,6 +46,7 @@ namespace EuroSoundExplorer2
             string filePath = "ESEx\\General Settings.ini";
             if (File.Exists(filePath))
             {
+                var parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
                 using (StreamReader sr = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
                     string line;
@@ -57,21 +58,21 @@ namespace EuroSoundExplorer2
                             switch (lineData[0])
                             {
                                 case "FilesFolder":
-                                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder = lineData[1];
+                                    parentForm.configuration.ProjectFolder = lineData[1];
                                     break;
                                 case "Platform":
                                     if (Enum.TryParse(lineData[1], out Platform selectedPlatform))
                                     {
-                                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected = selectedPlatform;
+                                        parentForm.configuration.PlatformSelected = selectedPlatform;
                                     }
                                     break;
                                 case "SoundhFile":
-                                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile = lineData[1];
+                                    parentForm.configuration.SoundhFile = lineData[1];
                                     break;
                                 case "Title":
                                     if (Enum.TryParse(lineData[1], out Title selectedTitle))
                                     {
-                                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.TitleSelected = selectedTitle;
+                                        parentForm.configuration.TitleSelected = selectedTitle;
                                     }
                                     break;
                             }

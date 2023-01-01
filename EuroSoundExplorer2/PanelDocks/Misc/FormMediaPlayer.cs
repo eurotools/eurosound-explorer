@@ -15,6 +15,7 @@ namespace EuroSoundExplorer2
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
         private WaveOut _waveOut;
         private SoundFile soundToPlay;
+        private RawSourceWaveStream providerLeft, providerRight;
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -60,7 +61,7 @@ namespace EuroSoundExplorer2
             }
 
             //Check if sound has to play
-            if (chbxAutoPlay.Checked)
+            if (ButtonAutoPlay.Checked)
             {
                 PlaySound();
             }
@@ -81,29 +82,64 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonPause_Click(object sender, EventArgs e)
+        {
+            if (_waveOut != null)
+            {
+                if (_waveOut.PlaybackState == PlaybackState.Playing)
+                {
+                    _waveOut.Pause();
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             //Show dialog
-            DialogResult saveFileDialog = SaveFileDlg_SaveFile.ShowDialog();
-            if (saveFileDialog == DialogResult.OK)
+            if (soundToPlay != null)
             {
-                string filePath = SaveFileDlg_SaveFile.FileName;
-                try
+                DialogResult saveFileDialog = SaveFileDlg_SaveFile.ShowDialog();
+                if (saveFileDialog == DialogResult.OK)
                 {
-                    if (soundToPlay.channels > 1)
+                    string filePath = SaveFileDlg_SaveFile.FileName;
+                    try
                     {
-                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateStereoWav(soundToPlay.PcmData, soundToPlay).ToSampleProvider());
+                        //Stop current sound to avoid bugs.
+                        StopSound();
+
+                        //Save Data
+                        if (soundToPlay.channels > 1)
+                        {
+                            WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateStereoWav(ref providerLeft, ref providerRight, soundToPlay.PcmData, soundToPlay).ToSampleProvider());
+                        }
+                        else
+                        {
+                            WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateMonoWav(ref providerLeft, soundToPlay.PcmData[0], soundToPlay).ToSampleProvider());
+                        }
+                        MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay).ToSampleProvider());
+                        MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception ex)
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  TRACKBAR
+        //-------------------------------------------------------------------------------------------
+        private void TrackBarPosition_Scroll(object sender, EventArgs e)
+        {
+            if (_waveOut != null)
+            {
+                TimeSpan streamPos = TimeSpan.FromSeconds(providerRight.TotalTime.TotalSeconds * trackBarPosition.Value / 100.0);
+                if (soundToPlay.channels > 1)
                 {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    providerRight.CurrentTime = streamPos;
                 }
+                providerLeft.CurrentTime = streamPos;
             }
         }
 
@@ -112,19 +148,28 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------
         private void PlaySound()
         {
-            if (WaveOut.DeviceCount > 0)
+            if (WaveOut.DeviceCount > 0 && soundToPlay != null)
             {
-                //Create a new instance and start playing
-                StopSound();
-                _waveOut = new WaveOut();
-                if (soundToPlay.channels > 1)
+                if (_waveOut != null && _waveOut.PlaybackState == PlaybackState.Paused)
                 {
-                    _waveOut.Init(audioFunctions.CreateStereoLoopWav(soundToPlay.PcmData, soundToPlay));
                     _waveOut.Play();
                 }
                 else
                 {
-                    _waveOut.Init(audioFunctions.CreateMonoLoopWav(soundToPlay.PcmData[0], soundToPlay));
+                    //Create a new instance and start playing
+                    StopSound();
+                    _waveOut = new WaveOut();
+                    IWaveProvider waveDataProv;
+                    if (soundToPlay.channels > 1)
+                    {
+                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref providerLeft, ref providerRight, soundToPlay.PcmData, soundToPlay);
+                    }
+                    else
+                    {
+                        waveDataProv = audioFunctions.CreateMonoLoopWav(ref providerLeft, soundToPlay.PcmData[0], soundToPlay);
+                    }
+                    labelTotalTime.Text = string.Format("{0:00}:{1:00}", (int)providerLeft.TotalTime.TotalMinutes, providerLeft.TotalTime.Seconds);
+                    _waveOut.Init(waveDataProv);
                     _waveOut.Play();
                 }
             }
@@ -136,6 +181,21 @@ namespace EuroSoundExplorer2
             if (_waveOut != null)
             {
                 _waveOut.Stop();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            if (_waveOut != null && providerLeft != null)
+            {
+                TimeSpan currentTime = (_waveOut.PlaybackState == PlaybackState.Stopped) ? TimeSpan.Zero : providerLeft.CurrentTime;
+                trackBarPosition.Value = Math.Min(trackBarPosition.Maximum, (int)(100 * currentTime.TotalSeconds / providerLeft.TotalTime.TotalSeconds));
+                labelCurrentTime.Text = string.Format("{0:00}:{1:00}", (int)currentTime.TotalMinutes, currentTime.Seconds);
+            }
+            else
+            {
+                trackBarPosition.Value = 0;
             }
         }
     }

@@ -56,18 +56,19 @@ namespace EuroSoundExplorer2
             this.ButtonValidateAllStreams});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(590, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(590, 28);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // ButtonValidateAllStreams
             // 
-            this.ButtonValidateAllStreams.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ButtonValidateAllStreams.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ButtonValidateAllStreams.Enabled = false;
             this.ButtonValidateAllStreams.Image = ((System.Drawing.Image)(resources.GetObject("ButtonValidateAllStreams.Image")));
+            this.ButtonValidateAllStreams.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonValidateAllStreams.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonValidateAllStreams.Name = "ButtonValidateAllStreams";
-            this.ButtonValidateAllStreams.Size = new System.Drawing.Size(114, 22);
+            this.ButtonValidateAllStreams.Size = new System.Drawing.Size(26, 25);
             this.ButtonValidateAllStreams.Text = "Validate All Streams";
             this.ButtonValidateAllStreams.Click += new System.EventHandler(this.ButtonValidateAllStreams_Click);
             // 
@@ -82,6 +83,7 @@ namespace EuroSoundExplorer2
             // 
             // MenuItem_Save
             // 
+            this.MenuItem_Save.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Save.Image")));
             this.MenuItem_Save.Name = "MenuItem_Save";
             this.MenuItem_Save.Size = new System.Drawing.Size(186, 22);
             this.MenuItem_Save.Text = "Save";
@@ -89,6 +91,8 @@ namespace EuroSoundExplorer2
             // 
             // MenuItem_SendToMediaPlayer
             // 
+            this.MenuItem_SendToMediaPlayer.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_SendToMediaPlayer.Image")));
+            this.MenuItem_SendToMediaPlayer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_SendToMediaPlayer.Name = "MenuItem_SendToMediaPlayer";
             this.MenuItem_SendToMediaPlayer.Size = new System.Drawing.Size(186, 22);
             this.MenuItem_SendToMediaPlayer.Text = "Send To Media Player";
@@ -111,9 +115,10 @@ namespace EuroSoundExplorer2
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 26);
+            this.listView1.Location = new System.Drawing.Point(0, 28);
+            this.listView1.Margin = new System.Windows.Forms.Padding(0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(590, 500);
+            this.listView1.Size = new System.Drawing.Size(590, 498);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;

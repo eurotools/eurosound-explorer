@@ -35,6 +35,10 @@
 
         public uint FileStart3;
         public uint FileLength3;
+
+        //Projectbank
+        public uint MemoryStart;
+        public uint MemoryLength;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

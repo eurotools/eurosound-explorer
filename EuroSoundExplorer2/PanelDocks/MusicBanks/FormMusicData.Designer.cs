@@ -45,9 +45,10 @@ namespace EuroSoundExplorer2
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 28);
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 35);
+            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(0);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(410, 312);
+            this.propertyGrid1.Size = new System.Drawing.Size(410, 305);
             this.propertyGrid1.TabIndex = 6;
             this.propertyGrid1.ToolbarVisible = false;
             // 
@@ -61,34 +62,36 @@ namespace EuroSoundExplorer2
             this.textboxAdpcmStatus});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(410, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(410, 35);
             this.toolStrip1.TabIndex = 7;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // ButtonSendMediaPlayer
             // 
-            this.ButtonSendMediaPlayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ButtonSendMediaPlayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ButtonSendMediaPlayer.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSendMediaPlayer.Image")));
+            this.ButtonSendMediaPlayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonSendMediaPlayer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSendMediaPlayer.Name = "ButtonSendMediaPlayer";
-            this.ButtonSendMediaPlayer.Size = new System.Drawing.Size(122, 22);
-            this.ButtonSendMediaPlayer.Text = "Send to Media Player";
+            this.ButtonSendMediaPlayer.Size = new System.Drawing.Size(34, 32);
+            this.ButtonSendMediaPlayer.Text = "Send to media player";
             this.ButtonSendMediaPlayer.Click += new System.EventHandler(this.ButtonSendMediaPlayer_Click);
             // 
             // ButtonDisplayMusicMarkers
             // 
-            this.ButtonDisplayMusicMarkers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ButtonDisplayMusicMarkers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ButtonDisplayMusicMarkers.Image = ((System.Drawing.Image)(resources.GetObject("ButtonDisplayMusicMarkers.Image")));
+            this.ButtonDisplayMusicMarkers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonDisplayMusicMarkers.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonDisplayMusicMarkers.Name = "ButtonDisplayMusicMarkers";
-            this.ButtonDisplayMusicMarkers.Size = new System.Drawing.Size(94, 22);
+            this.ButtonDisplayMusicMarkers.Size = new System.Drawing.Size(35, 32);
             this.ButtonDisplayMusicMarkers.Text = "Display Markers";
             this.ButtonDisplayMusicMarkers.Click += new System.EventHandler(this.ButtonDisplayMusicMarkers_Click);
             // 
             // labelAdpcmStatus
             // 
             this.labelAdpcmStatus.Name = "labelAdpcmStatus";
-            this.labelAdpcmStatus.Size = new System.Drawing.Size(87, 22);
+            this.labelAdpcmStatus.Size = new System.Drawing.Size(87, 32);
             this.labelAdpcmStatus.Text = "ADPCM Status:";
             // 
             // textboxAdpcmStatus
@@ -97,7 +100,7 @@ namespace EuroSoundExplorer2
             this.textboxAdpcmStatus.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.textboxAdpcmStatus.Name = "textboxAdpcmStatus";
             this.textboxAdpcmStatus.ReadOnly = true;
-            this.textboxAdpcmStatus.Size = new System.Drawing.Size(100, 23);
+            this.textboxAdpcmStatus.Size = new System.Drawing.Size(100, 35);
             // 
             // FormMusicData
             // 

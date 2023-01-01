@@ -160,7 +160,7 @@ namespace EuroSoundExplorer2
         public string ProjectFolder
         {
             get { return _ProjectFolder; }
-            set { _ProjectFolder = value; }
+            set { _ProjectFolder = value; ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.LoadData(); }
         }
     }
 

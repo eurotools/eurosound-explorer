@@ -1,7 +1,7 @@
 ﻿
 namespace EuroSoundExplorer2
 {
-    partial class FormSBiSoundBanks
+    partial class FormPJ_SoundBanks
     {
         /// <summary>
         /// Required designer variable.
@@ -30,11 +30,11 @@ namespace EuroSoundExplorer2
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.labelSoundBanks = new System.Windows.Forms.ToolStripLabel();
-            this.textBoxSoundBanksCount = new System.Windows.Forms.ToolStripTextBox();
+            this.labelCount = new System.Windows.Forms.ToolStripLabel();
+            this.textboxCount = new System.Windows.Forms.ToolStripTextBox();
             this.listView_ColumnSortingClick1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.colHashCode = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colHashCodeLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colSlotNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,28 +42,26 @@ namespace EuroSoundExplorer2
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.labelSoundBanks,
-            this.textBoxSoundBanksCount});
+            this.labelCount,
+            this.textboxCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(392, 25);
-            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Size = new System.Drawing.Size(463, 25);
+            this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // labelSoundBanks
+            // labelCount
             // 
-            this.labelSoundBanks.Name = "labelSoundBanks";
-            this.labelSoundBanks.Size = new System.Drawing.Size(75, 22);
-            this.labelSoundBanks.Text = "SoundBanks:";
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(40, 22);
+            this.labelCount.Text = "Count";
             // 
-            // textBoxSoundBanksCount
+            // textboxCount
             // 
-            this.textBoxSoundBanksCount.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxSoundBanksCount.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.textBoxSoundBanksCount.Name = "textBoxSoundBanksCount";
-            this.textBoxSoundBanksCount.ReadOnly = true;
-            this.textBoxSoundBanksCount.Size = new System.Drawing.Size(35, 25);
-            this.textBoxSoundBanksCount.Text = "0";
+            this.textboxCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.textboxCount.Name = "textboxCount";
+            this.textboxCount.Size = new System.Drawing.Size(100, 25);
+            this.textboxCount.Text = "0";
             // 
             // listView_ColumnSortingClick1
             // 
@@ -72,39 +70,38 @@ namespace EuroSoundExplorer2
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView_ColumnSortingClick1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colHashCode,
-            this.colHashCodeLabel});
+            this.colSlotNumber});
             this.listView_ColumnSortingClick1.FullRowSelect = true;
             this.listView_ColumnSortingClick1.GridLines = true;
             this.listView_ColumnSortingClick1.HideSelection = false;
-            this.listView_ColumnSortingClick1.Location = new System.Drawing.Point(0, 25);
+            this.listView_ColumnSortingClick1.Location = new System.Drawing.Point(0, 26);
             this.listView_ColumnSortingClick1.Name = "listView_ColumnSortingClick1";
-            this.listView_ColumnSortingClick1.Size = new System.Drawing.Size(392, 321);
-            this.listView_ColumnSortingClick1.TabIndex = 1;
+            this.listView_ColumnSortingClick1.Size = new System.Drawing.Size(463, 388);
+            this.listView_ColumnSortingClick1.TabIndex = 2;
             this.listView_ColumnSortingClick1.UseCompatibleStateImageBehavior = false;
             this.listView_ColumnSortingClick1.View = System.Windows.Forms.View.Details;
             // 
             // colHashCode
             // 
             this.colHashCode.Text = "HashCode";
-            this.colHashCode.Width = 100;
+            this.colHashCode.Width = 200;
             // 
-            // colHashCodeLabel
+            // colSlotNumber
             // 
-            this.colHashCodeLabel.Text = "HashCode Label";
-            this.colHashCodeLabel.Width = 200;
+            this.colSlotNumber.Text = "Slot Number";
+            this.colSlotNumber.Width = 200;
             // 
-            // FormSBiSoundBanks
+            // FormPJ_SoundBanks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 346);
-            this.Controls.Add(this.listView_ColumnSortingClick1);
+            this.ClientSize = new System.Drawing.Size(463, 414);
             this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.listView_ColumnSortingClick1);
             this.HideOnClose = true;
-            this.Name = "FormSBiSoundBanks";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.TabText = "SBInfo SoundBanks";
-            this.Text = "SBInfo SoundBanks";
+            this.Name = "FormPJ_SoundBanks";
+            this.TabText = "SoundBanks";
+            this.Text = "SoundBanks";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -115,10 +112,10 @@ namespace EuroSoundExplorer2
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripLabel labelSoundBanks;
-        private System.Windows.Forms.ToolStripTextBox textBoxSoundBanksCount;
+        private System.Windows.Forms.ToolStripLabel labelCount;
+        private System.Windows.Forms.ToolStripTextBox textboxCount;
         private CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
         private System.Windows.Forms.ColumnHeader colHashCode;
-        private System.Windows.Forms.ColumnHeader colHashCodeLabel;
+        private System.Windows.Forms.ColumnHeader colSlotNumber;
     }
 }

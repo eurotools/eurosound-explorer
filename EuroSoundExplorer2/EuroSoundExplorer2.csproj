@@ -11,6 +11,21 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,6 +93,9 @@
     <Compile Include="Forms\FrmDataViewer.Designer.cs">
       <DependentUpon>FrmDataViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmDataViewer_SoundBanks.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FrmFileRefUsage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +132,24 @@
     </Compile>
     <Compile Include="PanelDocks\MusicBanks\FormMusicData.Designer.cs">
       <DependentUpon>FormMusicData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\ProjectDetails\FormPJ_MemorySlots.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\ProjectDetails\FormPJ_MemorySlots.Designer.cs">
+      <DependentUpon>FormPJ_MemorySlots.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\ProjectDetails\FormPJ_ProjectData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\ProjectDetails\FormPJ_ProjectData.Designer.cs">
+      <DependentUpon>FormPJ_ProjectData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\ProjectDetails\FormPJ_SoundBanks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\ProjectDetails\FormPJ_SoundBanks.Designer.cs">
+      <DependentUpon>FormPJ_SoundBanks.cs</DependentUpon>
     </Compile>
     <Compile Include="PanelDocks\SBI\FormSBiMusicBanks.cs">
       <SubType>Form</SubType>
@@ -192,6 +228,15 @@
     <EmbeddedResource Include="PanelDocks\MusicBanks\FormMusicData.resx">
       <DependentUpon>FormMusicData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\ProjectDetails\FormPJ_MemorySlots.resx">
+      <DependentUpon>FormPJ_MemorySlots.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\ProjectDetails\FormPJ_ProjectData.resx">
+      <DependentUpon>FormPJ_ProjectData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\ProjectDetails\FormPJ_SoundBanks.resx">
+      <DependentUpon>FormPJ_SoundBanks.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PanelDocks\SBI\FormSBiMusicBanks.resx">
       <DependentUpon>FormSBiMusicBanks.cs</DependentUpon>
     </EmbeddedResource>
@@ -252,6 +297,12 @@
   <ItemGroup>
     <Content Include="cd_audio_cd_a.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

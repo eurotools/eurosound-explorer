@@ -58,8 +58,8 @@ namespace EuroSoundExplorer2
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(83, 22);
-            this.toolStripLabel1.Text = "Marker Count:";
+            this.toolStripLabel1.Size = new System.Drawing.Size(43, 22);
+            this.toolStripLabel1.Text = "Count:";
             // 
             // Textbox_StartMarkers_Count
             // 
@@ -67,7 +67,7 @@ namespace EuroSoundExplorer2
             this.Textbox_StartMarkers_Count.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Textbox_StartMarkers_Count.Name = "Textbox_StartMarkers_Count";
             this.Textbox_StartMarkers_Count.ReadOnly = true;
-            this.Textbox_StartMarkers_Count.Size = new System.Drawing.Size(100, 25);
+            this.Textbox_StartMarkers_Count.Size = new System.Drawing.Size(35, 25);
             this.Textbox_StartMarkers_Count.Text = "0";
             // 
             // lvwStartMarkers

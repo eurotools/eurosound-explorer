@@ -29,6 +29,7 @@ namespace EuroSoundExplorer2
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.labelMemory = new System.Windows.Forms.ToolStripLabel();
             this.labelMemoryValue = new System.Windows.Forms.ToolStripLabel();
@@ -43,7 +44,11 @@ namespace EuroSoundExplorer2
             this.textboxFind = new System.Windows.Forms.ToolStripTextBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.fntDialog = new System.Windows.Forms.FontDialog();
+            this.contextMenuTreeview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.MenuItem_SetFont = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
+            this.contextMenuTreeview.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -142,6 +147,7 @@ namespace EuroSoundExplorer2
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView1.ContextMenuStrip = this.contextMenuTreeview;
             this.treeView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
             this.treeView1.Location = new System.Drawing.Point(0, 25);
             this.treeView1.Name = "treeView1";
@@ -151,6 +157,21 @@ namespace EuroSoundExplorer2
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "SFX Files (*.sfx)|*.sfx";
+            // 
+            // contextMenuTreeview
+            // 
+            this.contextMenuTreeview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_SetFont});
+            this.contextMenuTreeview.Name = "contextMenuTreeview";
+            this.contextMenuTreeview.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.contextMenuTreeview.Size = new System.Drawing.Size(181, 48);
+            // 
+            // MenuItem_SetFont
+            // 
+            this.MenuItem_SetFont.Name = "MenuItem_SetFont";
+            this.MenuItem_SetFont.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SetFont.Text = "Font";
+            this.MenuItem_SetFont.Click += new System.EventHandler(this.MenuItem_SetFont_Click);
             // 
             // FrmDataViewer
             // 
@@ -167,6 +188,7 @@ namespace EuroSoundExplorer2
             this.Load += new System.EventHandler(this.FrmDataViewer_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.contextMenuTreeview.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,5 +210,8 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripTextBox textboxFind;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuTreeview;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_SetFont;
+        private System.Windows.Forms.FontDialog fntDialog;
     }
 }

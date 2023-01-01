@@ -44,6 +44,8 @@
     <Compile Include="Objects\Markers\Marker.cs" />
     <Compile Include="Objects\Markers\StartMarker.cs" />
     <Compile Include="Objects\MusicSample.cs" />
+    <Compile Include="Objects\ProjectSlots.cs" />
+    <Compile Include="Objects\ProjectSoundBank.cs" />
     <Compile Include="Objects\SampleData.cs" />
     <Compile Include="Objects\SbiFile.cs" />
     <Compile Include="Objects\SfxHeaderData.cs" />
@@ -51,6 +53,8 @@
     <Compile Include="Objects\Sample.cs" />
     <Compile Include="Objects\StreamSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Objects\ProjectDetails.cs" />
+    <Compile Include="Readers\ProjectDetailsReader.cs" />
     <Compile Include="Readers\SBI\SbiReader.cs" />
     <Compile Include="Readers\SfxFunctions.cs" />
     <Compile Include="Readers\MusicBank\MusicBankReader.cs" />

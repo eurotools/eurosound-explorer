@@ -57,14 +57,13 @@ namespace EuroSoundExplorer2
             this.MenuItem_Music_StartMarkers = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Music_Markers = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Project = new System.Windows.Forms.ToolStripDropDownButton();
-            this.projectDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.memmorySlotsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.soundBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.musicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTipDisplayHex = new System.Windows.Forms.ToolStripButton();
+            this.MenuItem_Project_ProjectData = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Project_MemorySlots = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Project_Soundbank = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_SBI_StoredSoundBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI_StoredMusicBanks = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTipDisplayHex = new System.Windows.Forms.ToolStripButton();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -208,28 +207,28 @@ namespace EuroSoundExplorer2
             // MenuItem_SB_HashCodes
             // 
             this.MenuItem_SB_HashCodes.Name = "MenuItem_SB_HashCodes";
-            this.MenuItem_SB_HashCodes.Size = new System.Drawing.Size(169, 22);
+            this.MenuItem_SB_HashCodes.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_SB_HashCodes.Text = "HashCodes";
             this.MenuItem_SB_HashCodes.Click += new System.EventHandler(this.MenuItem_SB_HashCodes_Click);
             // 
             // MenuItem_SB_SamplePool
             // 
             this.MenuItem_SB_SamplePool.Name = "MenuItem_SB_SamplePool";
-            this.MenuItem_SB_SamplePool.Size = new System.Drawing.Size(169, 22);
+            this.MenuItem_SB_SamplePool.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_SB_SamplePool.Text = "Sample Pool";
             this.MenuItem_SB_SamplePool.Click += new System.EventHandler(this.MenuItem_SB_SamplePool_Click);
             // 
             // MenuItem_SB_SampleProps
             // 
             this.MenuItem_SB_SampleProps.Name = "MenuItem_SB_SampleProps";
-            this.MenuItem_SB_SampleProps.Size = new System.Drawing.Size(169, 22);
+            this.MenuItem_SB_SampleProps.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_SB_SampleProps.Text = "Sample Properties";
             this.MenuItem_SB_SampleProps.Click += new System.EventHandler(this.MenuItem_SB_SampleProps_Click);
             // 
             // MenuItem_SB_WavHeaderData
             // 
             this.MenuItem_SB_WavHeaderData.Name = "MenuItem_SB_WavHeaderData";
-            this.MenuItem_SB_WavHeaderData.Size = new System.Drawing.Size(169, 22);
+            this.MenuItem_SB_WavHeaderData.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_SB_WavHeaderData.Text = "Wav Header Data";
             this.MenuItem_SB_WavHeaderData.Click += new System.EventHandler(this.MenuItem_SB_WavHeaderData_Click);
             // 
@@ -307,48 +306,36 @@ namespace EuroSoundExplorer2
             // 
             this.MenuItem_Project.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.MenuItem_Project.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.projectDataToolStripMenuItem,
-            this.memmorySlotsToolStripMenuItem,
-            this.soundBankToolStripMenuItem,
-            this.musicToolStripMenuItem});
+            this.MenuItem_Project_ProjectData,
+            this.MenuItem_Project_MemorySlots,
+            this.MenuItem_Project_Soundbank});
             this.MenuItem_Project.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Project.Image")));
             this.MenuItem_Project.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Project.Name = "MenuItem_Project";
-            this.MenuItem_Project.Size = new System.Drawing.Size(57, 22);
-            this.MenuItem_Project.Text = "Project";
+            this.MenuItem_Project.Size = new System.Drawing.Size(95, 22);
+            this.MenuItem_Project.Text = "Project Details";
+            this.MenuItem_Project.DropDownOpening += new System.EventHandler(this.MenuItem_Project_DropDownOpening);
             // 
-            // projectDataToolStripMenuItem
+            // MenuItem_Project_ProjectData
             // 
-            this.projectDataToolStripMenuItem.Name = "projectDataToolStripMenuItem";
-            this.projectDataToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.projectDataToolStripMenuItem.Text = "Project Data";
+            this.MenuItem_Project_ProjectData.Name = "MenuItem_Project_ProjectData";
+            this.MenuItem_Project_ProjectData.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Project_ProjectData.Text = "Project Data";
+            this.MenuItem_Project_ProjectData.Click += new System.EventHandler(this.MenuItem_Project_ProjectData_Click);
             // 
-            // memmorySlotsToolStripMenuItem
+            // MenuItem_Project_MemorySlots
             // 
-            this.memmorySlotsToolStripMenuItem.Name = "memmorySlotsToolStripMenuItem";
-            this.memmorySlotsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.memmorySlotsToolStripMenuItem.Text = "Memmory Slots";
+            this.MenuItem_Project_MemorySlots.Name = "MenuItem_Project_MemorySlots";
+            this.MenuItem_Project_MemorySlots.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Project_MemorySlots.Text = "Memmory Slots";
+            this.MenuItem_Project_MemorySlots.Click += new System.EventHandler(this.MenuItem_Project_MemorySlots_Click);
             // 
-            // soundBankToolStripMenuItem
+            // MenuItem_Project_Soundbank
             // 
-            this.soundBankToolStripMenuItem.Name = "soundBankToolStripMenuItem";
-            this.soundBankToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.soundBankToolStripMenuItem.Text = "SoundBank";
-            // 
-            // musicToolStripMenuItem
-            // 
-            this.musicToolStripMenuItem.Name = "musicToolStripMenuItem";
-            this.musicToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.musicToolStripMenuItem.Text = "Music";
-            // 
-            // toolTipDisplayHex
-            // 
-            this.toolTipDisplayHex.CheckOnClick = true;
-            this.toolTipDisplayHex.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolTipDisplayHex.Name = "toolTipDisplayHex";
-            this.toolTipDisplayHex.Size = new System.Drawing.Size(73, 22);
-            this.toolTipDisplayHex.Text = "Display Hex";
-            this.toolTipDisplayHex.ToolTipText = "Display Hex";
+            this.MenuItem_Project_Soundbank.Name = "MenuItem_Project_Soundbank";
+            this.MenuItem_Project_Soundbank.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Project_Soundbank.Text = "SoundBank";
+            this.MenuItem_Project_Soundbank.Click += new System.EventHandler(this.MenuItem_Project_Soundbank_Click);
             // 
             // MenuItem_SBI
             // 
@@ -366,16 +353,25 @@ namespace EuroSoundExplorer2
             // MenuItem_SBI_StoredSoundBanks
             // 
             this.MenuItem_SBI_StoredSoundBanks.Name = "MenuItem_SBI_StoredSoundBanks";
-            this.MenuItem_SBI_StoredSoundBanks.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SBI_StoredSoundBanks.Size = new System.Drawing.Size(176, 22);
             this.MenuItem_SBI_StoredSoundBanks.Text = "Stored Soundbanks";
             this.MenuItem_SBI_StoredSoundBanks.Click += new System.EventHandler(this.MenuItem_SBI_StoredSoundBanks_Click);
             // 
             // MenuItem_SBI_StoredMusicBanks
             // 
             this.MenuItem_SBI_StoredMusicBanks.Name = "MenuItem_SBI_StoredMusicBanks";
-            this.MenuItem_SBI_StoredMusicBanks.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SBI_StoredMusicBanks.Size = new System.Drawing.Size(176, 22);
             this.MenuItem_SBI_StoredMusicBanks.Text = "Stored Musicbanks";
             this.MenuItem_SBI_StoredMusicBanks.Click += new System.EventHandler(this.MenuItem_SBI_StoredMusicBanks_Click);
+            // 
+            // toolTipDisplayHex
+            // 
+            this.toolTipDisplayHex.CheckOnClick = true;
+            this.toolTipDisplayHex.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolTipDisplayHex.Name = "toolTipDisplayHex";
+            this.toolTipDisplayHex.Size = new System.Drawing.Size(73, 22);
+            this.toolTipDisplayHex.Text = "Display Hex";
+            this.toolTipDisplayHex.ToolTipText = "Display Hex";
             // 
             // FrmMain
             // 
@@ -415,10 +411,9 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_MusicData;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_StartMarkers;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_Markers;
-        private System.Windows.Forms.ToolStripMenuItem projectDataToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem memmorySlotsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem soundBankToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem musicToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_ProjectData;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_MemorySlots;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_Soundbank;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_Settings;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DecodeAudio;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DataViewer;

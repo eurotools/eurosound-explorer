@@ -1,9 +1,5 @@
 ﻿using MusX.Objects;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace MusX.Readers
 {
@@ -21,16 +17,16 @@ namespace MusX.Readers
             {
                 //Read Project SoundBanks
                 binaryReader.BaseStream.Seek(headerData.FileStart1, SeekOrigin.Begin);
-                for(int i = 0; i < sbiFileObj.projectSoundBanks.Length; i++)
+                for (int i = 0; i < sbiFileObj.projectSoundBanks.Length; i++)
                 {
-                        sbiFileObj.projectSoundBanks[i] = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian);
+                    sbiFileObj.projectSoundBanks[i] = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian);
                 }
 
                 //Read Project MusicBanks
                 binaryReader.BaseStream.Seek(headerData.FileStart2, SeekOrigin.Begin);
                 for (int i = 0; i < sbiFileObj.projectMusicBanks.Length; i++)
                 {
-                        sbiFileObj.projectMusicBanks[i] = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian);
+                    sbiFileObj.projectMusicBanks[i] = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian);
                 }
             }
 

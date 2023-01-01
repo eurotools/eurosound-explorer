@@ -31,10 +31,13 @@ namespace EuroSoundExplorer2
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSB_HashCodes));
             this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.Col_HashCode = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_HashCode_Status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_HashCode_Label = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // listView1
@@ -49,16 +52,19 @@ namespace EuroSoundExplorer2
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
+            this.listView1.OwnerDraw = true;
             this.listView1.Size = new System.Drawing.Size(599, 424);
+            this.listView1.SmallImageList = this.imageList1;
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.listView1_DrawSubItem);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.ListView1_SelectedIndexChanged);
             // 
             // Col_HashCode
             // 
             this.Col_HashCode.Text = "HashCode";
-            this.Col_HashCode.Width = 80;
+            this.Col_HashCode.Width = 96;
             // 
             // Col_HashCode_Status
             // 
@@ -69,6 +75,14 @@ namespace EuroSoundExplorer2
             // 
             this.Col_HashCode_Label.Text = "Label";
             this.Col_HashCode_Label.Width = 250;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "SfxItem.png");
+            this.imageList1.Images.SetKeyName(1, "SatusError.png");
+            this.imageList1.Images.SetKeyName(2, "SatusOK.png");
             // 
             // FormSB_HashCodes
             // 
@@ -91,5 +105,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ColumnHeader Col_HashCode;
         private System.Windows.Forms.ColumnHeader Col_HashCode_Status;
         private System.Windows.Forms.ColumnHeader Col_HashCode_Label;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }

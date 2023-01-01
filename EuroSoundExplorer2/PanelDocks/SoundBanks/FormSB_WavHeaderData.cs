@@ -14,6 +14,7 @@ namespace EuroSoundExplorer2
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FormSB_WavHeaderData : DockContent
     {
+        private RawSourceWaveStream rawLeftChannel;
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -115,7 +116,7 @@ namespace EuroSoundExplorer2
                             soundToPlay.channels = selectedSample.Channels;
 
                             //Create Wav File
-                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(soundToPlay.PcmData[0], soundToPlay);
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
                             WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".wav")), wavFile.ToSampleProvider());
                         }
                     }

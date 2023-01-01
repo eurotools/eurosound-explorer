@@ -34,6 +34,9 @@ namespace EuroSoundExplorer2
         internal FormMusicData pnlMusicData = new FormMusicData();
         internal FormSBiSoundBanks pnlSbiSoundbanks = new FormSBiSoundBanks();
         internal FormSBiMusicBanks pnlSbiMusicbanks = new FormSBiMusicBanks();
+        internal FormPJ_MemorySlots pnlProjDetailsMemSlots = new FormPJ_MemorySlots();
+        internal FormPJ_SoundBanks pnlProjDetailsSoundBanks = new FormPJ_SoundBanks();
+        internal FormPJ_ProjectData pnlProjDetailsData = new FormPJ_ProjectData();
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -59,6 +62,12 @@ namespace EuroSoundExplorer2
             m_DockForms.Add(pnlMusicData);
             m_DockForms.Add(pnlSbiSoundbanks);
             m_DockForms.Add(pnlSbiMusicbanks);
+            m_DockForms.Add(pnlProjDetailsMemSlots);
+            m_DockForms.Add(pnlProjDetailsSoundBanks);
+            m_DockForms.Add(pnlProjDetailsData);
+
+            //Load previous settings
+            pnlSettings.LoadSettings();
 
             //Load Panels State
             if (!File.Exists("ESEx\\Dock Settings.xml"))
@@ -277,6 +286,35 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------
+        //  Project Details Menu
+        //-------------------------------------------------------------------------------------------
+        private void MenuItem_Project_DropDownOpening(object sender, EventArgs e)
+        {
+            UpdateWindowMenuChecks();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_Project_ProjectData_Click(object sender, EventArgs e)
+        {
+            pnlProjDetailsData.Show(mainDockPanel, DockState.Float);
+            UpdateWindowMenuChecks();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_Project_MemorySlots_Click(object sender, EventArgs e)
+        {
+            pnlProjDetailsMemSlots.Show(mainDockPanel, DockState.Float);
+            UpdateWindowMenuChecks();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_Project_Soundbank_Click(object sender, EventArgs e)
+        {
+            pnlProjDetailsSoundBanks.Show(mainDockPanel, DockState.Float);
+            UpdateWindowMenuChecks();
+        }
+
+        //-------------------------------------------------------------------------------------------
         //  Functions
         //-------------------------------------------------------------------------------------------
         private void UpdateWindowMenuChecks()
@@ -303,6 +341,11 @@ namespace EuroSoundExplorer2
             //SBI
             MenuItem_SBI_StoredSoundBanks.Checked = pnlSbiSoundbanks.DockState != DockState.Hidden;
             MenuItem_SBI_StoredMusicBanks.Checked = pnlSbiMusicbanks.DockState != DockState.Hidden;
+
+            //Project Details
+            MenuItem_Project_MemorySlots.Checked = pnlProjDetailsMemSlots.DockState != DockState.Hidden;
+            MenuItem_Project_Soundbank.Checked = pnlProjDetailsSoundBanks.DockState != DockState.Hidden;
+            MenuItem_Project_ProjectData.Checked = pnlProjDetailsData.DockState != DockState.Hidden;
 
             //Menu 1
             MenuItem_SfxFiles.Checked = pnlSoundBankFiles.DockState != DockState.Hidden;

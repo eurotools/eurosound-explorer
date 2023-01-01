@@ -13,7 +13,7 @@ namespace EuroSoundExplorer2.Classes
         private readonly Random random = new Random();
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private int SemitonesToFreq(int Frequency, float Semitone)
+        internal int SemitonesToFreq(int Frequency, float Semitone)
         {
             float mult = 1.0f;
             if (Semitone != 0)
@@ -25,9 +25,9 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateMonoLoopWav(byte[] _pcmData, SoundFile _soundToPlay)
+        internal IWaveProvider CreateMonoLoopWav(ref RawSourceWaveStream provider, byte[] _pcmData, SoundFile _soundToPlay)
         {
-            RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
             LoopStream loop = new LoopStream(provider, _soundToPlay.loopOffset) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
             PanningSampleProvider panProvider = new PanningSampleProvider(loop.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
@@ -36,9 +36,9 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateMonoWav(byte[] _pcmData, SoundFile _soundToPlay)
+        internal IWaveProvider CreateMonoWav(ref RawSourceWaveStream provider, byte[] _pcmData, SoundFile _soundToPlay)
         {
-            RawSourceWaveStream provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
             PanningSampleProvider panProvider = new PanningSampleProvider(provider.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
 
@@ -46,11 +46,11 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateStereoLoopWav(byte[][] _pcmData, SoundFile _soundToPlay)
+        internal IWaveProvider CreateStereoLoopWav(ref RawSourceWaveStream providerLeft, ref RawSourceWaveStream providerRight, byte[][] _pcmData, SoundFile _soundToPlay)
         {
-            RawSourceWaveStream providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
             LoopStream loopLeft = new LoopStream(providerLeft, _soundToPlay.loopOffset) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
-            RawSourceWaveStream providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
             LoopStream loopRight = new LoopStream(providerRight, _soundToPlay.loopOffset) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
             MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { loopLeft, loopRight }, 2);
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
@@ -59,10 +59,10 @@ namespace EuroSoundExplorer2.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateStereoWav(byte[][] _pcmData, SoundFile _soundToPlay)
+        internal IWaveProvider CreateStereoWav(ref RawSourceWaveStream providerLeft, ref RawSourceWaveStream providerRight, byte[][] _pcmData, SoundFile _soundToPlay)
         {
-            IWaveProvider providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
-            IWaveProvider providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq(_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
             MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { providerLeft, providerRight }, 2);
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
 

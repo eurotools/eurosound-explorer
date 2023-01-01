@@ -33,11 +33,11 @@ namespace EuroSoundExplorer2
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmFileRefUsage));
-            this.listViewItemUsage = new ListView_ColumnSortingClick();
+            this.listViewItemUsage = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.Col_Item = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Usage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnOk = new System.Windows.Forms.Button();
             this.ImageList_ListView = new System.Windows.Forms.ImageList(this.components);
+            this.btnOk = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listViewItemUsage
@@ -69,6 +69,12 @@ namespace EuroSoundExplorer2
             this.Col_Usage.Text = "Usage";
             this.Col_Usage.Width = 268;
             // 
+            // ImageList_ListView
+            // 
+            this.ImageList_ListView.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ImageList_ListView.ImageStream")));
+            this.ImageList_ListView.TransparentColor = System.Drawing.Color.Magenta;
+            this.ImageList_ListView.Images.SetKeyName(0, "iconUsage.png");
+            // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -79,12 +85,6 @@ namespace EuroSoundExplorer2
             this.btnOk.TabIndex = 1;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
-            // 
-            // ImageList_ListView
-            // 
-            this.ImageList_ListView.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ImageList_ListView.ImageStream")));
-            this.ImageList_ListView.TransparentColor = System.Drawing.Color.Transparent;
-            this.ImageList_ListView.Images.SetKeyName(0, "exclamation.png");
             // 
             // FrmFileRefUsage
             // 

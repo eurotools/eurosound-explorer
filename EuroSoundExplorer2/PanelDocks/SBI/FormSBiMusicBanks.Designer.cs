@@ -62,7 +62,7 @@ namespace EuroSoundExplorer2
             this.textBoxSoundBanksCount.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.textBoxSoundBanksCount.Name = "textBoxSoundBanksCount";
             this.textBoxSoundBanksCount.ReadOnly = true;
-            this.textBoxSoundBanksCount.Size = new System.Drawing.Size(100, 25);
+            this.textBoxSoundBanksCount.Size = new System.Drawing.Size(35, 25);
             this.textBoxSoundBanksCount.Text = "0";
             // 
             // listView_ColumnSortingClick1

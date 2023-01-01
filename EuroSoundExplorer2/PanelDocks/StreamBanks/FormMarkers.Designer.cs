@@ -107,8 +107,8 @@ namespace EuroSoundExplorer2
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(83, 22);
-            this.toolStripLabel1.Text = "Marker Count:";
+            this.toolStripLabel1.Size = new System.Drawing.Size(43, 22);
+            this.toolStripLabel1.Text = "Count:";
             // 
             // txtMarkerCount
             // 
@@ -116,7 +116,7 @@ namespace EuroSoundExplorer2
             this.txtMarkerCount.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtMarkerCount.Name = "txtMarkerCount";
             this.txtMarkerCount.ReadOnly = true;
-            this.txtMarkerCount.Size = new System.Drawing.Size(100, 25);
+            this.txtMarkerCount.Size = new System.Drawing.Size(35, 25);
             this.txtMarkerCount.Text = "0";
             // 
             // FormMarkers

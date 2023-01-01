@@ -1,10 +1,9 @@
-﻿using MusX;
-using MusX.Objects;
-using MusX.Readers;
+﻿using MusX.Readers;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using static EuroSoundExplorer2.AppConfig;
+using static MusX.Readers.SfxFunctions;
 
 namespace EuroSoundExplorer2
 {
@@ -13,116 +12,67 @@ namespace EuroSoundExplorer2
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FrmDataViewer : Form
     {
-        private readonly SoundBankReader sfxFileReader = new SoundBankReader();
+        private readonly SoundBankReader sbReader = new SoundBankReader();
+        private readonly StreamBankReader strReader = new StreamBankReader();
         private readonly int m_ErrorCount = 0;
+        private string sfxFilePath = string.Empty;
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public FrmDataViewer()
+        public FrmDataViewer(string fileToLoad = "")
         {
             InitializeComponent();
+            sfxFilePath = fileToLoad;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void FrmDataViewer_Load(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+
+            //If the file path has not been passed as an argument ask user 
+            if (string.IsNullOrEmpty(sfxFilePath))
             {
-                //Read File Data 
-                SfxHeaderData headerData = sfxFileReader.ReadSfxHeader(openFileDialog1.FileName, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-                SortedDictionary<uint, Sample> SfxSamples = new SortedDictionary<uint, Sample>();
-                List<SampleData> waveData = new List<SampleData>();
-                sfxFileReader.ReadSoundBank(openFileDialog1.FileName, headerData, SfxSamples, waveData);
-
-                Text = string.Format("Data Viewer - {0}", Path.GetFileName(openFileDialog1.FileName));
-                labelPlatformValue.Text = string.Format("{0}", headerData.Platform);
-                labelMemoryValue.Text = string.Format("{0} kb", headerData.FileSize / 1024);
-                labelErrorsValue.Text = string.Format("{0}", m_ErrorCount);
-
-                //Add data
-                TreeNode treeNode1 = new TreeNode("SoundbankInfo");
-                treeView1.Nodes.Add(treeNode1);
-
-                //Print Soundbank Info
-                TreeAdd(treeNode1, nameof(headerData.FileHashCode), headerData.FileHashCode);
-                TreeAdd(treeNode1, nameof(headerData.FileVersion), headerData.FileVersion);
-                TreeAdd(treeNode1, nameof(headerData.FileSize), headerData.FileSize);
-
-                if (headerData.FileVersion > 3 && headerData.FileVersion < 10)
+                openFileDialog1.InitialDirectory = parentForm.configuration.ProjectFolder;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    TreeAdd(treeNode1, nameof(headerData.Timespan), headerData.Timespan);
-                    TreeAdd(treeNode1, nameof(headerData.EurocomIma), headerData.EurocomIma);
+                    sfxFilePath = openFileDialog1.FileName;
                 }
-
-                TreeAdd(treeNode1, "SFXParametersStart", headerData.SFXStart);
-                TreeAdd(treeNode1, "SFXParametersLength", headerData.SFXLenght);
-
-                TreeAdd(treeNode1, nameof(headerData.SampleInfoStart), headerData.SampleInfoStart);
-                TreeAdd(treeNode1, nameof(headerData.SampleInfoLenght), headerData.SampleInfoLenght);
-
-                TreeAdd(treeNode1, nameof(headerData.SpecialSampleInfoStart), headerData.SpecialSampleInfoStart);
-                TreeAdd(treeNode1, nameof(headerData.SpecialSampleInfoLength), headerData.SpecialSampleInfoLength);
-
-                TreeAdd(treeNode1, nameof(headerData.SampleDataStart), headerData.SampleDataStart);
-                TreeAdd(treeNode1, nameof(headerData.SampleDataLength), headerData.SampleDataLength);
-
-                //Print SFX Parameters List
-                TreeNode treeNode2 = new TreeNode("SFXParameters " + SfxSamples.Count);
-                treeView1.Nodes.Add(treeNode2);
-
-                foreach (KeyValuePair<uint, Sample> item in SfxSamples)
+                else
                 {
-                    TreeNode hashCode = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", "HashCode", item.Key));
-                    treeNode2.Nodes.Add(hashCode);
-
-                    TreeAdd(hashCode, nameof(item.Value.DuckerLenght), item.Value.DuckerLenght);
-                    TreeAdd(hashCode, nameof(item.Value.MinDelay), item.Value.MinDelay);
-                    TreeAdd(hashCode, nameof(item.Value.MaxDelay), item.Value.MaxDelay);
-                    TreeAdd(hashCode, nameof(item.Value.InnerRadius), item.Value.InnerRadius);
-                    TreeAdd(hashCode, nameof(item.Value.OuterRadius), item.Value.OuterRadius);
-                    TreeAdd(hashCode, nameof(item.Value.ReverbSend), item.Value.ReverbSend);
-                    TreeAdd(hashCode, nameof(item.Value.TrackingType), item.Value.TrackingType);
-                    TreeAdd(hashCode, nameof(item.Value.MaxVoices), item.Value.MaxVoices);
-                    TreeAdd(hashCode, nameof(item.Value.Priority), item.Value.Priority);
-                    TreeAdd(hashCode, nameof(item.Value.Ducker), item.Value.Ducker);
-                    TreeAdd(hashCode, nameof(item.Value.MasterVolume), item.Value.MasterVolume);
-
-                    //Add Samples
-                    TreeNode node = new TreeNode("SFXPoolElements " + item.Value.samplesList.Count);
-                    hashCode.Nodes.Add(node);
-                    foreach (SampleInfo sampleToPrint in item.Value.samplesList)
-                    {
-                        TreeNode fileRef = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", nameof(sampleToPrint.FileRef), sampleToPrint.FileRef));
-                        node.Nodes.Add(fileRef);
-
-                        TreeAdd(fileRef, nameof(sampleToPrint.FileRef), sampleToPrint.FileRef);
-                        TreeAdd(fileRef, nameof(sampleToPrint.Pitch), sampleToPrint.Pitch);
-                        TreeAdd(fileRef, nameof(sampleToPrint.PitchOffset), sampleToPrint.PitchOffset);
-                        TreeAdd(fileRef, nameof(sampleToPrint.Volume), sampleToPrint.Volume);
-                        TreeAdd(fileRef, nameof(sampleToPrint.VolumeOffset), sampleToPrint.VolumeOffset);
-                        TreeAdd(fileRef, nameof(sampleToPrint.Pan), sampleToPrint.Pan);
-                        TreeAdd(fileRef, nameof(sampleToPrint.PanOffset), sampleToPrint.PanOffset);
-                    }
+                    Close();
                 }
+            }
 
-                //Print SFX Waves List
-                TreeNode treeNode3 = new TreeNode("SampleInfo " + waveData.Count);
-                treeView1.Nodes.Add(treeNode3);
+            //Update form title
+            Text = string.Format("Data Viewer - {0}", Path.GetFileName(sfxFilePath));
 
-                for (int i = 0; i < waveData.Count; i++)
-                {
-                    TreeNode waveNode = new TreeNode(i.ToString());
-                    treeNode3.Nodes.Add(waveNode);
-                    TreeAdd(waveNode, "Flags", waveData[i].Flags);
-                    TreeAdd(waveNode, "Address", waveData[i].Address);
-                    TreeAdd(waveNode, "MemorySize", waveData[i].MemorySize);
-                    TreeAdd(waveNode, "Frequency", waveData[i].Frequency);
-                    TreeAdd(waveNode, "SampleSize", waveData[i].SampleSize);
-                    TreeAdd(waveNode, "Channels", waveData[i].Channels);
-                    TreeAdd(waveNode, "Bits", waveData[i].Bits);
-                    TreeAdd(waveNode, "PsiSampleHeader", waveData[i].PsiSampleHeader);
-                    TreeAdd(waveNode, "SampleLoopOffset", waveData[i].LoopStartOffset);
-                    TreeAdd(waveNode, "Duration", waveData[i].Duration);
-                }
+            //Get selected info from the mainform
+            int selectedVersion = parentForm.configuration.FileVersion;
+            Title selectedTitle = parentForm.configuration.TitleSelected;
+
+            //Get version of MusX Files
+            int hashCode = sbReader.GetFileHashCode(sfxFilePath);
+            FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, sfxFilePath, selectedTitle);
+            switch (fileType)
+            {
+                case FileType.SoundBank:
+                    ShowSoundBank(sfxFilePath);
+                    break;
+                case FileType.Stream:
+                    ShowStreamBank(sfxFilePath);
+                    break;
+                case FileType.Music:
+                    //LoadSelectedMusic(filePath);
+                    //lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                    break;
+                case FileType.SBI:
+                    //LoadSelectedSbi(filePath);
+                    //lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                    break;
+                case FileType.ProjectDetails:
+                    //LoadSelectedProjectDetails(filePath);
+                    //lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                    break;
             }
 
             //Expand TreeView
@@ -213,6 +163,12 @@ namespace EuroSoundExplorer2
             parent.Nodes.Add(node);
         }
 
+        private void TreeAdd(TreeNode parent, string name, bool value)
+        {
+            TreeNode node = new TreeNode(string.Format("bool {0} = {1}", name, value));
+            parent.Nodes.Add(node);
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------
         private TreeNode NextNode(TreeNode n, bool Returning)
         {
@@ -225,6 +181,15 @@ namespace EuroSoundExplorer2
                 return n.FirstNode;
             }
             return n.NextNode ?? NextNode(n.Parent, true);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_SetFont_Click(object sender, EventArgs e)
+        {
+            if (fntDialog.ShowDialog() == DialogResult.OK)
+            {
+                treeView1.Font = fntDialog.Font;
+            }
         }
     }
 
