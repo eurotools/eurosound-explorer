@@ -102,6 +102,12 @@ namespace MusX.Readers
                         Duration = BReader.ReadInt32(),
                     };
 
+                    //Parse Xbox Offset
+                    if (headerData.Platform.IndexOf("XB", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        wavHeaderData.LoopStartOffset = (int)CalculusLoopOffsets.ReverseGetXboxAlignedNumber((uint)wavHeaderData.LoopStartOffset);
+                    }
+
                     //Store current position
                     long prevPos = BReader.BaseStream.Position;
 

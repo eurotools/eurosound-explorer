@@ -267,7 +267,7 @@ namespace EuroSoundExplorer2
                         soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                     }
                     soundToPlay.channels = 1;
-                    soundToPlay.loopOffset = selectedSample.LoopStartOffset;
+                    soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
                     soundToPlay.isLooped = selectedSample.Flags == 1;
                 }
             }

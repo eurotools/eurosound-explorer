@@ -137,7 +137,7 @@ namespace EuroSoundExplorer2
                         {
                             SoundFile soundToPlay = new SoundFile();
                             soundToPlay.PcmData[0] = decodedData;
-                            soundToPlay.loopOffset = selectedSample.LoopStartOffset;
+                            soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
                             soundToPlay.isLooped = selectedSample.Flags == 1;
                             soundToPlay.sampleRate = selectedSample.Frequency;
                             soundToPlay.channels = selectedSample.Channels;
@@ -173,7 +173,7 @@ namespace EuroSoundExplorer2
                 {
                     SoundFile soundToPlay = new SoundFile();
                     soundToPlay.PcmData[0] = decodedData;
-                    soundToPlay.loopOffset = selectedSample.LoopStartOffset;
+                    soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
                     soundToPlay.isLooped = selectedSample.Flags == 1;
                     soundToPlay.sampleRate = selectedSample.Frequency;
                     soundToPlay.channels = selectedSample.Channels;

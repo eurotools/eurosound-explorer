@@ -19,6 +19,10 @@ namespace EuroSoundExplorer2.Classes
             string filePath = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile;
             if (File.Exists(filePath))
             {
+                //Clear dictionary before adding a new hashtable
+                HashCodes.Clear();
+
+                //Read new hashtable
                 using (StreamReader sr = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
                     string line;

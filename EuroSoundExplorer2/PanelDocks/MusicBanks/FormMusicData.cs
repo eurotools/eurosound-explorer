@@ -118,7 +118,11 @@ namespace EuroSoundExplorer2
                     PcmData = new byte[2][] { decodedDataL, decodedDataR },
                     volume = musicData.BaseVolume / 100.0f,
                     sampleRate = frequency,
-                    channels = 2
+                    channels = 2,
+                    isLooped = true,
+                    startPos = (int)GetStartPosition(musicData.Markers),
+                    loopStartPoint = (int)GetStartLoopPos(musicData.Markers),
+                    loopEndPoint = (int)GetEndLoopPos(musicData.Markers),
                 };
 
                 ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
@@ -128,9 +132,66 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         private void ButtonDisplayMusicMarkers_Click(object sender, EventArgs e)
         {
+            //First we need to know the frequency, to convert samples to milliseconds we need to know the frequency
+            int frequency = 32000;
+            SfxHeaderData headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
+            if ((headerFileData.Platform.Equals("XB") || headerFileData.Platform.Equals("Xbox") || headerFileData.Platform.Equals("XB__") || headerFileData.Platform.Equals("XB1_")))
+            {
+                frequency = 44100;
+            }
+
+            //Print markers
             MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
-            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(musicData);
-            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(musicData);
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(musicData, frequency);
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(musicData, frequency);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private uint GetStartPosition(Marker[] startMarkers)
+        {
+            uint startPosition = 0;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 10)
+                {
+                    startPosition = startMarkers[i].Position / 2;
+                    break;
+                }
+            }
+
+            return startPosition;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private uint GetStartLoopPos(Marker[] startMarkers)
+        {
+            uint startPosition = 0;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 7 || startMarkers[i].Type == 6)
+                {
+                    startPosition = startMarkers[i].LoopStart / 2;
+                    break;
+                }
+            }
+
+            return startPosition;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private uint GetEndLoopPos(Marker[] startMarkers)
+        {
+            uint startPosition = 0;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 7 || startMarkers[i].Type == 6)
+                {
+                    startPosition = startMarkers[i].Position / 2;
+                    break;
+                }
+            }
+
+            return startPosition;
         }
     }
 

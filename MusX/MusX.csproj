@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryFunctions.cs" />
+    <Compile Include="CalculusLoopOffsets.cs" />
     <Compile Include="Objects\Markers\Marker.cs" />
     <Compile Include="Objects\Markers\StartMarker.cs" />
     <Compile Include="Objects\MusicSample.cs" />

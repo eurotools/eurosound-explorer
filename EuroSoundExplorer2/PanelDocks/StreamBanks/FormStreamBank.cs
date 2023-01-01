@@ -170,8 +170,9 @@ namespace EuroSoundExplorer2
                     if (selectedItemIndex <= streamedSamples.Count)
                     {
                         StreamSample sampleToDisplay = streamedSamples[selectedItemIndex];
-                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(sampleToDisplay);
-                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(sampleToDisplay);
+                        int sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(sampleToDisplay, sampleRate);
+                        ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(sampleToDisplay, sampleRate);
                     }
                 }
             }
@@ -238,9 +239,77 @@ namespace EuroSoundExplorer2
                 soundToPlay.volume = selectedSample.BaseVolume / 100;
                 soundToPlay.sampleRate = sampleRate;
                 soundToPlay.channels = 1;
+                soundToPlay.isLooped = SoundIsLooped(selectedSample.Markers);
+                soundToPlay.startPos = (int)GetStartPosition(selectedSample.Markers);
+                soundToPlay.loopStartPoint = (int)GetStartLoopPos(selectedSample.Markers);
+                soundToPlay.loopEndPoint = (int)GetEndLoopPos(selectedSample.Markers);
             }
 
             return soundToPlay;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private uint GetStartPosition(Marker[] startMarkers)
+        {
+            uint startPosition = 0;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 10)
+                {
+                    startPosition = startMarkers[i].Position / 2;
+                    break;
+                }
+            }
+
+            return startPosition;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private uint GetStartLoopPos(Marker[] startMarkers)
+        {
+            uint startPosition = 0;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 7 || startMarkers[i].Type == 6)
+                {
+                    startPosition = startMarkers[i].LoopStart / 2;
+                    break;
+                }
+            }
+
+            return startPosition;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private uint GetEndLoopPos(Marker[] startMarkers)
+        {
+            uint startPosition = 0;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 7 || startMarkers[i].Type == 6)
+                {
+                    startPosition = startMarkers[i].Position / 2;
+                    break;
+                }
+            }
+
+            return startPosition;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private bool SoundIsLooped(Marker[] startMarkers)
+        {
+            bool isLooped = true;
+            for (int i = 0; i < startMarkers.Length; i++)
+            {
+                if (startMarkers[i].Type == 9)
+                {
+                    isLooped = false;
+                    break;
+                }
+            }
+
+            return isLooped;
         }
     }
 

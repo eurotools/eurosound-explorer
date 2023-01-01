@@ -44,6 +44,18 @@ namespace MusX.Readers
                         MarkerPos = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian),
                     };
 
+                    //Parse loop Offsets
+                    if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        StartMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(StartMarker.Position);
+                        StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
+                    }
+                    else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        StartMarker.Position = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(StartMarker.Position);
+                        StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(StartMarker.LoopStart);
+                    }
+
                     //Add marker
                     musicDat.StartMarkers[j] = StartMarker;
                 }
@@ -60,6 +72,18 @@ namespace MusX.Readers
                         LoopStart = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
                         LoopMarkerCount = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian),
                     };
+
+                    //Parse loop Offsets
+                    if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        DataMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(DataMarker.Position);
+                        DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
+                    }
+                    else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        DataMarker.Position = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(DataMarker.Position);
+                        DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(DataMarker.LoopStart);
+                    }
 
                     //Add marker
                     musicDat.Markers[k] = DataMarker;

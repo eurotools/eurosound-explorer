@@ -12,11 +12,11 @@ namespace EuroSoundExplorer2.Classes
         /// </summary>
         /// <param name="sourceStream">The stream to read from. Note: the Read method of this stream should return 0 when it reaches the end
         /// or else we will not loop to the start again.</param>
-        public LoopStream(WaveStream sourceStream, long start)
+        public LoopStream(WaveStream sourceStream, int start)
         {
             this.sourceStream = sourceStream;
-            this.EnableLooping = true;
-            _start = (int)(start & -2);
+            EnableLooping = true;
+            _start = start & -2;
         }
 
         /// <summary>
