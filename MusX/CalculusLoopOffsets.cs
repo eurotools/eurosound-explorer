@@ -43,15 +43,6 @@
         }
 
         //-------------------------------------------------------------------------------------------
-        //  STREAMBANKS - NEW
-        //-------------------------------------------------------------------------------------------
-        public static uint GetStreamBankEurocomImaLoopOffset(uint loopOffsetPS2)
-        {
-            uint positionAligned = (uint)(loopOffsetPS2 * 8.5);
-            return GetLoopOffsetAligned(positionAligned);
-        }
-
-        //-------------------------------------------------------------------------------------------
         //  MUSICBANKS - NEW
         //-------------------------------------------------------------------------------------------
         public static uint GetMusicLoopOffsetXboxNew(uint loopOffsetXbox)

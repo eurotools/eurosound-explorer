@@ -256,7 +256,7 @@ namespace EuroSoundExplorer2
             {
                 if (startMarkers[i].Type == 10)
                 {
-                    startPosition = startMarkers[i].Position / 2;
+                    startPosition = startMarkers[i].Position;
                     break;
                 }
             }
@@ -272,7 +272,7 @@ namespace EuroSoundExplorer2
             {
                 if (startMarkers[i].Type == 7 || startMarkers[i].Type == 6)
                 {
-                    startPosition = startMarkers[i].LoopStart / 2;
+                    startPosition = startMarkers[i].LoopStart;
                     break;
                 }
             }
@@ -288,7 +288,7 @@ namespace EuroSoundExplorer2
             {
                 if (startMarkers[i].Type == 7 || startMarkers[i].Type == 6)
                 {
-                    startPosition = startMarkers[i].Position / 2;
+                    startPosition = startMarkers[i].Position;
                     break;
                 }
             }
