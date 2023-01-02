@@ -51,7 +51,7 @@ namespace EuroSoundExplorer2
                         break;
                     case Platform.PS2:
                         SonyAdpcm vagDecoder = new SonyAdpcm();
-                        decodedData = vagDecoder.Decode(selectedSample.EncodedData);
+                        decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref selectedSample.LoopStartOffset);
                         break;
                     case Platform.Xbox:
                         XboxAdpcm xboxDecoder = new XboxAdpcm();
@@ -74,7 +74,7 @@ namespace EuroSoundExplorer2
                 else if (headerData.Platform.Equals("PS2_"))
                 {
                     SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedData = vagDecoder.Decode(selectedSample.EncodedData);
+                    decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref selectedSample.LoopStartOffset);
                 }
             }
 
@@ -98,8 +98,9 @@ namespace EuroSoundExplorer2
                 }
                 else if (selectedPlatform == Platform.PS2)
                 {
+                    int test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedData = vagDecoder.Decode(selectedSample.EncodedData);
+                    decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref test);
                 }
                 else if (selectedPlatform == Platform.Xbox)
                 {
@@ -116,8 +117,9 @@ namespace EuroSoundExplorer2
                 }
                 else if (headerData.Platform.Equals("PS2_"))
                 {
+                    int test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedData = vagDecoder.Decode(selectedSample.EncodedData);
+                    decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref test);
                 }
             }
 

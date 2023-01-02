@@ -47,13 +47,13 @@ namespace MusX.Readers
                     //Parse loop Offsets
                     if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        StartMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(StartMarker.Position);
-                        StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
+                        StartMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.Position);
+                        StartMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
                     }
                     else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        StartMarker.Position = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(StartMarker.Position);
-                        StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(StartMarker.LoopStart);
+                        StartMarker.Position = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(StartMarker.Position);
+                        StartMarker.LoopStart = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(StartMarker.LoopStart);
                     }
 
                     //Add marker
@@ -76,13 +76,13 @@ namespace MusX.Readers
                     //Parse loop Offsets
                     if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        DataMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(DataMarker.Position);
-                        DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
+                        DataMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.Position);
+                        DataMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
                     }
                     else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        DataMarker.Position = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(DataMarker.Position);
-                        DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetMusicLoopOffsetXboxNew(DataMarker.LoopStart);
+                        DataMarker.Position = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(DataMarker.Position);
+                        DataMarker.LoopStart = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(DataMarker.LoopStart);
                     }
 
                     //Add marker

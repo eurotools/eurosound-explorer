@@ -45,7 +45,7 @@ namespace AudioDecoders
         private readonly int VAG_SAMPLE_NIBBL = VAG_SAMPLE_BYTES * 2;
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public byte[] Decode(byte[] vagData)
+        public byte[] Decode(byte[] vagData, ref int loopOffset)
         {
             byte[] pcmData;
 
@@ -74,6 +74,10 @@ namespace AudioDecoders
                     if (vc.flags == (byte)VAGFlag.VAGF_PLAYBACK_END)
                     {
                         break;
+                    }
+                    else if (vc.flags == (byte)VAGFlag.VAGF_LOOP_START)
+                    {
+                        loopOffset = (int)PCMStream.Length;
                     }
                     else
                     {

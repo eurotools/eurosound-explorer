@@ -75,9 +75,10 @@ namespace EuroSoundExplorer2
                 }
                 else if (headerFileData.Platform.Equals("PS2"))
                 {
+                    int test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedDataL = vagDecoder.Decode(musicData.EncodedData[0]);
-                    decodedDataR = vagDecoder.Decode(musicData.EncodedData[1]);
+                    decodedDataL = vagDecoder.Decode(musicData.EncodedData[0], ref test);
+                    decodedDataR = vagDecoder.Decode(musicData.EncodedData[1], ref test);
                 }
                 else if (headerFileData.Platform.Equals("XB") || headerFileData.Platform.Equals("Xbox"))
                 {
@@ -97,9 +98,10 @@ namespace EuroSoundExplorer2
                 }
                 else if (headerFileData.Platform.Equals("PS2_"))
                 {
+                    int test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedDataL = vagDecoder.Decode(musicData.EncodedData[0]);
-                    decodedDataR = vagDecoder.Decode(musicData.EncodedData[1]);
+                    decodedDataL = vagDecoder.Decode(musicData.EncodedData[0], ref test);
+                    decodedDataR = vagDecoder.Decode(musicData.EncodedData[1], ref test);
                 }
                 else if (headerFileData.Platform.Equals("XB__") || headerFileData.Platform.Equals("XB1_"))
                 {

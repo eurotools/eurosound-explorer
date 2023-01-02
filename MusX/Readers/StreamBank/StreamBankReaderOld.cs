@@ -70,18 +70,18 @@ namespace MusX.Readers
                         //Parse loop Offsets
                         if (headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            StartMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPCandGC(StartMarker.Position);
-                            StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPCandGC(StartMarker.LoopStart);
+                            StartMarker.Position = CalculusLoopOffsets.GetLoopOffsetAligned(StartMarker.Position);
+                            StartMarker.LoopStart = CalculusLoopOffsets.GetLoopOffsetAligned(StartMarker.LoopStart);
                         }
                         else if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            StartMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(StartMarker.Position);
-                            StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
+                            StartMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.Position);
+                            StartMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
                         }
                         else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            StartMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetXbox(StartMarker.Position);
-                            StartMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetXbox(StartMarker.LoopStart);
+                            StartMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetXbox(StartMarker.Position);
+                            StartMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetXbox(StartMarker.LoopStart);
                         }
 
                         //Add marker
@@ -107,18 +107,18 @@ namespace MusX.Readers
                         //Parse loop Offsets
                         if (headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            DataMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPCandGC(DataMarker.Position);
-                            DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPCandGC(DataMarker.LoopStart);
+                            DataMarker.Position = CalculusLoopOffsets.GetLoopOffsetAligned(DataMarker.Position);
+                            DataMarker.LoopStart = CalculusLoopOffsets.GetLoopOffsetAligned(DataMarker.LoopStart);
                         }
                         else if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            DataMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(DataMarker.Position);
-                            DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
+                            DataMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.Position);
+                            DataMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
                         }
                         else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            DataMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetXbox(DataMarker.Position);
-                            DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetXbox(DataMarker.LoopStart);
+                            DataMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetXbox(DataMarker.Position);
+                            DataMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetXbox(DataMarker.LoopStart);
                         }
 
                         //Add marker

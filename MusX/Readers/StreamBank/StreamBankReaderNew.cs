@@ -59,8 +59,8 @@ namespace MusX.Readers
                         };
 
                         //Parse loop Offsets
-                        startMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2New(startMarker.Position);
-                        startMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2New(startMarker.LoopStart);
+                        startMarker.Position = CalculusLoopOffsets.GetStreamBankEurocomImaLoopOffset(startMarker.Position);
+                        startMarker.LoopStart = CalculusLoopOffsets.GetStreamBankEurocomImaLoopOffset(startMarker.LoopStart);
 
                         //Add marker
                         streamSample.StartMarkers[j] = startMarker;
@@ -80,8 +80,8 @@ namespace MusX.Readers
                         };
 
                         //Parse loop Offsets
-                        DataMarker.Position = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2New(DataMarker.Position);
-                        DataMarker.LoopStart = CalculusLoopOffsets.ReverseGetStreamLoopOffsetPlayStation2New(DataMarker.LoopStart);
+                        DataMarker.Position = CalculusLoopOffsets.GetStreamBankEurocomImaLoopOffset(DataMarker.Position);
+                        DataMarker.LoopStart = CalculusLoopOffsets.GetStreamBankEurocomImaLoopOffset(DataMarker.LoopStart);
 
                         //Add marker
                         streamSample.Markers[j] = DataMarker;

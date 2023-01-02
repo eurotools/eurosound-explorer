@@ -156,6 +156,12 @@ namespace MusX.Readers
                         Duration = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian)
                     };
 
+                    //Parse Xbox Offset
+                    if (headerData.Platform.IndexOf("PC", System.StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("XB", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        wavHeaderData.LoopStartOffset = (int)CalculusLoopOffsets.GetSoundBankEurocomImaLoopOffset((uint)wavHeaderData.LoopStartOffset);
+                    }
+
                     //Store current position
                     long prevPos = BReader.BaseStream.Position;
 

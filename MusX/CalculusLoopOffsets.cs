@@ -5,36 +5,65 @@
     //-------------------------------------------------------------------------------------------------------------------------------
     internal static class CalculusLoopOffsets
     {
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetMusicLoopOffsetPCandGC(uint loopOffsetGC)
+        //-------------------------------------------------------------------------------------------
+        //  SOUNDBANKS - OLD
+        //-------------------------------------------------------------------------------------------
+        public static uint ReverseGetXboxAlignedNumber(uint inputValue)
         {
-            // 1.378125 comes from 44100Hz / 32000Hz
-            double ruleOfThree = loopOffsetGC / 4.0;
-            return (uint)(ruleOfThree * 1.378125);
+            uint alignedNumber = 0;
+            if (inputValue > 31)
+            {
+                alignedNumber = (((inputValue / 36) - 1) * 64) + 32;
+            }
+            return alignedNumber;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetMusicLoopOffsetPlayStation2(uint loopOffsetPS2)
+        public static uint GetSoundBankEurocomImaLoopOffset(uint loopOffsetPS2)
         {
-            uint pcResult = (uint)(loopOffsetPS2 * 3.5);
-            return ReverseGetMusicLoopOffsetPCandGC(pcResult);
+            uint positionAligned = (uint)(loopOffsetPS2 * 2.928);
+            return GetLoopOffsetAligned(positionAligned);
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  STREAMBANKS - OLD
+        //-------------------------------------------------------------------------------------------
+        public static uint GetStreamLoopOffsetPlayStation2(uint loopOffsetPS2)
+        {
+            uint positionAligned = (uint)(loopOffsetPS2 * 3.5);
+            return GetLoopOffsetAligned(positionAligned);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetMusicLoopOffsetXbox(uint loopOffsetXbox)
+        public static uint GetStreamLoopOffsetXbox(uint loopOffsetXbox)
         {
-            return (uint)(loopOffsetXbox * 0.88888887);
+            uint parsedLoopOffset = (uint)(loopOffsetXbox * 1.7777777777);
+            uint positionAligned = parsedLoopOffset * 2;
+            return GetLoopOffsetAligned(positionAligned);
         }
 
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetMusicLoopOffsetXboxNew(uint loopOffsetXbox)
+        //-------------------------------------------------------------------------------------------
+        //  STREAMBANKS - NEW
+        //-------------------------------------------------------------------------------------------
+        public static uint GetStreamBankEurocomImaLoopOffset(uint loopOffsetPS2)
+        {
+            uint positionAligned = (uint)(loopOffsetPS2 * 8.5);
+            return GetLoopOffsetAligned(positionAligned);
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  MUSICBANKS - NEW
+        //-------------------------------------------------------------------------------------------
+        public static uint GetMusicLoopOffsetXboxNew(uint loopOffsetXbox)
         {
             uint positionAligned = (uint)(loopOffsetXbox * 3.5003);
-            return ReverseGetStreamLoopOffsetPCandGC(positionAligned);
+            return GetLoopOffsetAligned(positionAligned);
         }
 
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetStreamLoopOffsetPCandGC(uint markerPosition)
+        //-------------------------------------------------------------------------------------------
+        //  FUNCTIONS
+        //-------------------------------------------------------------------------------------------
+        public static uint GetLoopOffsetAligned(uint markerPosition)
         {
             uint PositionAligned;
 
@@ -48,38 +77,6 @@
                 PositionAligned = AlignNumber(markerPosition, 4);
             }
             return PositionAligned;
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetStreamLoopOffsetPlayStation2(uint loopOffsetPS2)
-        {
-            uint positionAligned = (uint)(loopOffsetPS2 * 3.5);
-            return ReverseGetStreamLoopOffsetPCandGC(positionAligned);
-        }
-
-        public static uint ReverseGetStreamLoopOffsetPlayStation2New(uint loopOffsetPS2)
-        {
-            uint positionAligned = (uint)(loopOffsetPS2 * 8.5);
-            return ReverseGetStreamLoopOffsetPCandGC(positionAligned);
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetStreamLoopOffsetXbox(uint loopOffsetXbox)
-        {
-            uint parsedLoopOffset = (uint)(loopOffsetXbox * 1.7777777777);
-            uint positionAligned = parsedLoopOffset * 2;
-            return ReverseGetStreamLoopOffsetPCandGC(positionAligned);
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint ReverseGetXboxAlignedNumber(uint inputValue)
-        {
-            uint alignedNumber = 0;
-            if (inputValue > 31)
-            {
-                alignedNumber = (((inputValue / 36) - 1) * 64) + 32;
-            }
-            return alignedNumber;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
