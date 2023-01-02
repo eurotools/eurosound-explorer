@@ -208,30 +208,38 @@ namespace EuroSoundExplorer2
                 string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
                 string filePath = Path.Combine(parentFolder, lvwFiles.SelectedItems[0].SubItems[2].Text.TrimStart('\\'));
 
-                //Get type of file
-                FileType fileType = (FileType)lvwFiles.SelectedItems[0].Tag;
-                switch (fileType)
+                //This can crash if the user has not correctly selected the platform & title
+                try
                 {
-                    case FileType.SoundBank:
-                        LoadSelectedSfx(filePath);
-                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                        break;
-                    case FileType.Stream:
-                        LoadSelectedStream(filePath);
-                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                        break;
-                    case FileType.Music:
-                        LoadSelectedMusic(filePath);
-                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                        break;
-                    case FileType.SBI:
-                        LoadSelectedSbi(filePath);
-                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                        break;
-                    case FileType.ProjectDetails:
-                        LoadSelectedProjectDetails(filePath);
-                        lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                        break;
+                    //Get type of file
+                    FileType fileType = (FileType)lvwFiles.SelectedItems[0].Tag;
+                    switch (fileType)
+                    {
+                        case FileType.SoundBank:
+                            LoadSelectedSfx(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.Stream:
+                            LoadSelectedStream(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.Music:
+                            LoadSelectedMusic(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.SBI:
+                            LoadSelectedSbi(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.ProjectDetails:
+                            LoadSelectedProjectDetails(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else if (treeView1.SelectedNode != null)
