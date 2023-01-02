@@ -41,6 +41,8 @@ namespace EuroSoundExplorer2
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSendToSamplePool = new System.Windows.Forms.ToolStripButton();
             this.ButtonListProperties = new System.Windows.Forms.ToolStripButton();
+            this.ButtonApplyFilter = new System.Windows.Forms.ToolStripButton();
+            this.txtBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,7 +96,9 @@ namespace EuroSoundExplorer2
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonSendToSamplePool,
-            this.ButtonListProperties});
+            this.ButtonListProperties,
+            this.ButtonApplyFilter,
+            this.txtBoxSearch});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(599, 31);
@@ -128,6 +132,24 @@ namespace EuroSoundExplorer2
             this.ButtonListProperties.Text = "List selected item properties";
             this.ButtonListProperties.ToolTipText = "List selected item properties";
             // 
+            // ButtonApplyFilter
+            // 
+            this.ButtonApplyFilter.CheckOnClick = true;
+            this.ButtonApplyFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonApplyFilter.Image = ((System.Drawing.Image)(resources.GetObject("ButtonApplyFilter.Image")));
+            this.ButtonApplyFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonApplyFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonApplyFilter.Name = "ButtonApplyFilter";
+            this.ButtonApplyFilter.Size = new System.Drawing.Size(23, 28);
+            this.ButtonApplyFilter.Text = "Apply Filter";
+            this.ButtonApplyFilter.Click += new System.EventHandler(this.ButtonApplyFilter_Click);
+            // 
+            // txtBoxSearch
+            // 
+            this.txtBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtBoxSearch.Name = "txtBoxSearch";
+            this.txtBoxSearch.Size = new System.Drawing.Size(100, 31);
+            // 
             // FormSB_HashCodes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -156,5 +178,7 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton ButtonSendToSamplePool;
         private System.Windows.Forms.ToolStripButton ButtonListProperties;
+        private System.Windows.Forms.ToolStripButton ButtonApplyFilter;
+        private System.Windows.Forms.ToolStripTextBox txtBoxSearch;
     }
 }

@@ -121,6 +121,37 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void BtnApplyFilter_Click(object sender, EventArgs e)
+        {
+            if (btnApplyFilter.Checked)
+            {
+                if (!string.IsNullOrEmpty(txtFilter.Text))
+                {
+                    if (btnListView.Checked)
+                    {
+                        //Iterate through all list items
+                        GenericMethods.FilterListView(txtFilter.Text, lvwFiles);
+
+                        //Update Count
+                        txtTotal.Text = lvwFiles.Items.Count.ToString();
+                    }
+                    else
+                    {
+                        //Iterate through all list items
+                        GenericMethods.FilterTree(txtFilter.Text, treeView1);
+
+                        //Update Count
+                        txtTotal.Text = treeView1.GetNodeCount(true).ToString();
+                    }
+                }
+            }
+            else
+            {
+                LoadData();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void BtnReloadHashCodes_Click(object sender, EventArgs e)
         {
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).hashTable.LoadHashTable();
@@ -237,7 +268,7 @@ namespace EuroSoundExplorer2
                             break;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -445,7 +476,11 @@ namespace EuroSoundExplorer2
                             GetNumberOfSFXs(files[i], fileType).ToString(),
                             fileType.ToString()
                     })
-                    { UseItemStyleForSubItems = false, Tag = fileType, ImageIndex = 2 };
+                    {
+                        UseItemStyleForSubItems = false,
+                        Tag = fileType,
+                        ImageIndex = 2
+                    };
 
                     //Check if we need to highlight this item
                     if (itemToAdd.SubItems[1].Text.StartsWith("**"))
@@ -464,8 +499,13 @@ namespace EuroSoundExplorer2
         private void FillTreeView(string folder, int selectedVersion, Title selectedTitle)
         {
             treeView1.BeginUpdate();
+            treeView1.Nodes.Clear();
             DirectoryInfo rootDirectoryInfo = new DirectoryInfo(folder);
             treeView1.Nodes.Add(CreateDirectoryNode(rootDirectoryInfo, selectedVersion, selectedTitle));
+            if (treeView1.Nodes.Count > 0 && treeView1.Nodes[0].Nodes.Count > 0)
+            {
+                treeView1.Nodes[0].Expand();
+            }
             treeView1.EndUpdate();
         }
 

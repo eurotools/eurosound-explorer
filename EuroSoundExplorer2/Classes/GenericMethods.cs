@@ -2,10 +2,14 @@
 using EuroSoundExplorer2.Classes;
 using MusX;
 using MusX.Objects;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using static EuroSoundExplorer2.AppConfig;
 using static MusX.Readers.SfxFunctions;
+using static System.Windows.Forms.ListViewItem;
 
 namespace EuroSoundExplorer2
 {
@@ -232,6 +236,70 @@ namespace EuroSoundExplorer2
             }
 
             return finalPath;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal static void FilterListView(string filterText, ListView lvwFiles)
+        {
+            lvwFiles.BeginUpdate();
+            foreach (ListViewItem itemToCheck in lvwFiles.Items)
+            {
+                bool RemoveSubSFX = true;
+
+                //Look for matches in the subitems
+                foreach (ListViewSubItem subItem in itemToCheck.SubItems)
+                {
+                    if (subItem.Text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        RemoveSubSFX = false;
+                        break;
+                    }
+                }
+
+                //Check if we have to remove this item
+                if (RemoveSubSFX)
+                {
+                    itemToCheck.Remove();
+                }
+            }
+            lvwFiles.EndUpdate();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal static void FilterTree(string filterText, TreeView treeView1)
+        {
+            //.Reverse() is required here to iterate backward because the collections
+            //are modified when removing nodes. You can call .ToList() instead to 
+            //iterate forward.
+            treeView1.BeginUpdate();
+            foreach (TreeNode node in GetAllNodes(treeView1.Nodes).Reverse())
+            {
+                if (node.Tag != null && node.Text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    if (node.Parent is null)
+                    {
+                        treeView1.Nodes.Remove(node);
+                    }
+                    else
+                    {
+                        node.Parent.Nodes.Remove(node);
+                    }
+                }
+            }
+            treeView1.EndUpdate();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static IEnumerable<TreeNode> GetAllNodes(TreeNodeCollection Nodes)
+        {
+            foreach (TreeNode tn in Nodes)
+            {
+                yield return tn;
+                foreach (TreeNode child in GetAllNodes(tn.Nodes))
+                {
+                    yield return child;
+                }
+            }
         }
     }
 

@@ -44,6 +44,8 @@ namespace EuroSoundExplorer2
             this.btnTreeView = new System.Windows.Forms.ToolStripButton();
             this.btnReloadList = new System.Windows.Forms.ToolStripButton();
             this.btnReloadHashCodes = new System.Windows.Forms.ToolStripButton();
+            this.btnApplyFilter = new System.Windows.Forms.ToolStripButton();
+            this.txtFilter = new System.Windows.Forms.ToolStripTextBox();
             this.labelTotal = new System.Windows.Forms.ToolStripLabel();
             this.txtTotal = new System.Windows.Forms.ToolStripTextBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -120,6 +122,8 @@ namespace EuroSoundExplorer2
             this.btnTreeView,
             this.btnReloadList,
             this.btnReloadHashCodes,
+            this.btnApplyFilter,
+            this.txtFilter,
             this.labelTotal,
             this.txtTotal});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -175,6 +179,24 @@ namespace EuroSoundExplorer2
             this.btnReloadHashCodes.Size = new System.Drawing.Size(25, 27);
             this.btnReloadHashCodes.Text = "Reload Sound.h";
             this.btnReloadHashCodes.Click += new System.EventHandler(this.BtnReloadHashCodes_Click);
+            // 
+            // btnApplyFilter
+            // 
+            this.btnApplyFilter.CheckOnClick = true;
+            this.btnApplyFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnApplyFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnApplyFilter.Image")));
+            this.btnApplyFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnApplyFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnApplyFilter.Name = "btnApplyFilter";
+            this.btnApplyFilter.Size = new System.Drawing.Size(23, 27);
+            this.btnApplyFilter.Text = "Apply Filter";
+            this.btnApplyFilter.Click += new System.EventHandler(this.BtnApplyFilter_Click);
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(100, 30);
             // 
             // labelTotal
             // 
@@ -326,5 +348,7 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripButton btnListView;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ToolStripButton btnApplyFilter;
+        private System.Windows.Forms.ToolStripTextBox txtFilter;
     }
 }

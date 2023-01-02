@@ -19,6 +19,20 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonApplyFilter_Click(object sender, System.EventArgs e)
+        {
+            if (ButtonApplyFilter.Checked)
+            {
+                //Iterate through all list items
+                GenericMethods.FilterListView(txtBoxSearch.Text, listView1);
+            }
+            else
+            {
+                SetHashCodesToListView();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         public void SetHashCodesToListView()
         {
             SortedDictionary<uint, Sample> dictToShow = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxSamples;
