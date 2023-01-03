@@ -32,68 +32,81 @@ namespace EuroSoundExplorer2
         public void ShowStreamData()
         {
             List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
-
-            //Print Samples Info
-            lvwStreamData.BeginUpdate();
-            lvwStreamData.Items.Clear();
-            for (int i = 0; i < streamedSamples.Count; i++)
+            if (streamedSamples.Count > 0)
             {
-                StreamSample currentSample = streamedSamples[i];
-                ushort errors = 0;
+                //Print Samples Info
+                lvwStreamData.BeginUpdate();
+                lvwStreamData.Items.Clear();
+                for (int i = 0; i < streamedSamples.Count; i++)
+                {
+                    StreamSample currentSample = streamedSamples[i];
+                    ushort errors = 0;
 
-                //Create item and add it to list
-                ListViewItem listViewItem2 = new ListViewItem(new string[] { i.ToString(), "??", currentSample.BlockPosition.ToString(), currentSample.MarkerSize.ToString(), currentSample.AudioOffset.ToString(), currentSample.AudioSize.ToString(), currentSample.BaseVolume.ToString() })
-                {
-                    ImageIndex = 0,
-                    Tag = i
-                };
+                    //Create item and add it to list
+                    string blockPos = currentSample.BlockPosition.ToString();
+                    string audioOff = currentSample.AudioOffset.ToString();
 
-                //Check for errors
-                if (currentSample.MarkerSize < 0)
-                {
-                    errors |= (1 << 3);
-                }
-                if (currentSample.AudioOffset < 0)
-                {
-                    errors |= (1 << 4);
-                }
-                if (currentSample.AudioSize < 0)
-                {
-                    errors |= (1 << 5);
-                }
-                if (currentSample.BaseVolume < 0 || currentSample.BaseVolume > 100)
-                {
-                    errors |= (1 << 6);
-                }
-
-                //Red fields
-                for (int j = 0; j < 7; j++)
-                {
-                    if (Convert.ToBoolean((errors >> j) & 1))
+                    //Enable hex
+                    if (ButtonHexView.Checked)
                     {
-                        listViewItem2.SubItems[j].ForeColor = Color.Red;
+                        blockPos = "0x" + currentSample.BlockPosition.ToString("X8");
+                        audioOff = "0x" + currentSample.AudioOffset.ToString("X8");
                     }
-                }
-                lvwStreamData.Items.Add(listViewItem2);
-            }
-            lvwStreamData.EndUpdate();
 
-            //Enable or disable button
-            SfxHeaderData streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
-            if (streamHeader.FileVersion == 201 || streamHeader.FileVersion == 1)
-            {
-                ButtonValidateAllStreams.Enabled = false;
-            }
-            else
-            {
-                //Enable validation tool - Only For Custom EuroCom ADPCM
-                if (streamHeader.Platform.Equals("PC__") || streamHeader.Platform.Equals("XB__") || streamHeader.Platform.Equals("GC__"))
+                    //Create item
+                    ListViewItem listViewItem2 = new ListViewItem(new string[] { i.ToString(), "??", blockPos, currentSample.MarkerSize.ToString(), audioOff, currentSample.AudioSize.ToString(), currentSample.BaseVolume.ToString() })
+                    {
+                        ImageIndex = 0,
+                        Tag = i
+                    };
+
+                    //Check for errors
+                    if (currentSample.MarkerSize < 0)
+                    {
+                        errors |= (1 << 3);
+                    }
+                    if (currentSample.AudioOffset < 0)
+                    {
+                        errors |= (1 << 4);
+                    }
+                    if (currentSample.AudioSize < 0)
+                    {
+                        errors |= (1 << 5);
+                    }
+                    if (currentSample.BaseVolume < 0 || currentSample.BaseVolume > 100)
+                    {
+                        errors |= (1 << 6);
+                    }
+
+                    //Red fields
+                    for (int j = 0; j < 7; j++)
+                    {
+                        if (Convert.ToBoolean((errors >> j) & 1))
+                        {
+                            listViewItem2.SubItems[j].ForeColor = Color.Red;
+                        }
+                    }
+                    lvwStreamData.Items.Add(listViewItem2);
+                }
+                lvwStreamData.EndUpdate();
+
+                //Enable or disable button
+                SfxHeaderData streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
+                if (streamHeader.FileVersion == 201 || streamHeader.FileVersion == 1)
                 {
-                    ButtonValidateAllStreams.Enabled = true;
+                    ButtonValidateAllStreams.Enabled = false;
                 }
                 else
                 {
-                    ButtonValidateAllStreams.Enabled = false;
+                    //Enable validation tool - Only For Custom EuroCom ADPCM
+                    if (streamHeader.Platform.Equals("PC__") || streamHeader.Platform.Equals("XB__") || streamHeader.Platform.Equals("GC__"))
+                    {
+                        ButtonValidateAllStreams.Enabled = true;
+                    }
+                    else
+                    {
+                        ButtonValidateAllStreams.Enabled = false;
+                    }
                 }
             }
         }
@@ -246,6 +259,12 @@ namespace EuroSoundExplorer2
         private void ButtonSendToMediaPlayer_Click(object sender, EventArgs e)
         {
             MenuItem_SendToMediaPlayer_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonHexView_Click(object sender, EventArgs e)
+        {
+            ShowStreamData();
         }
 
         //-------------------------------------------------------------------------------------------

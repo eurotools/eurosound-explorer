@@ -63,7 +63,6 @@ namespace EuroSoundExplorer2
             this.MenuItem_SBI = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_SBI_StoredSoundBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI_StoredMusicBanks = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTipDisplayHex = new System.Windows.Forms.ToolStripButton();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,8 +89,7 @@ namespace EuroSoundExplorer2
             this.MenuItem_Stream,
             this.MenuItem_Music,
             this.MenuItem_Project,
-            this.MenuItem_SBI,
-            this.toolTipDisplayHex});
+            this.MenuItem_SBI});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -365,15 +363,6 @@ namespace EuroSoundExplorer2
             this.MenuItem_SBI_StoredMusicBanks.Text = "Stored Musicbanks";
             this.MenuItem_SBI_StoredMusicBanks.Click += new System.EventHandler(this.MenuItem_SBI_StoredMusicBanks_Click);
             // 
-            // toolTipDisplayHex
-            // 
-            this.toolTipDisplayHex.CheckOnClick = true;
-            this.toolTipDisplayHex.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolTipDisplayHex.Name = "toolTipDisplayHex";
-            this.toolTipDisplayHex.Size = new System.Drawing.Size(73, 22);
-            this.toolTipDisplayHex.Text = "Display Hex";
-            this.toolTipDisplayHex.ToolTipText = "Display Hex";
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -425,7 +414,6 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripDropDownButton MenuItem_Menu1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SfxFiles;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_MediaPlayer;
-        private System.Windows.Forms.ToolStripButton toolTipDisplayHex;
         private System.Windows.Forms.ToolStripDropDownButton MenuItem_SBI;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SBI_StoredSoundBanks;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SBI_StoredMusicBanks;

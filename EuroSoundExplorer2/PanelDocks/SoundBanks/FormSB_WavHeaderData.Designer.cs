@@ -48,6 +48,8 @@ namespace EuroSoundExplorer2
             this.ButtonSaveToMediaPlayer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ButtonItemUsage = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.ButtonHexView = new System.Windows.Forms.ToolStripButton();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
             this.Col_No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -130,10 +132,12 @@ namespace EuroSoundExplorer2
             this.ButtonSaveAudio,
             this.ButtonSaveToMediaPlayer,
             this.toolStripSeparator4,
-            this.ButtonItemUsage});
+            this.ButtonItemUsage,
+            this.toolStripSeparator5,
+            this.ButtonHexView});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(503, 35);
+            this.toolStrip1.Size = new System.Drawing.Size(503, 39);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -144,14 +148,14 @@ namespace EuroSoundExplorer2
             this.ButtonSaveRawData.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonSaveRawData.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSaveRawData.Name = "ButtonSaveRawData";
-            this.ButtonSaveRawData.Size = new System.Drawing.Size(26, 32);
+            this.ButtonSaveRawData.Size = new System.Drawing.Size(26, 36);
             this.ButtonSaveRawData.Text = "Save Raw Data";
             this.ButtonSaveRawData.Click += new System.EventHandler(this.ButtonSaveRawData_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 39);
             // 
             // ButtonSaveAudio
             // 
@@ -160,7 +164,7 @@ namespace EuroSoundExplorer2
             this.ButtonSaveAudio.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonSaveAudio.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSaveAudio.Name = "ButtonSaveAudio";
-            this.ButtonSaveAudio.Size = new System.Drawing.Size(25, 32);
+            this.ButtonSaveAudio.Size = new System.Drawing.Size(25, 36);
             this.ButtonSaveAudio.Text = "Decode and Save";
             this.ButtonSaveAudio.Click += new System.EventHandler(this.ButtonSaveAudio_Click);
             // 
@@ -171,14 +175,14 @@ namespace EuroSoundExplorer2
             this.ButtonSaveToMediaPlayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonSaveToMediaPlayer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSaveToMediaPlayer.Name = "ButtonSaveToMediaPlayer";
-            this.ButtonSaveToMediaPlayer.Size = new System.Drawing.Size(34, 32);
+            this.ButtonSaveToMediaPlayer.Size = new System.Drawing.Size(34, 36);
             this.ButtonSaveToMediaPlayer.Text = "Send To Media Player";
             this.ButtonSaveToMediaPlayer.Click += new System.EventHandler(this.ButtonSaveToMediaPlayer_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 35);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 39);
             // 
             // ButtonItemUsage
             // 
@@ -187,9 +191,26 @@ namespace EuroSoundExplorer2
             this.ButtonItemUsage.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonItemUsage.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonItemUsage.Name = "ButtonItemUsage";
-            this.ButtonItemUsage.Size = new System.Drawing.Size(28, 32);
+            this.ButtonItemUsage.Size = new System.Drawing.Size(28, 36);
             this.ButtonItemUsage.Text = "Item Usage";
             this.ButtonItemUsage.Click += new System.EventHandler(this.ButtonItemUsage_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 39);
+            // 
+            // ButtonHexView
+            // 
+            this.ButtonHexView.CheckOnClick = true;
+            this.ButtonHexView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonHexView.Image = ((System.Drawing.Image)(resources.GetObject("ButtonHexView.Image")));
+            this.ButtonHexView.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonHexView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonHexView.Name = "ButtonHexView";
+            this.ButtonHexView.Size = new System.Drawing.Size(36, 36);
+            this.ButtonHexView.Text = "Display Hex";
+            this.ButtonHexView.Click += new System.EventHandler(this.ButtonHexView_Click);
             // 
             // imageList1
             // 
@@ -309,5 +330,7 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripButton ButtonItemUsage;
         private System.Windows.Forms.ImageList imageList1;
         protected internal ListView_ColumnSortingClick listView1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripButton ButtonHexView;
     }
 }

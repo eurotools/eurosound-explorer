@@ -36,8 +36,14 @@ namespace EuroSoundExplorer2
 
                 foreach (SampleData waveData in wavesList)
                 {
+                    string addressOffset = waveData.Address.ToString();
+                    if (ButtonHexView.Checked)
+                    {
+                        addressOffset = "0x" + waveData.Address.ToString("X8");
+                    }
+
                     //Create item and add it to list
-                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), waveData.Address.ToString(), waveData.MemorySize.ToString(), waveData.SampleSize.ToString(), waveData.Frequency.ToString(), waveData.LoopStartOffset.ToString(), waveData.Duration.ToString() })
+                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, waveData.MemorySize.ToString(), waveData.SampleSize.ToString(), waveData.Frequency.ToString(), waveData.LoopStartOffset.ToString(), waveData.Duration.ToString() })
                     {
                         ImageIndex = 0,
                         Tag = index
@@ -88,6 +94,12 @@ namespace EuroSoundExplorer2
         private void ButtonItemUsage_Click(object sender, System.EventArgs e)
         {
             MenuItem_ItemUsage_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonHexView_Click(object sender, System.EventArgs e)
+        {
+            ShowWavesList();
         }
 
         //-------------------------------------------------------------------------------------------
