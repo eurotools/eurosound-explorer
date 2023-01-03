@@ -122,43 +122,44 @@ namespace EuroSoundExplorer2
             // MenuItem_File_Settings
             // 
             this.MenuItem_File_Settings.Name = "MenuItem_File_Settings";
-            this.MenuItem_File_Settings.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_Settings.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_Settings.Text = "Settings";
             this.MenuItem_File_Settings.Click += new System.EventHandler(this.MenuItem_File_Settings_Click);
             // 
             // MenuItem_File_DecodeAudio
             // 
             this.MenuItem_File_DecodeAudio.Name = "MenuItem_File_DecodeAudio";
-            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_DecodeAudio.Text = "Decode Audio File";
+            this.MenuItem_File_DecodeAudio.Click += new System.EventHandler(this.MenuItem_File_DecodeAudio_Click);
             // 
             // MenuItem_File_DataViewer
             // 
             this.MenuItem_File_DataViewer.Name = "MenuItem_File_DataViewer";
-            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_DataViewer.Text = "Data Viewer";
             this.MenuItem_File_DataViewer.Click += new System.EventHandler(this.MenuItem_File_DataViewer_Click);
             // 
             // MenuItem_File_Separator1
             // 
             this.MenuItem_File_Separator1.Name = "MenuItem_File_Separator1";
-            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(167, 6);
+            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_File_ResetSettings
             // 
             this.MenuItem_File_ResetSettings.Name = "MenuItem_File_ResetSettings";
-            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_ResetSettings.Text = "Reset Settings";
             // 
             // MenuItem_File_Separator2
             // 
             this.MenuItem_File_Separator2.Name = "MenuItem_File_Separator2";
-            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(167, 6);
+            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_File_Exit
             // 
             this.MenuItem_File_Exit.Name = "MenuItem_File_Exit";
-            this.MenuItem_File_Exit.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_Exit.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_Exit.Text = "Exit";
             this.MenuItem_File_Exit.Click += new System.EventHandler(this.MenuItem_File_Exit_Click);
             // 
@@ -207,28 +208,28 @@ namespace EuroSoundExplorer2
             // MenuItem_SB_HashCodes
             // 
             this.MenuItem_SB_HashCodes.Name = "MenuItem_SB_HashCodes";
-            this.MenuItem_SB_HashCodes.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SB_HashCodes.Size = new System.Drawing.Size(169, 22);
             this.MenuItem_SB_HashCodes.Text = "HashCodes";
             this.MenuItem_SB_HashCodes.Click += new System.EventHandler(this.MenuItem_SB_HashCodes_Click);
             // 
             // MenuItem_SB_SamplePool
             // 
             this.MenuItem_SB_SamplePool.Name = "MenuItem_SB_SamplePool";
-            this.MenuItem_SB_SamplePool.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SB_SamplePool.Size = new System.Drawing.Size(169, 22);
             this.MenuItem_SB_SamplePool.Text = "Sample Pool";
             this.MenuItem_SB_SamplePool.Click += new System.EventHandler(this.MenuItem_SB_SamplePool_Click);
             // 
             // MenuItem_SB_SampleProps
             // 
             this.MenuItem_SB_SampleProps.Name = "MenuItem_SB_SampleProps";
-            this.MenuItem_SB_SampleProps.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SB_SampleProps.Size = new System.Drawing.Size(169, 22);
             this.MenuItem_SB_SampleProps.Text = "Sample Properties";
             this.MenuItem_SB_SampleProps.Click += new System.EventHandler(this.MenuItem_SB_SampleProps_Click);
             // 
             // MenuItem_SB_WavHeaderData
             // 
             this.MenuItem_SB_WavHeaderData.Name = "MenuItem_SB_WavHeaderData";
-            this.MenuItem_SB_WavHeaderData.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SB_WavHeaderData.Size = new System.Drawing.Size(169, 22);
             this.MenuItem_SB_WavHeaderData.Text = "Wav Header Data";
             this.MenuItem_SB_WavHeaderData.Click += new System.EventHandler(this.MenuItem_SB_WavHeaderData_Click);
             // 
@@ -319,21 +320,21 @@ namespace EuroSoundExplorer2
             // MenuItem_Project_ProjectData
             // 
             this.MenuItem_Project_ProjectData.Name = "MenuItem_Project_ProjectData";
-            this.MenuItem_Project_ProjectData.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Project_ProjectData.Size = new System.Drawing.Size(158, 22);
             this.MenuItem_Project_ProjectData.Text = "Project Data";
             this.MenuItem_Project_ProjectData.Click += new System.EventHandler(this.MenuItem_Project_ProjectData_Click);
             // 
             // MenuItem_Project_MemorySlots
             // 
             this.MenuItem_Project_MemorySlots.Name = "MenuItem_Project_MemorySlots";
-            this.MenuItem_Project_MemorySlots.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Project_MemorySlots.Size = new System.Drawing.Size(158, 22);
             this.MenuItem_Project_MemorySlots.Text = "Memmory Slots";
             this.MenuItem_Project_MemorySlots.Click += new System.EventHandler(this.MenuItem_Project_MemorySlots_Click);
             // 
             // MenuItem_Project_Soundbank
             // 
             this.MenuItem_Project_Soundbank.Name = "MenuItem_Project_Soundbank";
-            this.MenuItem_Project_Soundbank.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Project_Soundbank.Size = new System.Drawing.Size(158, 22);
             this.MenuItem_Project_Soundbank.Text = "SoundBank";
             this.MenuItem_Project_Soundbank.Click += new System.EventHandler(this.MenuItem_Project_Soundbank_Click);
             // 

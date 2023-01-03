@@ -51,6 +51,10 @@ namespace EuroSoundExplorer2
             this.Col_AudioLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_BaseVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.ButtonSaveRawData = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.MenuItem_SaveRaw = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +65,8 @@ namespace EuroSoundExplorer2
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonValidateAllStreams,
             this.toolStripSeparator2,
+            this.ButtonSaveRawData,
+            this.toolStripSeparator3,
             this.ButtonSaveFile,
             this.ButtonSendToMediaPlayer,
             this.toolStripSeparator1,
@@ -131,11 +137,13 @@ namespace EuroSoundExplorer2
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_SaveRaw,
+            this.toolStripSeparator4,
             this.MenuItem_Save,
             this.MenuItem_SendToMediaPlayer});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 76);
             // 
             // MenuItem_Save
             // 
@@ -224,6 +232,36 @@ namespace EuroSoundExplorer2
             this.imageList1.Images.SetKeyName(1, "SatusOK.png");
             this.imageList1.Images.SetKeyName(2, "SatusError.png");
             // 
+            // ButtonSaveRawData
+            // 
+            this.ButtonSaveRawData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonSaveRawData.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSaveRawData.Image")));
+            this.ButtonSaveRawData.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonSaveRawData.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSaveRawData.Name = "ButtonSaveRawData";
+            this.ButtonSaveRawData.Size = new System.Drawing.Size(26, 32);
+            this.ButtonSaveRawData.Text = "Save Raw Data";
+            this.ButtonSaveRawData.Click += new System.EventHandler(this.ButtonSaveRawData_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 35);
+            // 
+            // MenuItem_SaveRaw
+            // 
+            this.MenuItem_SaveRaw.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_SaveRaw.Image")));
+            this.MenuItem_SaveRaw.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuItem_SaveRaw.Name = "MenuItem_SaveRaw";
+            this.MenuItem_SaveRaw.Size = new System.Drawing.Size(186, 22);
+            this.MenuItem_SaveRaw.Text = "Save Raw Data";
+            this.MenuItem_SaveRaw.Click += new System.EventHandler(this.MenuItem_SaveRaw_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(183, 6);
+            // 
             // FormStreamBank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -264,5 +302,9 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton ButtonDisplayMarkers;
+        private System.Windows.Forms.ToolStripButton ButtonSaveRawData;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_SaveRaw;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }

@@ -88,8 +88,8 @@ namespace MusX.Readers
             }
             else
             {
-                SoundBankReaderNew oldReader = new SoundBankReaderNew();
-                oldReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList);
+                SoundBankReaderNew newReader = new SoundBankReaderNew();
+                newReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList);
             }
         }
     }

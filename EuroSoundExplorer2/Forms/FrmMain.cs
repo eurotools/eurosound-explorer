@@ -126,16 +126,19 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void MenuItem_File_Exit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_File_Settings_Click(object sender, EventArgs e)
         {
             pnlSettings.Show(mainDockPanel, DockState.Float);
             UpdateWindowMenuChecks();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_File_DecodeAudio_Click(object sender, EventArgs e)
+        {
+            using (FrmAudioDecoder audioDecoder = new FrmAudioDecoder())
+            {
+                audioDecoder.ShowDialog();
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -145,6 +148,12 @@ namespace EuroSoundExplorer2
             {
                 dataViewer.ShowDialog();
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_File_Exit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
         //-------------------------------------------------------------------------------------------

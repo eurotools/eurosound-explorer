@@ -43,10 +43,13 @@ namespace EuroSoundExplorer2
             this.buttonFind = new System.Windows.Forms.ToolStripButton();
             this.textboxFind = new System.Windows.Forms.ToolStripTextBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.fntDialog = new System.Windows.Forms.FontDialog();
             this.contextMenuTreeview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_SetFont = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.fntDialog = new System.Windows.Forms.FontDialog();
+            this.MenuItem_ExpandNode = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_CollapseNode = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Separator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.contextMenuTreeview.SuspendLayout();
             this.SuspendLayout();
@@ -153,25 +156,48 @@ namespace EuroSoundExplorer2
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(540, 454);
             this.treeView1.TabIndex = 7;
+            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TreeView1_MouseDown);
+            // 
+            // contextMenuTreeview
+            // 
+            this.contextMenuTreeview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_ExpandNode,
+            this.MenuItem_CollapseNode,
+            this.MenuItem_Separator,
+            this.MenuItem_SetFont});
+            this.contextMenuTreeview.Name = "contextMenuTreeview";
+            this.contextMenuTreeview.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.contextMenuTreeview.Size = new System.Drawing.Size(120, 76);
+            // 
+            // MenuItem_SetFont
+            // 
+            this.MenuItem_SetFont.Name = "MenuItem_SetFont";
+            this.MenuItem_SetFont.Size = new System.Drawing.Size(119, 22);
+            this.MenuItem_SetFont.Text = "Font...";
+            this.MenuItem_SetFont.Click += new System.EventHandler(this.MenuItem_SetFont_Click);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "SFX Files (*.sfx)|*.sfx";
             // 
-            // contextMenuTreeview
+            // MenuItem_ExpandNode
             // 
-            this.contextMenuTreeview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem_SetFont});
-            this.contextMenuTreeview.Name = "contextMenuTreeview";
-            this.contextMenuTreeview.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuTreeview.Size = new System.Drawing.Size(181, 48);
+            this.MenuItem_ExpandNode.Name = "MenuItem_ExpandNode";
+            this.MenuItem_ExpandNode.Size = new System.Drawing.Size(119, 22);
+            this.MenuItem_ExpandNode.Text = "Expand";
+            this.MenuItem_ExpandNode.Click += new System.EventHandler(this.MenuItem_ExpandNode_Click);
             // 
-            // MenuItem_SetFont
+            // MenuItem_CollapseNode
             // 
-            this.MenuItem_SetFont.Name = "MenuItem_SetFont";
-            this.MenuItem_SetFont.Size = new System.Drawing.Size(180, 22);
-            this.MenuItem_SetFont.Text = "Font";
-            this.MenuItem_SetFont.Click += new System.EventHandler(this.MenuItem_SetFont_Click);
+            this.MenuItem_CollapseNode.Name = "MenuItem_CollapseNode";
+            this.MenuItem_CollapseNode.Size = new System.Drawing.Size(119, 22);
+            this.MenuItem_CollapseNode.Text = "Collapse";
+            this.MenuItem_CollapseNode.Click += new System.EventHandler(this.MenuItem_CollapseNode_Click);
+            // 
+            // MenuItem_Separator
+            // 
+            this.MenuItem_Separator.Name = "MenuItem_Separator";
+            this.MenuItem_Separator.Size = new System.Drawing.Size(116, 6);
             // 
             // FrmDataViewer
             // 
@@ -213,5 +239,8 @@ namespace EuroSoundExplorer2
         private System.Windows.Forms.ContextMenuStrip contextMenuTreeview;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SetFont;
         private System.Windows.Forms.FontDialog fntDialog;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_ExpandNode;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_CollapseNode;
+        private System.Windows.Forms.ToolStripSeparator MenuItem_Separator;
     }
 }

@@ -14,6 +14,9 @@ namespace EuroSoundExplorer2
     {
         private readonly SoundBankReader sbReader = new SoundBankReader();
         private readonly StreamBankReader strReader = new StreamBankReader();
+        private readonly MusicBankReader musReader = new MusicBankReader();
+        private readonly SbiBankReader sbiReader = new SbiBankReader();
+        private readonly ProjectDetailsReader projDetReader = new ProjectDetailsReader();
         private readonly int m_ErrorCount = 0;
         private string sfxFilePath = string.Empty;
 
@@ -43,42 +46,47 @@ namespace EuroSoundExplorer2
                 }
             }
 
-            //Update form title
-            Text = string.Format("Data Viewer - {0}", Path.GetFileName(sfxFilePath));
-
-            //Get selected info from the mainform
-            int selectedVersion = parentForm.configuration.FileVersion;
-            Title selectedTitle = parentForm.configuration.TitleSelected;
-
-            //Get version of MusX Files
-            int hashCode = sbReader.GetFileHashCode(sfxFilePath);
-            FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, sfxFilePath, selectedTitle);
-            switch (fileType)
+            //Check that the string is not null and show the data
+            if (!string.IsNullOrEmpty(sfxFilePath))
             {
-                case FileType.SoundBank:
-                    ShowSoundBank(sfxFilePath);
-                    break;
-                case FileType.Stream:
-                    ShowStreamBank(sfxFilePath);
-                    break;
-                case FileType.Music:
-                    //LoadSelectedMusic(filePath);
-                    //lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                    break;
-                case FileType.SBI:
-                    //LoadSelectedSbi(filePath);
-                    //lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                    break;
-                case FileType.ProjectDetails:
-                    //LoadSelectedProjectDetails(filePath);
-                    //lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
-                    break;
-            }
+                //Update form title
+                Text = string.Format("Data Viewer - {0}", Path.GetFileName(sfxFilePath));
 
-            //Expand TreeView
-            if (treeView1.Nodes.Count > 0)
-            {
-                treeView1.Nodes[0].Expand();
+                //Get selected info from the mainform
+                int selectedVersion = parentForm.configuration.FileVersion;
+                Title selectedTitle = parentForm.configuration.TitleSelected;
+
+                //Get version of MusX Files
+                int hashCode = sbReader.GetFileHashCode(sfxFilePath);
+                FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, sfxFilePath, selectedTitle);
+                switch (fileType)
+                {
+                    case FileType.SoundBank:
+                        ShowSoundBank(sfxFilePath);
+                        break;
+                    case FileType.Stream:
+                        ShowStreamBank(sfxFilePath);
+                        break;
+                    case FileType.Music:
+                        ShowMusicBank(sfxFilePath);
+                        break;
+                    case FileType.SBI:
+                        ShowSbiBank(sfxFilePath);
+                        break;
+                    case FileType.ProjectDetails:
+                        ShowProjectDetails(sfxFilePath);
+                        break;
+                    default:
+                        MessageBox.Show("Unsuported file type!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        Close();
+                        break;
+                }
+
+                //Expand TreeView
+                if (treeView1.Nodes.Count > 0)
+                {
+                    treeView1.Nodes[0].Expand();
+                }
             }
         }
 
@@ -109,6 +117,35 @@ namespace EuroSoundExplorer2
                         break;
                     }
                 }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  CONTEXT MENU
+        //-------------------------------------------------------------------------------------------
+        private void MenuItem_ExpandNode_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Nodes.Count > 0)
+            {
+                treeView1.SelectedNode.Expand();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_CollapseNode_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Nodes.Count > 0)
+            {
+                treeView1.SelectedNode.Collapse();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_SetFont_Click(object sender, EventArgs e)
+        {
+            if (fntDialog.ShowDialog() == DialogResult.OK)
+            {
+                treeView1.Font = fntDialog.Font;
             }
         }
 
@@ -163,9 +200,17 @@ namespace EuroSoundExplorer2
             parent.Nodes.Add(node);
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void TreeAdd(TreeNode parent, string name, bool value)
         {
             TreeNode node = new TreeNode(string.Format("bool {0} = {1}", name, value));
+            parent.Nodes.Add(node);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void TreeAdd(TreeNode parent, string name, string value)
+        {
+            TreeNode node = new TreeNode(string.Format("string {0} = {1}", name, value));
             parent.Nodes.Add(node);
         }
 
@@ -184,11 +229,11 @@ namespace EuroSoundExplorer2
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void MenuItem_SetFont_Click(object sender, EventArgs e)
+        private void TreeView1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (fntDialog.ShowDialog() == DialogResult.OK)
+            if (treeView1.SelectedNode != null)
             {
-                treeView1.Font = fntDialog.Font;
+                treeView1.SelectedNode = treeView1.GetNodeAt(e.X, e.Y);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace EuroSoundExplorer2
         private readonly SoundBankReader reader = new SoundBankReader();
         private readonly StreamBankReader streamReader = new StreamBankReader();
         private readonly MusicBankReader musicReader = new MusicBankReader();
-        private readonly SbiReader sbiReader = new SbiReader();
+        private readonly SbiBankReader sbiReader = new SbiBankReader();
         private readonly ProjectDetailsReader projDetailsReader = new ProjectDetailsReader();
 
         //SoundBanks
@@ -305,6 +305,32 @@ namespace EuroSoundExplorer2
             else if (treeView1.SelectedNode != null && treeView1.SelectedNode.Tag != null)
             {
                 ClearLoadedData((FileType)treeView1.SelectedNode.Tag);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_DataViewer_Click(object sender, EventArgs e)
+        {
+            string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
+
+            //Get the selected file path
+            string filePath = string.Empty;
+            if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
+            {
+                filePath = Path.Combine(parentFolder, lvwFiles.SelectedItems[0].SubItems[2].Text.TrimStart('\\'));
+            }
+            else if (treeView1.SelectedNode != null && treeView1.SelectedNode.Tag != null)
+            {
+                filePath = Path.Combine(parentFolder, treeView1.SelectedNode.Name);
+            }
+
+            //Show the selected file if exists
+            if (File.Exists(filePath))
+            {
+                using (FrmDataViewer dataViewer = new FrmDataViewer(filePath))
+                {
+                    dataViewer.ShowDialog();
+                }
             }
         }
 

@@ -22,16 +22,16 @@ namespace MusX.Readers
                 musicDat = new MusicSample
                 {
                     //Properties
-                    StartMarkerCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                    MarkerCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                    StartMarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                    MarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
                     StartMarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
                     MarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
                     BaseVolume = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)
                 };
 
                 //Read Start Markers
-                musicDat.StartMarkers = new StartMarker[musicDat.StartMarkerCount];
-                for (int j = 0; j < musicDat.StartMarkerCount; j++)
+                musicDat.StartMarkers = new StartMarker[musicDat.StartMarkersCount];
+                for (int j = 0; j < musicDat.StartMarkersCount; j++)
                 {
                     StartMarker StartMarker = new StartMarker
                     {
@@ -74,8 +74,8 @@ namespace MusX.Readers
                 }
 
                 //Read Markers
-                musicDat.Markers = new Marker[musicDat.MarkerCount];
-                for (int k = 0; k < musicDat.MarkerCount; k++)
+                musicDat.Markers = new Marker[musicDat.MarkersCount];
+                for (int k = 0; k < musicDat.MarkersCount; k++)
                 {
                     Marker DataMarker = new Marker
                     {

@@ -16,9 +16,9 @@ namespace MusX.Objects
 
         //Parameters
         [Category("Marker Header")]
-        public uint StartMarkerCount { get; set; }
+        public uint StartMarkersCount { get; set; }
         [Category("Marker Header")]
-        public uint MarkerCount { get; set; }
+        public uint MarkersCount { get; set; }
         [Category("Marker Header")]
         public uint StartMarkerOffset { get; set; }
         [Category("Marker Header")]

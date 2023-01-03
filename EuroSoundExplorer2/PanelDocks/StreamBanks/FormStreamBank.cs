@@ -109,6 +109,26 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------
         //  CONTEXT MENU
         //-------------------------------------------------------------------------------------------
+        private void MenuItem_SaveRaw_Click(object sender, EventArgs e)
+        {
+            if (lvwStreamData.SelectedItems.Count > 0)
+            {
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (ListViewItem selectedItem in lvwStreamData.SelectedItems)
+                    {
+                        //Get Sample data 
+                        List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+                        StreamSample selectedSample = streamedSamples[(int)selectedItem.Tag];
+
+                        //Write RAW file
+                        File.WriteAllBytes(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (int)selectedItem.Tag + ".raw")), selectedSample.EncodedData);
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_Save_Click(object sender, EventArgs e)
         {
             //Output Selected Files
@@ -208,6 +228,12 @@ namespace EuroSoundExplorer2
                     }
                 }
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSaveRawData_Click(object sender, EventArgs e)
+        {
+            MenuItem_SaveRaw_Click(sender, e);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

@@ -72,14 +72,14 @@ namespace EuroSoundExplorer2
             this.MenuItem_DataViewer});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(137, 98);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 120);
             // 
             // MenuItem_Load
             // 
             this.MenuItem_Load.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Load.Image")));
             this.MenuItem_Load.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Load.Name = "MenuItem_Load";
-            this.MenuItem_Load.Size = new System.Drawing.Size(136, 22);
+            this.MenuItem_Load.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_Load.Text = "Load";
             this.MenuItem_Load.Click += new System.EventHandler(this.MenuItem_Load_Click);
             // 
@@ -88,7 +88,7 @@ namespace EuroSoundExplorer2
             this.MenuItem_Reload.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Reload.Image")));
             this.MenuItem_Reload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Reload.Name = "MenuItem_Reload";
-            this.MenuItem_Reload.Size = new System.Drawing.Size(136, 22);
+            this.MenuItem_Reload.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_Reload.Text = "Reload";
             this.MenuItem_Reload.Click += new System.EventHandler(this.MenuItem_Reload_Click);
             // 
@@ -97,22 +97,23 @@ namespace EuroSoundExplorer2
             this.MenuItem_Unload.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Unload.Image")));
             this.MenuItem_Unload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Unload.Name = "MenuItem_Unload";
-            this.MenuItem_Unload.Size = new System.Drawing.Size(136, 22);
+            this.MenuItem_Unload.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_Unload.Text = "Unload";
             this.MenuItem_Unload.Click += new System.EventHandler(this.MenuItem_Unload_Click);
             // 
             // MenuItem_Separator
             // 
             this.MenuItem_Separator.Name = "MenuItem_Separator";
-            this.MenuItem_Separator.Size = new System.Drawing.Size(133, 6);
+            this.MenuItem_Separator.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_DataViewer
             // 
             this.MenuItem_DataViewer.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_DataViewer.Image")));
             this.MenuItem_DataViewer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_DataViewer.Name = "MenuItem_DataViewer";
-            this.MenuItem_DataViewer.Size = new System.Drawing.Size(136, 22);
+            this.MenuItem_DataViewer.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_DataViewer.Text = "Data Viewer";
+            this.MenuItem_DataViewer.Click += new System.EventHandler(this.MenuItem_DataViewer_Click);
             // 
             // toolStrip1
             // 
