@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static EuroSoundExplorer2.AppConfig;
+using static EuroSoundExplorer2.Enumerations;
 
 namespace EuroSoundExplorer2
 {

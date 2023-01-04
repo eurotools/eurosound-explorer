@@ -1,7 +1,7 @@
 ﻿using MusX.Objects;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static EuroSoundExplorer2.AppConfig;
+using static EuroSoundExplorer2.Enumerations;
 using static MusX.Readers.SfxFunctions;
 
 namespace EuroSoundExplorer2

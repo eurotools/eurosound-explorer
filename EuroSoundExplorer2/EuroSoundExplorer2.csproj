@@ -73,11 +73,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Audio\AudioFunctions.cs" />
+    <Compile Include="Classes\Enumerations.cs" />
     <Compile Include="Classes\GenericMethods.cs" />
     <Compile Include="Classes\HashcodeParser.cs" />
     <Compile Include="Classes\Audio\LoopStream.cs" />
     <Compile Include="Classes\Objects\SampleForPropGrid.cs" />
     <Compile Include="Classes\Objects\SoundFile.cs" />
+    <Compile Include="Classes\PropertyGridHelpers\CustomFileBrowser.cs" />
+    <Compile Include="Classes\PropertyGridHelpers\CustomFolderBrowser.cs" />
+    <Compile Include="Classes\PropertyGridHelpers\FileVersions.cs" />
     <Compile Include="CustomControls\UserControl_ListViewColumnSortingClick.cs">
       <SubType>Component</SubType>
     </Compile>

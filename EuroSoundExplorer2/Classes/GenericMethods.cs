@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static EuroSoundExplorer2.AppConfig;
+using static EuroSoundExplorer2.Enumerations;
 using static MusX.Readers.SfxFunctions;
 using static System.Windows.Forms.ListViewItem;
 

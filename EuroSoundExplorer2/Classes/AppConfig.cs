@@ -1,9 +1,8 @@
-﻿using System;
+﻿using EuroSoundExplorer2.Classes.PropertyGridHelpers;
 using System.ComponentModel;
 using System.Drawing.Design;
-using System.Globalization;
 using System.Windows.Forms;
-using System.Windows.Forms.Design;
+using static EuroSoundExplorer2.Enumerations;
 
 namespace EuroSoundExplorer2
 {
@@ -12,40 +11,6 @@ namespace EuroSoundExplorer2
     //-------------------------------------------------------------------------------------------------------------------------------
     public class AppConfig
     {
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public enum Platform
-        {
-            None,
-            GameCube,
-            PC,
-            PS2,
-            Wii,
-            Xbox,
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public enum Title
-        {
-            Buffy,
-            Sphinx,
-            Athens,
-            Spyro,
-            Robots,
-            Predator,
-            BatmanBegins,
-            IceAge2
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static int[] SfxFileVersion = new int[]
-        {
-            1,
-            4,
-            5,
-            6,
-            201
-        };
-
         //-------------------------------------------------------------------------------------------------------------------------------
         private Platform _PlatformSelected;
         private Title _TitleSelected;
@@ -161,68 +126,6 @@ namespace EuroSoundExplorer2
         {
             get { return _ProjectFolder; }
             set { _ProjectFolder = value; ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.LoadData(); }
-        }
-    }
-
-    //-------------------------------------------------------------------------------------------------------------------------------
-    internal class CustomFileBrowser : FileNameEditor
-    {
-        protected override void InitializeDialog(OpenFileDialog openFileDialog)
-        {
-            base.InitializeDialog(openFileDialog);
-            openFileDialog.Filter = "Hashcode File (*.h)|*.h";
-        }
-    }
-
-    //-------------------------------------------------------------------------------------------------------------------------------
-    internal class CustomFolderBrowser : FolderNameEditor
-    {
-        protected override void InitializeDialog(FolderBrowser openFileDialog)
-        {
-            base.InitializeDialog(openFileDialog);
-        }
-    }
-
-    //-------------------------------------------------------------------------------------------------------------------------------
-    internal class FileVersions : TypeConverter
-    {
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-        {
-            return true; // display drop
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-        {
-            return true; // drop-down vs combo
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            if (sourceType == typeof(string))
-            {
-                return true;
-            }
-            return base.CanConvertFrom(context, sourceType);
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (value is string @string)
-            {
-                // conversion logic goes here
-                return int.Parse(@string);
-            }
-            return base.ConvertFrom(context, culture, value);
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
-        {
-            return new StandardValuesCollection(AppConfig.SfxFileVersion);
         }
     }
 
