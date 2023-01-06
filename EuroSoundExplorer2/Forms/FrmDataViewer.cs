@@ -2,10 +2,10 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using static EuroSoundExplorer2.Enumerations;
+using static sb_explorer.Enumerations;
 using static MusX.Readers.SfxFunctions;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

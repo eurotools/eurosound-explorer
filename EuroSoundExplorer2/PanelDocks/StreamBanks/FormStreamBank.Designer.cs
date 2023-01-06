@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormStreamBank
     {
@@ -49,7 +49,7 @@ namespace EuroSoundExplorer2
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.ButtonHexView = new System.Windows.Forms.ToolStripButton();
-            this.lvwStreamData = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.lvwStreamData = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.Col_No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Adpcm = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_MarkerOffset = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

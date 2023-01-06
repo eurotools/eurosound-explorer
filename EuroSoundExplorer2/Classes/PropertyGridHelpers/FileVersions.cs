@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 
-namespace EuroSoundExplorer2.Classes.PropertyGridHelpers
+namespace sb_explorer.Classes.PropertyGridHelpers
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

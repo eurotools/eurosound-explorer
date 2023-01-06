@@ -1,10 +1,10 @@
-﻿using EuroSoundExplorer2.Classes.PropertyGridHelpers;
+﻿using sb_explorer.Classes.PropertyGridHelpers;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
-using static EuroSoundExplorer2.Enumerations;
+using static sb_explorer.Enumerations;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

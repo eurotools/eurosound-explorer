@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     internal static class Program
     {

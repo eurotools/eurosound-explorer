@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace EuroSoundExplorer2.Classes
+namespace sb_explorer.Classes
 {
     internal class SampleForPropGrid
     {

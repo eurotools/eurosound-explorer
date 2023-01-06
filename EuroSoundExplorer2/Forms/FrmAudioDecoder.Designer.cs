@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FrmAudioDecoder
     {

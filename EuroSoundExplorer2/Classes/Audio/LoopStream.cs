@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
 
-namespace EuroSoundExplorer2.Classes
+namespace sb_explorer.Classes
 {
     public class LoopStream : WaveStream
     {

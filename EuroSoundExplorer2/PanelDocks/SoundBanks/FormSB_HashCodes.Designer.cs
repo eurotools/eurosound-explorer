@@ -1,7 +1,7 @@
 ﻿
-using EuroSoundExplorer2.CustomControls;
+using sb_explorer.CustomControls;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormSB_HashCodes
     {
@@ -33,7 +33,7 @@ namespace EuroSoundExplorer2
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSB_HashCodes));
-            this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.listView1 = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.Col_HashCode = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_HashCode_Status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_HashCode_Label = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

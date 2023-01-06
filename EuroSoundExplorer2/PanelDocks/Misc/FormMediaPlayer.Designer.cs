@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormMediaPlayer
     {
@@ -32,8 +32,8 @@ namespace EuroSoundExplorer2
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMediaPlayer));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.userControl_WaveViewer1 = new EuroSoundExplorer2.CustomControls.UserControl_WaveViewer();
-            this.userControl_WaveViewer2 = new EuroSoundExplorer2.CustomControls.UserControl_WaveViewer();
+            this.userControl_WaveViewer1 = new sb_explorer.CustomControls.UserControl_WaveViewer();
+            this.userControl_WaveViewer2 = new sb_explorer.CustomControls.UserControl_WaveViewer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSave = new System.Windows.Forms.ToolStripButton();
             this.ButtonAutoPlay = new System.Windows.Forms.ToolStripButton();

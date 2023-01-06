@@ -1,7 +1,7 @@
 ﻿
-using EuroSoundExplorer2.CustomControls;
+using sb_explorer.CustomControls;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormSB_SamplePool
     {
@@ -50,7 +50,7 @@ namespace EuroSoundExplorer2
             this.ButtonApplyEffects = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.ButtonItemUsage = new System.Windows.Forms.ToolStripButton();
-            this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.listView1 = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.Col_SamplePool_HashCode = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_SamplePool_Vol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_SamplePool_VolRnd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

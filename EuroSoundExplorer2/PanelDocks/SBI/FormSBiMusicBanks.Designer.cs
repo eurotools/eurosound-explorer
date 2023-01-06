@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormSBiMusicBanks
     {
@@ -32,7 +32,7 @@ namespace EuroSoundExplorer2
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.labelSoundBanks = new System.Windows.Forms.ToolStripLabel();
             this.textBoxSoundBanksCount = new System.Windows.Forms.ToolStripTextBox();
-            this.listView_ColumnSortingClick1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.listView_ColumnSortingClick1 = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.colHashCode = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colHashCodeLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1.SuspendLayout();

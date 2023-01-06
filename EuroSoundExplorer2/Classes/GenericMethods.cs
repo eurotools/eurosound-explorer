@@ -1,5 +1,5 @@
 ﻿using AudioDecoders;
-using EuroSoundExplorer2.Classes;
+using sb_explorer.Classes;
 using MusX;
 using MusX.Objects;
 using System;
@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static EuroSoundExplorer2.Enumerations;
+using static sb_explorer.Enumerations;
 using static MusX.Readers.SfxFunctions;
 using static System.Windows.Forms.ListViewItem;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

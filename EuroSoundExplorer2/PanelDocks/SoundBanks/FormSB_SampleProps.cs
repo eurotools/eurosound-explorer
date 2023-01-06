@@ -1,11 +1,11 @@
-﻿using EuroSoundExplorer2.Classes;
+﻿using sb_explorer.Classes;
 using MusX.Objects;
 using System;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

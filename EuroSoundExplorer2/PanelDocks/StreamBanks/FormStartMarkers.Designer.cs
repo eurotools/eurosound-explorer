@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormStartMarkers
     {
@@ -32,7 +32,7 @@ namespace EuroSoundExplorer2
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.Textbox_StartMarkers_Count = new System.Windows.Forms.ToolStripTextBox();
-            this.lvwStartMarkers = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.lvwStartMarkers = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.colNo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colIndex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colPosition = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

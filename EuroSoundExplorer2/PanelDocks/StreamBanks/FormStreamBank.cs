@@ -1,5 +1,5 @@
-﻿using EuroSoundExplorer2.Classes;
-using EuroSoundExplorer2.CustomControls;
+﻿using sb_explorer.Classes;
+using sb_explorer.CustomControls;
 using MusX;
 using MusX.Objects;
 using NAudio.Wave;
@@ -10,7 +10,7 @@ using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

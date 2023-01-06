@@ -1,7 +1,7 @@
 ﻿
-using EuroSoundExplorer2.CustomControls;
+using sb_explorer.CustomControls;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormSoundBankFiles
     {
@@ -50,7 +50,7 @@ namespace EuroSoundExplorer2
             this.txtTotal = new System.Windows.Forms.ToolStripTextBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.lvwFiles = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.lvwFiles = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.Col_HashCode = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_HashCode_Label = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

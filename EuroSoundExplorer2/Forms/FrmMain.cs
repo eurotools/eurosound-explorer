@@ -1,5 +1,5 @@
-﻿using EuroSoundExplorer2.Classes;
-using EuroSoundExplorer2.CustomControls;
+﻿using sb_explorer.Classes;
+using sb_explorer.CustomControls;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Layout;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

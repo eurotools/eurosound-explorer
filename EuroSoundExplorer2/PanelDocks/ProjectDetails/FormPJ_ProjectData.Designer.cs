@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormPJ_ProjectData
     {
@@ -30,7 +30,7 @@ namespace EuroSoundExplorer2
         private void InitializeComponent()
         {
             this.propGrid_ProjData = new System.Windows.Forms.PropertyGrid();
-            this.lvwFlags = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.lvwFlags = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.colUserFlag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();

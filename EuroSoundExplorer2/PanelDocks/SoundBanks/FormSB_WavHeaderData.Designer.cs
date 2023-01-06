@@ -1,7 +1,7 @@
 ﻿
-using EuroSoundExplorer2.CustomControls;
+using sb_explorer.CustomControls;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormSB_WavHeaderData
     {
@@ -51,7 +51,7 @@ namespace EuroSoundExplorer2
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.ButtonHexView = new System.Windows.Forms.ToolStripButton();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.listView1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.listView1 = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.Col_No = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Flags = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Address = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

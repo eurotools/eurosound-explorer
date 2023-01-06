@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormMarkers
     {
@@ -29,7 +29,7 @@ namespace EuroSoundExplorer2
         /// </summary>
         private void InitializeComponent()
         {
-            this.lvwMarkers = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.lvwMarkers = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.colNo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStartMarkersIndex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colPosition = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

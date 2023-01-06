@@ -1,4 +1,4 @@
-﻿using EuroSoundExplorer2.Classes;
+﻿using sb_explorer.Classes;
 using MusX;
 using MusX.Objects;
 using MusX.Readers;
@@ -8,10 +8,10 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static EuroSoundExplorer2.Enumerations;
+using static sb_explorer.Enumerations;
 using static MusX.Readers.SfxFunctions;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

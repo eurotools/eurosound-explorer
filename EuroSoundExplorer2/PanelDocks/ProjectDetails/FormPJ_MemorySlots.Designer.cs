@@ -1,5 +1,5 @@
 ﻿
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FormPJ_MemorySlots
     {
@@ -29,7 +29,7 @@ namespace EuroSoundExplorer2
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView_ColumnSortingClick1 = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.listView_ColumnSortingClick1 = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.colMemSlotNo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colMemSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colMemQuant = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

@@ -1,7 +1,7 @@
 ﻿
-using EuroSoundExplorer2.CustomControls;
+using sb_explorer.CustomControls;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     partial class FrmFileRefUsage
     {
@@ -33,7 +33,7 @@ namespace EuroSoundExplorer2
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmFileRefUsage));
-            this.listViewItemUsage = new EuroSoundExplorer2.CustomControls.ListView_ColumnSortingClick();
+            this.listViewItemUsage = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.Col_Item = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Usage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ImageList_ListView = new System.Windows.Forms.ImageList(this.components);

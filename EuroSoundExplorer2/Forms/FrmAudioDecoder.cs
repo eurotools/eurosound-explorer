@@ -1,11 +1,11 @@
 ﻿using AudioDecoders;
-using EuroSoundExplorer2.Classes;
+using sb_explorer.Classes;
 using NAudio.Wave;
 using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

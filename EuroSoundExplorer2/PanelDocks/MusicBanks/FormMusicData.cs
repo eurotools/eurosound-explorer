@@ -1,5 +1,5 @@
 ﻿using AudioDecoders;
-using EuroSoundExplorer2.Classes;
+using sb_explorer.Classes;
 using MusX;
 using MusX.Objects;
 using System;
@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace EuroSoundExplorer2
+namespace sb_explorer
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

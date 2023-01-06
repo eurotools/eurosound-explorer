@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("EuroSoundExplorer2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Eurosound Explorer")]
+[assembly: AssemblyDescription("Eurosound Soundbank Explorer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EuroSoundExplorer2")]
+[assembly: AssemblyProduct("EuroSound")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
