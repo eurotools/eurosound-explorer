@@ -37,7 +37,7 @@ namespace EuroSoundExplorer2
                 ListViewItem itemToAdd = new ListViewItem(new string[]
                 {
                     string.Format("0x{0:X8}", dictToShow.projectMusicBanks[i]),
-                    parentForm.hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(FileType.Music, dictToShow.projectMusicBanks[i], selectedVersion, selectedTitle))
+                    parentForm.hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(FileType.MusicFile, dictToShow.projectMusicBanks[i], selectedVersion, selectedTitle))
                 })
                 {
                     UseItemStyleForSubItems = false

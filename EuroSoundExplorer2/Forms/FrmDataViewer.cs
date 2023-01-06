@@ -53,39 +53,47 @@ namespace EuroSoundExplorer2
                 Text = string.Format("Data Viewer - {0}", Path.GetFileName(sfxFilePath));
 
                 //Get selected info from the mainform
-                int selectedVersion = parentForm.configuration.FileVersion;
                 Title selectedTitle = parentForm.configuration.TitleSelected;
 
                 //Get version of MusX Files
                 int hashCode = sbReader.GetFileHashCode(sfxFilePath);
-                FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, sfxFilePath, selectedTitle);
-                switch (fileType)
+                int fileVersion = sbiReader.GetFileVersion(sfxFilePath);
+                try
                 {
-                    case FileType.SoundBank:
-                        ShowSoundBank(sfxFilePath);
-                        break;
-                    case FileType.Stream:
-                        ShowStreamBank(sfxFilePath);
-                        break;
-                    case FileType.Music:
-                        ShowMusicBank(sfxFilePath);
-                        break;
-                    case FileType.SBI:
-                        ShowSbiBank(sfxFilePath);
-                        break;
-                    case FileType.ProjectDetails:
-                        ShowProjectDetails(sfxFilePath);
-                        break;
-                    default:
-                        MessageBox.Show("Unsuported file type!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        Close();
-                        break;
-                }
+                    FileType fileType = GenericMethods.GetFileType(hashCode, fileVersion, sfxFilePath, selectedTitle);
+                    switch (fileType)
+                    {
+                        case FileType.SoundbankFile:
+                            ShowSoundBank(sfxFilePath);
+                            break;
+                        case FileType.StreamFile:
+                            ShowStreamBank(sfxFilePath);
+                            break;
+                        case FileType.MusicFile:
+                            ShowMusicBank(sfxFilePath);
+                            break;
+                        case FileType.SBI:
+                            ShowSbiBank(sfxFilePath);
+                            break;
+                        case FileType.ProjectDetails:
+                            ShowProjectDetails(sfxFilePath);
+                            break;
+                        default:
+                            MessageBox.Show("Could not load this file, probably is from an unsupported version or game.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            Close();
+                            break;
+                    }
 
-                //Expand TreeView
-                if (treeView1.Nodes.Count > 0)
+                    //Expand TreeView
+                    if (treeView1.Nodes.Count > 0)
+                    {
+                        treeView1.Nodes[0].Expand();
+                    }
+                }
+                catch (Exception ex)
                 {
-                    treeView1.Nodes[0].Expand();
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Close();
                 }
             }
         }

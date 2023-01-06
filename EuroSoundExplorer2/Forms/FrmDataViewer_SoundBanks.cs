@@ -303,7 +303,7 @@ namespace EuroSoundExplorer2
             {
                 TreeAdd(soundbankInfo, nameof(headerData.Platform), headerData.Platform);
                 TreeAdd(soundbankInfo, nameof(headerData.Timespan), headerData.Timespan);
-                TreeAdd(soundbankInfo, nameof(headerData.EurocomIma), headerData.EurocomIma);
+                TreeAdd(soundbankInfo, nameof(headerData.UsesAdpcm), headerData.UsesAdpcm);
             }
 
             return soundbankInfo;

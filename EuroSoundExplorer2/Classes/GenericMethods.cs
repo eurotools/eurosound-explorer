@@ -135,18 +135,18 @@ namespace EuroSoundExplorer2
         {
             if (selectedVersion == 201 && (selectedTitle == Title.Sphinx || selectedTitle == Title.Buffy))
             {
-                if (fileType == FileType.Music)
+                if (fileType == FileType.MusicFile)
                 {
                     hashCode |= 0x1BE00000;
                 }
             }
             else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) && (selectedTitle == Title.Athens || selectedTitle == Title.Spyro || selectedTitle == Title.Robots || selectedTitle == Title.Predator || selectedTitle == Title.BatmanBegins))
             {
-                if (fileType == FileType.Music)
+                if (fileType == FileType.MusicFile)
                 {
                     hashCode = 0x1B000000 | (0x00000FFF & hashCode);
                 }
-                else if (fileType == FileType.SoundBank)
+                else if (fileType == FileType.SoundbankFile)
                 {
                     hashCode = 0x1AE00000 | (0x00000FFF & hashCode);
                 }
@@ -158,16 +158,16 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static FileType GetFileType(int hashCode, int selectedVersion, string filePath, Title selectedTitle)
         {
-            if (selectedVersion == 201 && (selectedTitle == Title.Sphinx || selectedTitle == Title.Buffy))
+            if (selectedVersion == 201)
             {
                 int sectionHashCode = (hashCode & 0x00F00000) >> 20;
                 if (sectionHashCode == 0xE)
                 {
-                    return FileType.Music;
+                    return FileType.MusicFile;
                 }
                 else if (filePath.IndexOf("stream") >= 0 || hashCode == 0x0000FFFF)
                 {
-                    return FileType.Stream;
+                    return FileType.StreamFile;
                 }
                 else if (hashCode == 0x00FFFFFF)
                 {
@@ -175,29 +175,29 @@ namespace EuroSoundExplorer2
                 }
                 else
                 {
-                    return FileType.SoundBank;
+                    return FileType.SoundbankFile;
                 }
             }
-            else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) && (selectedTitle == Title.Athens || selectedTitle == Title.Spyro || selectedTitle == Title.Robots || selectedTitle == Title.Predator || selectedTitle == Title.BatmanBegins))
+            else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) && selectedTitle != Title.IceAge2)
             {
                 int sectionHashCode = (hashCode & 0x0000F000) >> 12;
                 switch (sectionHashCode)
                 {
-                    case 0xF:
-                        return FileType.Music;
-                    case 0xE:
-                        return FileType.SoundBank;
-                    case 0xD:
-                        return FileType.Stream;
-                    case 0xB:
-                        return FileType.SoundDetails;
                     case 0xA:
                         return FileType.MusicDetails;
+                    case 0xB:
+                        return FileType.SoundDetailsFile;
                     case 0xC:
                         return FileType.ProjectDetails;
+                    case 0xD:
+                        return FileType.StreamFile;
+                    case 0xE:
+                        return FileType.SoundbankFile;
+                    case 0xF:
+                        return FileType.MusicFile;
                 }
             }
-            else if (selectedVersion == 6 && selectedTitle == Title.IceAge2)
+            else if (selectedVersion >= 6)
             {
                 int sectionHashCode = (hashCode & 0x00F00000) >> 20;
                 if (hashCode == 0x2D600000)
@@ -208,18 +208,22 @@ namespace EuroSoundExplorer2
                 {
                     switch (sectionHashCode)
                     {
-                        case 0x6:
-                            return FileType.Music;
-                        case 0x5:
-                            return FileType.SoundBank;
-                        case 0x4:
-                            return FileType.Stream;
                         case 0x2:
-                            return FileType.SoundDetails;
+                            return FileType.SoundDetailsFile;
                         case 0x3:
                             return FileType.ProjectDetails;
+                        case 0x4:
+                            return FileType.StreamFile;
+                        case 0x5:
+                            return FileType.SoundbankFile;
+                        case 0x6:
+                            return FileType.MusicFile;
                     }
                 }
+            }
+            else
+            {
+
             }
             return FileType.Unknown;
         }

@@ -11,7 +11,7 @@
         public uint FileSize;
         public string Platform;
         public uint Timespan;
-        public uint EurocomIma;
+        public uint UsesAdpcm;
 
         //Soundbanks
         public uint SFXStart;

@@ -200,13 +200,13 @@ namespace EuroSoundExplorer2
                 FileType fileType = (FileType)treeView1.SelectedNode.Tag;
                 switch (fileType)
                 {
-                    case FileType.SoundBank:
+                    case FileType.SoundbankFile:
                         LoadSelectedSfx(filePath);
                         break;
-                    case FileType.Stream:
+                    case FileType.StreamFile:
                         LoadSelectedStream(filePath);
                         break;
-                    case FileType.Music:
+                    case FileType.MusicFile:
                         LoadSelectedMusic(filePath);
                         break;
                     case FileType.SBI:
@@ -246,15 +246,15 @@ namespace EuroSoundExplorer2
                     FileType fileType = (FileType)lvwFiles.SelectedItems[0].Tag;
                     switch (fileType)
                     {
-                        case FileType.SoundBank:
+                        case FileType.SoundbankFile:
                             LoadSelectedSfx(filePath);
                             lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                             break;
-                        case FileType.Stream:
+                        case FileType.StreamFile:
                             LoadSelectedStream(filePath);
                             lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                             break;
-                        case FileType.Music:
+                        case FileType.MusicFile:
                             LoadSelectedMusic(filePath);
                             lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                             break;
@@ -339,7 +339,7 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------
         private void LoadSelectedSfx(string filePath)
         {
-            ClearLoadedData(FileType.SoundBank);
+            ClearLoadedData(FileType.SoundbankFile);
 
             //Load data
             soundBankHeaderData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
@@ -353,7 +353,7 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         private void LoadSelectedStream(string filePath)
         {
-            ClearLoadedData(FileType.Stream);
+            ClearLoadedData(FileType.StreamFile);
 
             //Load data
             streamBankHeaderData = streamReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
@@ -366,7 +366,7 @@ namespace EuroSoundExplorer2
         //-------------------------------------------------------------------------------------------------------------------------------
         private void LoadSelectedMusic(string filePath)
         {
-            ClearLoadedData(FileType.Music);
+            ClearLoadedData(FileType.MusicFile);
 
             //Load data
             musicBankHeaderData = musicReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
@@ -410,7 +410,7 @@ namespace EuroSoundExplorer2
             //Clear loaded data
             switch (fileType)
             {
-                case FileType.SoundBank:
+                case FileType.SoundbankFile:
                     soundBankHeaderData = new SfxHeaderData();
                     sfxSamples.Clear();
                     sfxStoredData.Clear();
@@ -420,7 +420,7 @@ namespace EuroSoundExplorer2
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlWavHeaderData.listView1.Items.Clear();
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbSamplePool.listView1.Items.Clear();
                     break;
-                case FileType.Stream:
+                case FileType.StreamFile:
                     streamBankHeaderData = new SfxHeaderData();
                     streamSamples.Clear();
 
@@ -429,7 +429,7 @@ namespace EuroSoundExplorer2
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.lvwStartMarkers.Items.Clear();
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStreamData.lvwStreamData.Items.Clear();
                     break;
-                case FileType.Music:
+                case FileType.MusicFile:
                     musicBankHeaderData = new SfxHeaderData();
                     musicData = new MusicSample();
                     break;
@@ -461,15 +461,15 @@ namespace EuroSoundExplorer2
             int total = 0;
             switch (fileType)
             {
-                case FileType.SoundBank:
+                case FileType.SoundbankFile:
                     SfxHeaderData sbData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
                     total = reader.GetNumberOfSFXs(filePath, sbData);
                     break;
-                case FileType.Stream:
+                case FileType.StreamFile:
                     sbData = streamReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
                     total = (int)(sbData.FileLength1 / 4);
                     break;
-                case FileType.Music:
+                case FileType.MusicFile:
                     total = 1;
                     break;
             }
