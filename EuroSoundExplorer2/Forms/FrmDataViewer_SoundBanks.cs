@@ -283,6 +283,66 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void ShowSoundDetails(string filePath)
+        {
+            //Read File Data 
+            SfxHeaderData headerData = soundDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SoundDetails fileData = soundDetailsReader.ReadSoundDetailsFile(filePath, headerData);
+
+            //Add data
+            TreeNode soundDetailsInfo = ShowHeaderData(headerData, "SoundDetails Info");
+
+            TreeNode hashCodesData = new TreeNode("HashCodes Info");
+            soundDetailsInfo.Nodes.Add(hashCodesData);
+            TreeAdd(hashCodesData, nameof(fileData.MinHashCode), fileData.MinHashCode);
+            TreeAdd(hashCodesData, nameof(fileData.MaxHashCode), fileData.MaxHashCode);
+
+            //Print Project Slots
+            TreeNode sfxsData = new TreeNode("SFXs Info " + fileData.sfxItems.Length);
+            soundDetailsInfo.Nodes.Add(sfxsData);
+            foreach (SoundDetailsData item in fileData.sfxItems)
+            {
+                TreeNode memSlot = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", nameof(item.HashCode), item.HashCode));
+                sfxsData.Nodes.Add(memSlot);
+                TreeAdd(memSlot, nameof(item.InnerRadius), item.InnerRadius);
+                TreeAdd(memSlot, nameof(item.OuterRadius), item.OuterRadius);
+                TreeAdd(memSlot, nameof(item.Duration), item.Duration);
+                TreeAdd(memSlot, nameof(item.Looping), item.Looping);
+                TreeAdd(memSlot, nameof(item.Tracking3D), item.Tracking3D);
+                TreeAdd(memSlot, nameof(item.SampleStreamed), item.SampleStreamed);
+                TreeAdd(memSlot, nameof(item.Is3D), item.Is3D);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ShowMusicDetails(string filePath)
+        {
+            //Read File Data 
+            SfxHeaderData headerData = musicDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            MusicDetails fileData = musicDetailsReader.ReadMusicDetailsFile(filePath, headerData);
+
+            //Add data
+            TreeNode soundDetailsInfo = ShowHeaderData(headerData, "MusicDetails Info");
+
+            TreeNode hashCodesData = new TreeNode("HashCodes Info");
+            soundDetailsInfo.Nodes.Add(hashCodesData);
+            TreeAdd(hashCodesData, nameof(fileData.MinHashCode), fileData.MinHashCode);
+            TreeAdd(hashCodesData, nameof(fileData.MaxHashCode), fileData.MaxHashCode);
+
+            //Print Project Slots
+            TreeNode sfxsData = new TreeNode("MFXs Info " + fileData.musicItems.Length);
+            soundDetailsInfo.Nodes.Add(sfxsData);
+            foreach (MusicDetailsData item in fileData.musicItems)
+            {
+                TreeNode memSlot = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", nameof(item.HashCode), item.HashCode));
+                sfxsData.Nodes.Add(memSlot);
+                TreeAdd(memSlot, nameof(item.Duration), item.Duration);
+                TreeAdd(memSlot, nameof(item.MusicLooping), item.MusicLooping);
+                TreeAdd(memSlot, nameof(item.UserValue), item.UserValue);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private TreeNode ShowHeaderData(SfxHeaderData headerData, string nodeName)
         {
             //Update Toolbar

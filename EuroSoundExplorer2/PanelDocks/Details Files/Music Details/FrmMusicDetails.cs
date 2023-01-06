@@ -24,7 +24,7 @@ namespace sb_explorer
             int m_ErrorCount = 0;
             lstvMfxItems.BeginUpdate();
             lstvMfxItems.Items.Clear();
-            foreach (MusicDetailsData itemToadd in fileData.sfxItems)
+            foreach (MusicDetailsData itemToadd in fileData.musicItems)
             {
                 ListViewItem itemToAdd = new ListViewItem(new string[]
                 {
@@ -41,7 +41,7 @@ namespace sb_explorer
             //Update labels
             txtHashCodeMax.Text = string.Format("0x{0:X8}", fileData.MaxHashCode);
             txtHashCodeMin.Text = string.Format("0x{0:X8}", fileData.MinHashCode);
-            txtItemsCount.Text = fileData.sfxItems.Length.ToString();
+            txtItemsCount.Text = fileData.musicItems.Length.ToString();
             txtErrorsCount.Text = m_ErrorCount.ToString();
         }
 

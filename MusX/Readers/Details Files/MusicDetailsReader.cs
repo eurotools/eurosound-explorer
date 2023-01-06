@@ -66,7 +66,7 @@ namespace MusX.Readers
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public MusicDetails ReadSoundDetailsFile(string filePath, SfxHeaderData sfxHeaderData)
+        public MusicDetails ReadMusicDetailsFile(string filePath, SfxHeaderData sfxHeaderData)
         {
             MusicDetails projectData = new MusicDetails();
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
@@ -78,8 +78,8 @@ namespace MusX.Readers
                 uint hashCodePrefix = (0xFFFF0000 & projectData.MinHashCode);
 
                 //Read each stored SFX
-                projectData.sfxItems = new MusicDetailsData[(int)(0x0000FFFF & projectData.MaxHashCode)];
-                for (int i = 0; i < projectData.sfxItems.Length; i++)
+                projectData.musicItems = new MusicDetailsData[(int)(0x0000FFFF & projectData.MaxHashCode)];
+                for (int i = 0; i < projectData.musicItems.Length; i++)
                 {
                     MusicDetailsData sfxItem = new MusicDetailsData
                     {
@@ -88,7 +88,7 @@ namespace MusX.Readers
                         MusicLooping = Convert.ToBoolean(BReader.ReadUInt32()),
                         UserValue = BReader.ReadUInt32(),
                     };
-                    projectData.sfxItems[i] = sfxItem;
+                    projectData.musicItems[i] = sfxItem;
                 }
             }
 

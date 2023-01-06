@@ -7,7 +7,7 @@
     {
         public uint MinHashCode;
         public uint MaxHashCode;
-        public MusicDetailsData[] sfxItems;
+        public MusicDetailsData[] musicItems;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

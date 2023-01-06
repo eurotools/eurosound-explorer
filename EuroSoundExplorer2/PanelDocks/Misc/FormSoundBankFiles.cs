@@ -471,7 +471,7 @@ namespace sb_explorer
 
             //Load data
             musicDetailsHeaderData = musicDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            musicDetails = musicDetailsReader.ReadSoundDetailsFile(filePath, projDetailsHeaderData);
+            musicDetails = musicDetailsReader.ReadMusicDetailsFile(filePath, projDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicDetailsData.ShowData();
         }
