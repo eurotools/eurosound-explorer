@@ -1,8 +1,8 @@
 ﻿using MusX.Objects;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static sb_explorer.Enumerations;
 using static MusX.Readers.SfxFunctions;
+using static sb_explorer.Enumerations;
 
 namespace sb_explorer
 {

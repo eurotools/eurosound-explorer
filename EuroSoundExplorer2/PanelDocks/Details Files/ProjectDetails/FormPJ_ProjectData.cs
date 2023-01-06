@@ -32,6 +32,15 @@ namespace sb_explorer
             }
             lvwFlags.EndUpdate();
         }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public void ClearData()
+        {
+            propGrid_ProjData.SelectedObject = null;
+            lvwFlags.BeginUpdate();
+            lvwFlags.Items.Clear();
+            lvwFlags.EndUpdate();
+        }
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

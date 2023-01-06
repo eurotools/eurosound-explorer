@@ -1,4 +1,6 @@
-﻿namespace MusX
+﻿using System;
+
+namespace MusX
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -6,7 +8,7 @@
     internal static class BinaryFunctions
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal static uint FlipUInt32(uint valueToFlip, bool IsBigEndian)
+        internal static uint FlipData(uint valueToFlip, bool IsBigEndian)
         {
             uint finalData;
 
@@ -22,7 +24,7 @@
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal static int FlipInt32(int valueToFlip, bool IsBigEndian)
+        internal static int FlipData(int valueToFlip, bool IsBigEndian)
         {
             int finalData;
 
@@ -38,7 +40,7 @@
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal static short FlipShort(short valueToFlip, bool IsBigEndian)
+        internal static short FlipData(short valueToFlip, bool IsBigEndian)
         {
             short finalData;
 
@@ -55,7 +57,7 @@
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal static ushort FlipUShort(ushort valueToFlip, bool IsBigEndian)
+        internal static ushort FlipData(ushort valueToFlip, bool IsBigEndian)
         {
             ushort finalData;
 
@@ -63,6 +65,29 @@
             {
                 //Flip input value
                 finalData = (ushort)((valueToFlip << 8) | valueToFlip >> 8);
+            }
+            else
+            {
+                finalData = valueToFlip;
+            }
+
+            return finalData;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal static float FlipData(float valueToFlip, bool IsBigEndian)
+        {
+            float finalData;
+
+            if (IsBigEndian)
+            {
+                byte[] floatData = BitConverter.GetBytes(valueToFlip);
+                byte b1 = floatData[0];
+                byte b2 = floatData[1];
+                byte b3 = floatData[2];
+                byte b4 = floatData[3];
+
+                finalData = b1 << 24 | b2 << 16 | (b3 << 8) | b4;
             }
             else
             {

@@ -22,11 +22,11 @@ namespace MusX.Readers
                 musicDat = new MusicSample
                 {
                     //Properties
-                    StartMarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                    MarkersCount = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                    StartMarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                    MarkerOffset = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                    BaseVolume = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)
+                    StartMarkersCount = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                    MarkersCount = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                    StartMarkerOffset = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                    MarkerOffset = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                    BaseVolume = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian)
                 };
 
                 //Read Start Markers
@@ -35,21 +35,21 @@ namespace MusX.Readers
                 {
                     StartMarker StartMarker = new StartMarker
                     {
-                        Index = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian),
-                        Position = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        Type = (byte)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        Flags = (byte)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        Extra = (byte)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        LoopStart = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        MarkerCount = (int)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        LoopMarkerCount = (int)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Index = BinaryFunctions.FlipData(binaryReader.ReadInt32(), headerData.IsBigEndian),
+                        Position = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Type = (byte)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Flags = (byte)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Extra = (byte)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        LoopStart = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        MarkerCount = (int)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        LoopMarkerCount = (int)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
 
                         //StartMarker
-                        MarkerPos = (int)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        IsInstant = Convert.ToBoolean(BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)),
-                        InstantBuffer = Convert.ToBoolean(BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)),
-                        StateA = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        StateB = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian)
+                        MarkerPos = (int)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        IsInstant = Convert.ToBoolean(BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian)),
+                        InstantBuffer = Convert.ToBoolean(BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian)),
+                        StateA = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        StateB = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian)
                     };
 
                     //Parse loop Offsets
@@ -79,14 +79,14 @@ namespace MusX.Readers
                 {
                     Marker DataMarker = new Marker
                     {
-                        Index = BinaryFunctions.FlipInt32(binaryReader.ReadInt32(), headerData.IsBigEndian),
-                        Position = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        Type = (byte)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        Flags = (byte)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        Extra = (byte)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        LoopStart = BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        MarkerCount = (int)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
-                        LoopMarkerCount = (int)BinaryFunctions.FlipUInt32(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Index = BinaryFunctions.FlipData(binaryReader.ReadInt32(), headerData.IsBigEndian),
+                        Position = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Type = (byte)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Flags = (byte)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        Extra = (byte)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        LoopStart = BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        MarkerCount = (int)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
+                        LoopMarkerCount = (int)BinaryFunctions.FlipData(binaryReader.ReadUInt32(), headerData.IsBigEndian),
                     };
 
                     //Parse loop Offsets

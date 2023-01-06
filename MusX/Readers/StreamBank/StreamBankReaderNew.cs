@@ -23,7 +23,7 @@ namespace MusX.Readers
                 //Read Offsets
                 for (int i = 0; i < storedElements.Length; i++)
                 {
-                    storedElements[i] = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                    storedElements[i] = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                 }
 
                 //Read File Section 2
@@ -34,14 +34,14 @@ namespace MusX.Readers
                     StreamSample streamSample = new StreamSample
                     {
                         BlockPosition = storedElements[i],
-                        MarkerSize = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        AudioOffset = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        AudioSize = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        StartMarkersCount = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        MarkersCount = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        StartMarkerOffset = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        MarkerOffset = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        BaseVolume = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian)
+                        MarkerSize = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        AudioOffset = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        AudioSize = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        StartMarkersCount = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        MarkersCount = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        StartMarkerOffset = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        MarkerOffset = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        BaseVolume = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian)
                     };
 
                     //Stream marker start data
@@ -50,12 +50,12 @@ namespace MusX.Readers
                     {
                         StartMarker startMarker = new StartMarker
                         {
-                            Index = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                            Position = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                            Type = (byte)BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                            LoopStart = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                            LoopMarkerCount = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                            MarkerPos = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
+                            Index = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                            Position = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                            Type = (byte)BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                            LoopStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                            LoopMarkerCount = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                            MarkerPos = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
                         };
 
                         //Parse loop Offsets
@@ -72,11 +72,11 @@ namespace MusX.Readers
                     {
                         Marker DataMarker = new Marker
                         {
-                            Index = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                            Position = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                            Type = (byte)BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                            LoopStart = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                            LoopMarkerCount = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
+                            Index = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                            Position = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                            Type = (byte)BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                            LoopStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                            LoopMarkerCount = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
                         };
 
                         //Parse loop Offsets

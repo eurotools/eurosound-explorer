@@ -1,5 +1,5 @@
 ﻿using MusX.Objects;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Text;
 
@@ -8,7 +8,7 @@ namespace MusX.Readers
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
-    public class SoundBankReader : SfxFunctions
+    public class SoundDetailsReader : SfxFunctions
     {
         //-------------------------------------------------------------------------------------------------------------------------------
         public override SfxHeaderData ReadSfxHeader(string filePath, string platform)
@@ -51,26 +51,6 @@ namespace MusX.Readers
                         {
                             headerData.IsBigEndian = true;
                         }
-
-                        //Section where soundbanks are stored
-                        headerData.SFXStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the first section, in bytes
-                        headerData.SFXLenght = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-
-                        //Section where the sample properties are stored
-                        headerData.SampleInfoStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the second section, in bytes. 
-                        headerData.SampleInfoLenght = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-
-                        //Section where the ADPCM metadata and parameters for the GameCube DSP are stored
-                        headerData.SpecialSampleInfoStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the block, in bytes.
-                        headerData.SpecialSampleInfoLength = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-
-                        //Points to the beginning of the PCM data, where sound is actually stored. 
-                        headerData.SampleDataStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the block, in bytes. 
-                        headerData.SampleDataLength = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                     }
                     else
                     {
@@ -86,18 +66,37 @@ namespace MusX.Readers
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void ReadSoundBank(string filePath, SfxHeaderData headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList)
+        public SoundDetails ReadSoundDetailsFile(string filePath, SfxHeaderData sfxHeaderData)
         {
-            if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
+            SoundDetails projectData = new SoundDetails();
+            using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-                SoundBankReaderOld oldReader = new SoundBankReaderOld();
-                oldReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList);
+                BReader.BaseStream.Seek(0x20, SeekOrigin.Begin);
+                projectData.MinHashCode = BReader.ReadUInt32();
+                projectData.MaxHashCode = BReader.ReadUInt32();
+
+                int hashCodePrefix = (int)(0xFFFF0000 & projectData.MinHashCode);
+
+                //Read each stored SFX
+                projectData.sfxItems = new SoundDetailsData[(int)(0x0000FFFF & projectData.MaxHashCode)];
+                for (int i = 0; i < projectData.sfxItems.Length; i++)
+                {
+                    SoundDetailsData sfxItem = new SoundDetailsData
+                    {
+                        HashCode = hashCodePrefix | i,
+                        InnerRadius = BinaryFunctions.FlipData(BReader.ReadUInt16(), sfxHeaderData.IsBigEndian),
+                        OuterRadius = BinaryFunctions.FlipData(BReader.ReadUInt16(), sfxHeaderData.IsBigEndian),
+                        Duration = BinaryFunctions.FlipData(BReader.ReadSingle(), sfxHeaderData.IsBigEndian),
+                        Looping = Convert.ToBoolean(BReader.ReadSByte()),
+                        Tracking3D = BReader.ReadSByte(),
+                        SampleStreamed = Convert.ToBoolean(BReader.ReadSByte()),
+                        Is3D = Convert.ToBoolean(BReader.ReadSByte())
+                    };
+                    projectData.sfxItems[i] = sfxItem;
+                }
             }
-            else
-            {
-                SoundBankReaderNew newReader = new SoundBankReaderNew();
-                newReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList);
-            }
+
+            return projectData;
         }
     }
 

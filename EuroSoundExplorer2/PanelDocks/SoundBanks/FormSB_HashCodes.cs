@@ -1,5 +1,5 @@
-﻿using sb_explorer.CustomControls;
-using MusX.Objects;
+﻿using MusX.Objects;
+using sb_explorer.CustomControls;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -99,6 +99,26 @@ namespace sb_explorer
                         }
                     }
                 }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------
+        //  CONTEXT MENU
+        //-------------------------------------------------------------------------------------------
+        private void MenuItem_CopyHashCode_Click(object sender, System.EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                Clipboard.SetText(listView1.SelectedItems[0].SubItems[0].Text);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_CopyLabel_Click(object sender, System.EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                Clipboard.SetText(listView1.SelectedItems[0].SubItems[1].Text);
             }
         }
     }

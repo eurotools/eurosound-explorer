@@ -1,15 +1,15 @@
-﻿using sb_explorer.Classes;
-using MusX;
+﻿using MusX;
 using MusX.Objects;
 using MusX.Readers;
+using sb_explorer.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static sb_explorer.Enumerations;
 using static MusX.Readers.SfxFunctions;
+using static sb_explorer.Enumerations;
 
 namespace sb_explorer
 {
@@ -24,6 +24,8 @@ namespace sb_explorer
         private readonly MusicBankReader musicReader = new MusicBankReader();
         private readonly SbiBankReader sbiReader = new SbiBankReader();
         private readonly ProjectDetailsReader projDetailsReader = new ProjectDetailsReader();
+        private readonly SoundDetailsReader soundDetailsReader = new SoundDetailsReader();
+        private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
 
         //SoundBanks
         public SfxHeaderData soundBankHeaderData = new SfxHeaderData();
@@ -45,6 +47,14 @@ namespace sb_explorer
         //Project Details
         public SfxHeaderData projDetailsHeaderData = new SfxHeaderData();
         public ProjectDetails projDetailsData = new ProjectDetails();
+
+        //Sound Details
+        public SfxHeaderData soundDetailsHeaderData = new SfxHeaderData();
+        public SoundDetails soundDetails = new SoundDetails();
+
+        //Music Details
+        public SfxHeaderData musicDetailsHeaderData = new SfxHeaderData();
+        public MusicDetails musicDetails = new MusicDetails();
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -93,6 +103,9 @@ namespace sb_explorer
             {
                 btnListView.Checked = false;
                 lvwFiles.Visible = false;
+                MenuItem_CopyHashcode.Visible = false;
+                MenuItem_CopyLabel.Visible = false;
+                MenuItem_Separator1.Visible = false;
                 lvwFiles.Items.Clear();
                 treeView1.Visible = true;
                 BtnReloadList_Click(sender, e);
@@ -112,6 +125,9 @@ namespace sb_explorer
                 treeView1.Visible = false;
                 treeView1.Nodes.Clear();
                 lvwFiles.Visible = true;
+                MenuItem_CopyHashcode.Visible = true;
+                MenuItem_CopyLabel.Visible = true;
+                MenuItem_Separator1.Visible = true;
                 BtnReloadList_Click(sender, e);
             }
             else
@@ -215,6 +231,12 @@ namespace sb_explorer
                     case FileType.ProjectDetails:
                         LoadSelectedProjectDetails(filePath);
                         break;
+                    case FileType.SoundDetailsFile:
+                        LoadSelectedSoundDetails(filePath);
+                        break;
+                    case FileType.MusicDetails:
+                        LoadSelectedMusicDetails(filePath);
+                        break;
                 }
             }
         }
@@ -231,6 +253,24 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         //  CONTEXT MENU
         //-------------------------------------------------------------------------------------------
+        private void MenuItem_CopyHashcode_Click(object sender, EventArgs e)
+        {
+            if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
+            {
+                Clipboard.SetText(lvwFiles.SelectedItems[0].SubItems[0].Text);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_CopyLabel_Click(object sender, EventArgs e)
+        {
+            if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
+            {
+                Clipboard.SetText(lvwFiles.SelectedItems[0].SubItems[1].Text);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_Load_Click(object sender, EventArgs e)
         {
             if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
@@ -264,6 +304,14 @@ namespace sb_explorer
                             break;
                         case FileType.ProjectDetails:
                             LoadSelectedProjectDetails(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.SoundDetailsFile:
+                            LoadSelectedSoundDetails(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.MusicDetails:
+                            LoadSelectedMusicDetails(filePath);
                             lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                             break;
                     }
@@ -405,9 +453,35 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        public void LoadSelectedSoundDetails(string filePath)
+        {
+            ClearLoadedData(FileType.SoundDetailsFile);
+
+            //Load data
+            soundDetailsHeaderData = soundDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            soundDetails = soundDetailsReader.ReadSoundDetailsFile(filePath, projDetailsHeaderData);
+
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundDetailsData.ShowData();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public void LoadSelectedMusicDetails(string filePath)
+        {
+            ClearLoadedData(FileType.MusicDetails);
+
+            //Load data
+            musicDetailsHeaderData = musicDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            musicDetails = musicDetailsReader.ReadSoundDetailsFile(filePath, projDetailsHeaderData);
+
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicDetailsData.ShowData();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void ClearLoadedData(FileType fileType)
         {
-            //Clear loaded data
+            FrmMain mainForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+
+            //Clear loaded data and UI
             switch (fileType)
             {
                 case FileType.SoundbankFile:
@@ -416,30 +490,60 @@ namespace sb_explorer
                     sfxStoredData.Clear();
 
                     //Clear UI
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbHashCodes.listView1.Items.Clear();
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlWavHeaderData.listView1.Items.Clear();
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbSamplePool.listView1.Items.Clear();
+                    mainForm.pnlSbHashCodes.listView1.Items.Clear();
+                    mainForm.pnlWavHeaderData.listView1.Items.Clear();
+                    mainForm.pnlSbSamplePool.listView1.Items.Clear();
                     break;
                 case FileType.StreamFile:
                     streamBankHeaderData = new SfxHeaderData();
                     streamSamples.Clear();
 
                     //Clear UI
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.lvwMarkers.Items.Clear();
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.lvwStartMarkers.Items.Clear();
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStreamData.lvwStreamData.Items.Clear();
+                    mainForm.pnlMarkers.lvwMarkers.Items.Clear();
+                    mainForm.pnlStartMarkers.lvwStartMarkers.Items.Clear();
+                    mainForm.pnlStreamData.lvwStreamData.Items.Clear();
                     break;
                 case FileType.MusicFile:
                     musicBankHeaderData = new SfxHeaderData();
                     musicData = new MusicSample();
+
+                    //Clear UI
+                    mainForm.pnlMusicData.propertyGrid1.SelectedObject = null;
                     break;
                 case FileType.SBI:
                     sbiBankHeaderData = new SfxHeaderData();
                     sbiFileData = new SbiFile();
+
+                    //Clear UI
+                    mainForm.pnlSbiMusicbanks.textBoxSoundBanksCount.Text = "0";
+                    mainForm.pnlSbiMusicbanks.listView_ColumnSortingClick1.Items.Clear();
+                    mainForm.pnlSbiSoundbanks.textBoxSoundBanksCount.Text = "0";
+                    mainForm.pnlSbiSoundbanks.listView_ColumnSortingClick1.Items.Clear();
                     break;
                 case FileType.ProjectDetails:
                     projDetailsHeaderData = new SfxHeaderData();
                     projDetailsData = new ProjectDetails();
+
+                    //Clear UI
+                    mainForm.pnlProjDetailsSoundBanks.textboxCount.Text = "0";
+                    mainForm.pnlProjDetailsSoundBanks.listView_ColumnSortingClick1.Items.Clear();
+                    mainForm.pnlProjDetailsMemSlots.textboxCount.Text = "0";
+                    mainForm.pnlProjDetailsMemSlots.listView_ColumnSortingClick1.Items.Clear();
+                    mainForm.pnlProjDetailsData.ClearData();
+                    break;
+                case FileType.SoundDetailsFile:
+                    soundDetailsHeaderData = new SfxHeaderData();
+                    soundDetails = new SoundDetails();
+
+                    //Clear UI
+                    mainForm.pnlSoundDetailsData.ClearData();
+                    break;
+                case FileType.MusicDetails:
+                    musicDetailsHeaderData = new SfxHeaderData();
+                    musicDetails = new MusicDetails();
+
+                    //Clear UI
+                    mainForm.pnlMusicDetailsData.ClearData();
                     break;
             }
 

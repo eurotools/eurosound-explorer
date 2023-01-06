@@ -57,9 +57,12 @@ namespace sb_explorer
             this.MenuItem_Music_StartMarkers = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Music_Markers = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Project = new System.Windows.Forms.ToolStripDropDownButton();
+            this.MenuItem_ProjectDetails = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Project_ProjectData = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Project_MemorySlots = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Project_Soundbank = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_SoundDetails = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_MusicDetails = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_SBI_StoredSoundBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI_StoredMusicBanks = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,44 +123,44 @@ namespace sb_explorer
             // MenuItem_File_Settings
             // 
             this.MenuItem_File_Settings.Name = "MenuItem_File_Settings";
-            this.MenuItem_File_Settings.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_Settings.Size = new System.Drawing.Size(170, 22);
             this.MenuItem_File_Settings.Text = "Settings";
             this.MenuItem_File_Settings.Click += new System.EventHandler(this.MenuItem_File_Settings_Click);
             // 
             // MenuItem_File_DecodeAudio
             // 
             this.MenuItem_File_DecodeAudio.Name = "MenuItem_File_DecodeAudio";
-            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(170, 22);
             this.MenuItem_File_DecodeAudio.Text = "Decode Audio File";
             this.MenuItem_File_DecodeAudio.Click += new System.EventHandler(this.MenuItem_File_DecodeAudio_Click);
             // 
             // MenuItem_File_DataViewer
             // 
             this.MenuItem_File_DataViewer.Name = "MenuItem_File_DataViewer";
-            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(170, 22);
             this.MenuItem_File_DataViewer.Text = "Data Viewer";
             this.MenuItem_File_DataViewer.Click += new System.EventHandler(this.MenuItem_File_DataViewer_Click);
             // 
             // MenuItem_File_Separator1
             // 
             this.MenuItem_File_Separator1.Name = "MenuItem_File_Separator1";
-            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(167, 6);
             // 
             // MenuItem_File_ResetSettings
             // 
             this.MenuItem_File_ResetSettings.Name = "MenuItem_File_ResetSettings";
-            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(170, 22);
             this.MenuItem_File_ResetSettings.Text = "Reset Settings";
             // 
             // MenuItem_File_Separator2
             // 
             this.MenuItem_File_Separator2.Name = "MenuItem_File_Separator2";
-            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(167, 6);
             // 
             // MenuItem_File_Exit
             // 
             this.MenuItem_File_Exit.Name = "MenuItem_File_Exit";
-            this.MenuItem_File_Exit.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_Exit.Size = new System.Drawing.Size(170, 22);
             this.MenuItem_File_Exit.Text = "Exit";
             this.MenuItem_File_Exit.Click += new System.EventHandler(this.MenuItem_File_Exit_Click);
             // 
@@ -283,21 +286,21 @@ namespace sb_explorer
             // MenuItem_Music_MusicData
             // 
             this.MenuItem_Music_MusicData.Name = "MenuItem_Music_MusicData";
-            this.MenuItem_Music_MusicData.Size = new System.Drawing.Size(143, 22);
+            this.MenuItem_Music_MusicData.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_Music_MusicData.Text = "Music Data";
             this.MenuItem_Music_MusicData.Click += new System.EventHandler(this.MenuItem_Music_MusicData_Click);
             // 
             // MenuItem_Music_StartMarkers
             // 
             this.MenuItem_Music_StartMarkers.Name = "MenuItem_Music_StartMarkers";
-            this.MenuItem_Music_StartMarkers.Size = new System.Drawing.Size(143, 22);
+            this.MenuItem_Music_StartMarkers.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_Music_StartMarkers.Text = "Start Markers";
             this.MenuItem_Music_StartMarkers.Click += new System.EventHandler(this.MenuItem_Music_StartMarkers_Click);
             // 
             // MenuItem_Music_Markers
             // 
             this.MenuItem_Music_Markers.Name = "MenuItem_Music_Markers";
-            this.MenuItem_Music_Markers.Size = new System.Drawing.Size(143, 22);
+            this.MenuItem_Music_Markers.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_Music_Markers.Text = "Markers";
             this.MenuItem_Music_Markers.Click += new System.EventHandler(this.MenuItem_Music_Markers_Click);
             // 
@@ -305,36 +308,60 @@ namespace sb_explorer
             // 
             this.MenuItem_Project.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.MenuItem_Project.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem_Project_ProjectData,
-            this.MenuItem_Project_MemorySlots,
-            this.MenuItem_Project_Soundbank});
+            this.MenuItem_ProjectDetails,
+            this.MenuItem_SoundDetails,
+            this.MenuItem_MusicDetails});
             this.MenuItem_Project.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Project.Image")));
             this.MenuItem_Project.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Project.Name = "MenuItem_Project";
-            this.MenuItem_Project.Size = new System.Drawing.Size(95, 22);
-            this.MenuItem_Project.Text = "Project Details";
+            this.MenuItem_Project.Size = new System.Drawing.Size(76, 22);
+            this.MenuItem_Project.Text = "File Details";
             this.MenuItem_Project.DropDownOpening += new System.EventHandler(this.MenuItem_Project_DropDownOpening);
+            // 
+            // MenuItem_ProjectDetails
+            // 
+            this.MenuItem_ProjectDetails.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_Project_ProjectData,
+            this.MenuItem_Project_MemorySlots,
+            this.MenuItem_Project_Soundbank});
+            this.MenuItem_ProjectDetails.Name = "MenuItem_ProjectDetails";
+            this.MenuItem_ProjectDetails.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_ProjectDetails.Text = "Project Details";
             // 
             // MenuItem_Project_ProjectData
             // 
             this.MenuItem_Project_ProjectData.Name = "MenuItem_Project_ProjectData";
-            this.MenuItem_Project_ProjectData.Size = new System.Drawing.Size(158, 22);
+            this.MenuItem_Project_ProjectData.Size = new System.Drawing.Size(147, 22);
             this.MenuItem_Project_ProjectData.Text = "Project Data";
             this.MenuItem_Project_ProjectData.Click += new System.EventHandler(this.MenuItem_Project_ProjectData_Click);
             // 
             // MenuItem_Project_MemorySlots
             // 
             this.MenuItem_Project_MemorySlots.Name = "MenuItem_Project_MemorySlots";
-            this.MenuItem_Project_MemorySlots.Size = new System.Drawing.Size(158, 22);
-            this.MenuItem_Project_MemorySlots.Text = "Memmory Slots";
+            this.MenuItem_Project_MemorySlots.Size = new System.Drawing.Size(147, 22);
+            this.MenuItem_Project_MemorySlots.Text = "Memory Slots";
             this.MenuItem_Project_MemorySlots.Click += new System.EventHandler(this.MenuItem_Project_MemorySlots_Click);
             // 
             // MenuItem_Project_Soundbank
             // 
             this.MenuItem_Project_Soundbank.Name = "MenuItem_Project_Soundbank";
-            this.MenuItem_Project_Soundbank.Size = new System.Drawing.Size(158, 22);
+            this.MenuItem_Project_Soundbank.Size = new System.Drawing.Size(147, 22);
             this.MenuItem_Project_Soundbank.Text = "SoundBank";
             this.MenuItem_Project_Soundbank.Click += new System.EventHandler(this.MenuItem_Project_Soundbank_Click);
+            // 
+            // MenuItem_SoundDetails
+            // 
+            this.MenuItem_SoundDetails.Name = "MenuItem_SoundDetails";
+            this.MenuItem_SoundDetails.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SoundDetails.Text = "Sound Details";
+            this.MenuItem_SoundDetails.Click += new System.EventHandler(this.MenuItem_SoundDetails_Click);
+            // 
+            // MenuItem_MusicDetails
+            // 
+            this.MenuItem_MusicDetails.Name = "MenuItem_MusicDetails";
+            this.MenuItem_MusicDetails.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_MusicDetails.Text = "Music Details";
+            this.MenuItem_MusicDetails.Click += new System.EventHandler(this.MenuItem_MusicDetails_Click);
             // 
             // MenuItem_SBI
             // 
@@ -401,9 +428,6 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_MusicData;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_StartMarkers;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_Markers;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_ProjectData;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_MemorySlots;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_Soundbank;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_Settings;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DecodeAudio;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DataViewer;
@@ -417,6 +441,12 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripDropDownButton MenuItem_SBI;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SBI_StoredSoundBanks;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SBI_StoredMusicBanks;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_ProjectDetails;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_ProjectData;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_MemorySlots;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_Soundbank;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_SoundDetails;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_MusicDetails;
     }
 }
 

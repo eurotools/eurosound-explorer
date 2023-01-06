@@ -1,7 +1,7 @@
 ﻿using AudioDecoders;
-using sb_explorer.Classes;
 using MusX;
 using MusX.Objects;
+using sb_explorer.Classes;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -48,11 +48,22 @@ namespace sb_explorer
                         textboxAdpcmStatus.ForeColor = SystemColors.ControlText;
                     }
                 }
+                else
+                {
+                    textboxAdpcmStatus.Text = "Cannot validate " + headerFileData.Platform.Trim('_') + " adpcm... The file format does not seem to be Eurocom ADPCM codec.";
+                    textboxAdpcmStatus.ForeColor = SystemColors.ControlText;
+                }
             }
             else
             {
-                textboxAdpcmStatus.Text = "Cannot validate " + headerFileData.Platform.Trim('_') + " adpcm... The file format does not seem to be Eurocom ADPCM codec.";
+                textboxAdpcmStatus.Text = "Cannot validate adpcm data for this version.";
                 textboxAdpcmStatus.ForeColor = SystemColors.ControlText;
+            }
+
+            //Check if we have to automatically send markers
+            if (ButtonAutoSendMarkers.Checked)
+            {
+                ButtonDisplayMusicMarkers_Click(null, EventArgs.Empty);
             }
         }
 

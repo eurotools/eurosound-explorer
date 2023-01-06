@@ -37,6 +37,8 @@ namespace sb_explorer
         internal FormPJ_MemorySlots pnlProjDetailsMemSlots = new FormPJ_MemorySlots();
         internal FormPJ_SoundBanks pnlProjDetailsSoundBanks = new FormPJ_SoundBanks();
         internal FormPJ_ProjectData pnlProjDetailsData = new FormPJ_ProjectData();
+        internal FormSD_SoundDetails pnlSoundDetailsData = new FormSD_SoundDetails();
+        internal FrmMusicDetails pnlMusicDetailsData = new FrmMusicDetails();
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -65,6 +67,8 @@ namespace sb_explorer
             m_DockForms.Add(pnlProjDetailsMemSlots);
             m_DockForms.Add(pnlProjDetailsSoundBanks);
             m_DockForms.Add(pnlProjDetailsData);
+            m_DockForms.Add(pnlSoundDetailsData);
+            m_DockForms.Add(pnlMusicDetailsData);
 
             //Load previous settings
             pnlSettings.LoadSettings();
@@ -323,6 +327,20 @@ namespace sb_explorer
             UpdateWindowMenuChecks();
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_SoundDetails_Click(object sender, EventArgs e)
+        {
+            pnlSoundDetailsData.Show(mainDockPanel, DockState.Float);
+            UpdateWindowMenuChecks();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_MusicDetails_Click(object sender, EventArgs e)
+        {
+            pnlMusicDetailsData.Show(mainDockPanel, DockState.Float);
+            UpdateWindowMenuChecks();
+        }
+
         //-------------------------------------------------------------------------------------------
         //  Functions
         //-------------------------------------------------------------------------------------------
@@ -355,6 +373,8 @@ namespace sb_explorer
             MenuItem_Project_MemorySlots.Checked = pnlProjDetailsMemSlots.DockState != DockState.Hidden;
             MenuItem_Project_Soundbank.Checked = pnlProjDetailsSoundBanks.DockState != DockState.Hidden;
             MenuItem_Project_ProjectData.Checked = pnlProjDetailsData.DockState != DockState.Hidden;
+            MenuItem_SoundDetails.Checked = pnlSoundDetailsData.DockState != DockState.Hidden;
+            MenuItem_MusicDetails.Checked = pnlMusicDetailsData.DockState != DockState.Hidden;
 
             //Menu 1
             MenuItem_SfxFiles.Checked = pnlSoundBankFiles.DockState != DockState.Hidden;

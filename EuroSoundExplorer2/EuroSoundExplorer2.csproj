@@ -118,6 +118,18 @@
     <Compile Include="Forms\FrmFileRefUsage.Designer.cs">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
     </Compile>
+    <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.Designer.cs">
+      <DependentUpon>FrmMusicDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.Designer.cs">
+      <DependentUpon>FormSD_SoundDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="PanelDocks\Misc\FormMediaPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,22 +161,22 @@
     <Compile Include="PanelDocks\MusicBanks\FormMusicData.Designer.cs">
       <DependentUpon>FormMusicData.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\ProjectDetails\FormPJ_MemorySlots.cs">
+    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_MemorySlots.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\ProjectDetails\FormPJ_MemorySlots.Designer.cs">
+    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_MemorySlots.Designer.cs">
       <DependentUpon>FormPJ_MemorySlots.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\ProjectDetails\FormPJ_ProjectData.cs">
+    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_ProjectData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\ProjectDetails\FormPJ_ProjectData.Designer.cs">
+    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_ProjectData.Designer.cs">
       <DependentUpon>FormPJ_ProjectData.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\ProjectDetails\FormPJ_SoundBanks.cs">
+    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_SoundBanks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\ProjectDetails\FormPJ_SoundBanks.Designer.cs">
+    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_SoundBanks.Designer.cs">
       <DependentUpon>FormPJ_SoundBanks.cs</DependentUpon>
     </Compile>
     <Compile Include="PanelDocks\SBI\FormSBiMusicBanks.cs">
@@ -232,6 +244,12 @@
     <EmbeddedResource Include="Forms\FrmFileRefUsage.resx">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.resx">
+      <DependentUpon>FrmMusicDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.resx">
+      <DependentUpon>FormSD_SoundDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PanelDocks\Misc\FormMediaPlayer.resx">
       <DependentUpon>FormMediaPlayer.cs</DependentUpon>
     </EmbeddedResource>
@@ -247,13 +265,13 @@
     <EmbeddedResource Include="PanelDocks\MusicBanks\FormMusicData.resx">
       <DependentUpon>FormMusicData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\ProjectDetails\FormPJ_MemorySlots.resx">
+    <EmbeddedResource Include="PanelDocks\Details Files\ProjectDetails\FormPJ_MemorySlots.resx">
       <DependentUpon>FormPJ_MemorySlots.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\ProjectDetails\FormPJ_ProjectData.resx">
+    <EmbeddedResource Include="PanelDocks\Details Files\ProjectDetails\FormPJ_ProjectData.resx">
       <DependentUpon>FormPJ_ProjectData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\ProjectDetails\FormPJ_SoundBanks.resx">
+    <EmbeddedResource Include="PanelDocks\Details Files\ProjectDetails\FormPJ_SoundBanks.resx">
       <DependentUpon>FormPJ_SoundBanks.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PanelDocks\SBI\FormSBiMusicBanks.resx">

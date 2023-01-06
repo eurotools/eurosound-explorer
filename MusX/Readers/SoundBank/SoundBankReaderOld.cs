@@ -18,11 +18,11 @@ namespace MusX.Readers
                 BReader.BaseStream.Seek(headerData.SFXStart, SeekOrigin.Begin);
 
                 //Loop througt stored elements
-                uint sfxCount = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                uint sfxCount = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                 for (int i = 0; i < sfxCount; i++)
                 {
-                    uint hashcode = 0x1A000000 | BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
-                    uint sfxPos = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                    uint hashcode = 0x1A000000 | BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+                    uint sfxPos = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                     long prevPos = BReader.BaseStream.Position;
 
                     //go to sound offset
@@ -31,11 +31,11 @@ namespace MusX.Readers
                     //Read sound properties
                     Sample sample = new Sample
                     {
-                        DuckerLenght = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                        MinDelay = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                        MaxDelay = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                        InnerRadius = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                        OuterRadius = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
+                        DuckerLenght = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
+                        MinDelay = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
+                        MaxDelay = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
+                        InnerRadius = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
+                        OuterRadius = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
                         ReverbSend = BReader.ReadSByte(),
                         TrackingType = BReader.ReadSByte(),
                         MaxVoices = BReader.ReadSByte(),
@@ -48,7 +48,7 @@ namespace MusX.Readers
                     sample.Flags = BReader.ReadUInt16();
 
                     //get samples count
-                    ushort sfxSamplesCount = BinaryFunctions.FlipUShort(BReader.ReadUInt16(), headerData.IsBigEndian);
+                    ushort sfxSamplesCount = BinaryFunctions.FlipData(BReader.ReadUInt16(), headerData.IsBigEndian);
 
                     //Loop througt all SFX samples
                     for (int j = 0; j < sfxSamplesCount; j++)
@@ -56,9 +56,9 @@ namespace MusX.Readers
                         //Read sample properties
                         SampleInfo samplePoolItem = new SampleInfo()
                         {
-                            FileRef = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian),
-                            Pitch = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian) / 1024.0f,
-                            PitchOffset = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian) / 1024.0f,
+                            FileRef = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
+                            Pitch = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian) / 1024.0f,
+                            PitchOffset = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian) / 1024.0f,
                             Volume = BReader.ReadSByte(),
                             VolumeOffset = BReader.ReadSByte(),
                             Pan = BReader.ReadSByte(),
@@ -85,20 +85,20 @@ namespace MusX.Readers
 
                 //Go to sample info section
                 BReader.BaseStream.Seek(headerData.SampleInfoStart, SeekOrigin.Begin);
-                uint waveCount = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                uint waveCount = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                 for (int i = 0; i < waveCount; i++)
                 {
                     SampleData wavHeaderData = new SampleData
                     {
-                        Flags = (ushort)BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian),
-                        Address = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        MemorySize = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        Frequency = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        SampleSize = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        Channels = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        Bits = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        PsiSampleHeader = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        LoopStartOffset = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
+                        Flags = (ushort)BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
+                        Address = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        MemorySize = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        Frequency = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        SampleSize = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        Channels = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        Bits = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        PsiSampleHeader = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        LoopStartOffset = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
                         Duration = BReader.ReadInt32(),
                     };
 
@@ -123,7 +123,7 @@ namespace MusX.Readers
                         wavHeaderData.DspCoeffs = new short[16];
                         for (int j = 0; j < wavHeaderData.DspCoeffs.Length; j++)
                         {
-                            wavHeaderData.DspCoeffs[j] = BinaryFunctions.FlipShort(BReader.ReadInt16(), headerData.IsBigEndian);
+                            wavHeaderData.DspCoeffs[j] = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian);
                         }
                     }
 

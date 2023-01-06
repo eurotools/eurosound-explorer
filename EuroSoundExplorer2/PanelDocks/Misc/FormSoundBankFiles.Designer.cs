@@ -34,10 +34,13 @@ namespace sb_explorer
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSoundBankFiles));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.MenuItem_CopyHashcode = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_CopyLabel = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_Load = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Reload = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Unload = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItem_Separator = new System.Windows.Forms.ToolStripSeparator();
+            this.MenuItem_Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_DataViewer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnListView = new System.Windows.Forms.ToolStripButton();
@@ -65,14 +68,40 @@ namespace sb_explorer
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_CopyHashcode,
+            this.MenuItem_CopyLabel,
+            this.MenuItem_Separator1,
             this.MenuItem_Load,
             this.MenuItem_Reload,
             this.MenuItem_Unload,
-            this.MenuItem_Separator,
+            this.MenuItem_Separator2,
             this.MenuItem_DataViewer});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 170);
+            // 
+            // MenuItem_CopyHashcode
+            // 
+            this.MenuItem_CopyHashcode.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyHashcode.Image")));
+            this.MenuItem_CopyHashcode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuItem_CopyHashcode.Name = "MenuItem_CopyHashcode";
+            this.MenuItem_CopyHashcode.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_CopyHashcode.Text = "Copy HashCode";
+            this.MenuItem_CopyHashcode.Click += new System.EventHandler(this.MenuItem_CopyHashcode_Click);
+            // 
+            // MenuItem_CopyLabel
+            // 
+            this.MenuItem_CopyLabel.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyLabel.Image")));
+            this.MenuItem_CopyLabel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuItem_CopyLabel.Name = "MenuItem_CopyLabel";
+            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_CopyLabel.Text = "Copy Label";
+            this.MenuItem_CopyLabel.Click += new System.EventHandler(this.MenuItem_CopyLabel_Click);
+            // 
+            // MenuItem_Separator1
+            // 
+            this.MenuItem_Separator1.Name = "MenuItem_Separator1";
+            this.MenuItem_Separator1.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_Load
             // 
@@ -101,10 +130,10 @@ namespace sb_explorer
             this.MenuItem_Unload.Text = "Unload";
             this.MenuItem_Unload.Click += new System.EventHandler(this.MenuItem_Unload_Click);
             // 
-            // MenuItem_Separator
+            // MenuItem_Separator2
             // 
-            this.MenuItem_Separator.Name = "MenuItem_Separator";
-            this.MenuItem_Separator.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_Separator2.Name = "MenuItem_Separator2";
+            this.MenuItem_Separator2.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_DataViewer
             // 
@@ -340,7 +369,7 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Load;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Reload;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Unload;
-        private System.Windows.Forms.ToolStripSeparator MenuItem_Separator;
+        private System.Windows.Forms.ToolStripSeparator MenuItem_Separator2;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_DataViewer;
         private System.Windows.Forms.ColumnHeader Col_HashCode_Label;
         private System.Windows.Forms.ToolStripButton btnReloadHashCodes;
@@ -351,5 +380,8 @@ namespace sb_explorer
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripButton btnApplyFilter;
         private System.Windows.Forms.ToolStripTextBox txtFilter;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyHashcode;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyLabel;
+        private System.Windows.Forms.ToolStripSeparator MenuItem_Separator1;
     }
 }

@@ -116,9 +116,9 @@ namespace sb_explorer
 
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel labelSoundBanks;
-        private System.Windows.Forms.ToolStripTextBox textBoxSoundBanksCount;
-        private CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
         private System.Windows.Forms.ColumnHeader colHashCode;
         private System.Windows.Forms.ColumnHeader colHashCodeLabel;
+        protected internal CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
+        protected internal System.Windows.Forms.ToolStripTextBox textBoxSoundBanksCount;
     }
 }

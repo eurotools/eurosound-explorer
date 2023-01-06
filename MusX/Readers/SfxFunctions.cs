@@ -100,21 +100,21 @@ namespace MusX.Readers
                         }
 
                         //Points to the stream look-up file details
-                        headerData.FileStart1 = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                        headerData.FileStart1 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                         //Size of the first section, in bytes. 
-                        headerData.FileLength1 = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                        headerData.FileLength1 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
 
                         //Offset to the second section with the sample data. 
-                        headerData.FileStart2 = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                        headerData.FileStart2 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                         //Size of the second section, in bytes. 
-                        headerData.FileLength2 = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                        headerData.FileLength2 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
 
                         if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
                         {
                             //Unused offset. Set to zero.
-                            headerData.FileStart3 = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                            headerData.FileStart3 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                             //Unused. Set to zero.
-                            headerData.FileLength3 = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                            headerData.FileLength3 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                         }
                     }
                     else
@@ -139,7 +139,7 @@ namespace MusX.Readers
                 if (sbData.SFXStart < br.BaseStream.Length)
                 {
                     br.BaseStream.Seek(sbData.SFXStart, SeekOrigin.Begin);
-                    totalSfx = BinaryFunctions.FlipInt32(br.ReadInt32(), sbData.IsBigEndian);
+                    totalSfx = BinaryFunctions.FlipData(br.ReadInt32(), sbData.IsBigEndian);
                 }
             }
             return totalSfx;

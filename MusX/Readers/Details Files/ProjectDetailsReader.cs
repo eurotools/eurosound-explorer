@@ -52,9 +52,9 @@ namespace MusX.Readers
                         }
 
                         //Get the start offset where memmory slots start.
-                        headerData.MemoryStart = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                        headerData.MemoryStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                         //Size of the first section, in bytes
-                        headerData.MemoryLength = BinaryFunctions.FlipUInt32(BReader.ReadUInt32(), headerData.IsBigEndian);
+                        headerData.MemoryLength = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                     }
                     else
                     {
@@ -77,10 +77,10 @@ namespace MusX.Readers
             {
                 //Read Offsets and count
                 BReader.BaseStream.Seek(headerData.MemoryStart, SeekOrigin.Begin);
-                projectData.MemmorySlotsCount = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
-                projectData.MemorySlotsOffset = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
-                projectData.SoundBanksCount = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
-                projectData.SoundBanksOffset = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.MemmorySlotsCount = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.MemorySlotsOffset = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.SoundBanksCount = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.SoundBanksOffset = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
                 long flagsPos = BReader.BaseStream.Position;
 
                 //Read Project Slots 
@@ -89,9 +89,9 @@ namespace MusX.Readers
                 {
                     ProjectSlots projSlots = new ProjectSlots
                     {
-                        SlotNumber = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        MemorySize = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        Quantity = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian)
+                        SlotNumber = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        MemorySize = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        Quantity = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian)
                     };
                     projectData.memorySlotsData.Add(projSlots);
                 }
@@ -102,20 +102,20 @@ namespace MusX.Readers
                 {
                     ProjectSoundBank soundbankData = new ProjectSoundBank
                     {
-                        HashCode = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian),
-                        SlotNumber = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian)
+                        HashCode = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
+                        SlotNumber = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian)
                     };
                     projectData.soundBanksData.Add(soundbankData);
                 }
 
                 //Read Flags Data
                 BReader.BaseStream.Seek(flagsPos + 16, SeekOrigin.Begin);
-                projectData.StereoStreamCount = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
-                projectData.MonoStreamCount = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
-                projectData.ProjectCode = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.StereoStreamCount = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.MonoStreamCount = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
+                projectData.ProjectCode = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
                 for (int i = 0; i < 10; i++)
                 {
-                    projectData.flagsValues[i] = BinaryFunctions.FlipInt32(BReader.ReadInt32(), headerData.IsBigEndian);
+                    projectData.flagsValues[i] = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian);
                 }
             }
             return projectData;

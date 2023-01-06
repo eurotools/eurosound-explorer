@@ -34,6 +34,7 @@ namespace sb_explorer
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSendMediaPlayer = new System.Windows.Forms.ToolStripButton();
             this.ButtonDisplayMusicMarkers = new System.Windows.Forms.ToolStripButton();
+            this.ButtonAutoSendMarkers = new System.Windows.Forms.ToolStripButton();
             this.labelAdpcmStatus = new System.Windows.Forms.ToolStripLabel();
             this.textboxAdpcmStatus = new System.Windows.Forms.ToolStripTextBox();
             this.toolStrip1.SuspendLayout();
@@ -58,6 +59,7 @@ namespace sb_explorer
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonSendMediaPlayer,
             this.ButtonDisplayMusicMarkers,
+            this.ButtonAutoSendMarkers,
             this.labelAdpcmStatus,
             this.textboxAdpcmStatus});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -87,6 +89,20 @@ namespace sb_explorer
             this.ButtonDisplayMusicMarkers.Size = new System.Drawing.Size(35, 32);
             this.ButtonDisplayMusicMarkers.Text = "Display Markers";
             this.ButtonDisplayMusicMarkers.Click += new System.EventHandler(this.ButtonDisplayMusicMarkers_Click);
+            // 
+            // ButtonAutoSendMarkers
+            // 
+            this.ButtonAutoSendMarkers.Checked = true;
+            this.ButtonAutoSendMarkers.CheckOnClick = true;
+            this.ButtonAutoSendMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ButtonAutoSendMarkers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonAutoSendMarkers.Image = ((System.Drawing.Image)(resources.GetObject("ButtonAutoSendMarkers.Image")));
+            this.ButtonAutoSendMarkers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonAutoSendMarkers.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonAutoSendMarkers.Name = "ButtonAutoSendMarkers";
+            this.ButtonAutoSendMarkers.Size = new System.Drawing.Size(39, 32);
+            this.ButtonAutoSendMarkers.Text = "toolStripButton1";
+            this.ButtonAutoSendMarkers.ToolTipText = "Automatically Show Markers";
             // 
             // labelAdpcmStatus
             // 
@@ -121,11 +137,12 @@ namespace sb_explorer
         }
 
         #endregion
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton ButtonSendMediaPlayer;
         private System.Windows.Forms.ToolStripButton ButtonDisplayMusicMarkers;
         private System.Windows.Forms.ToolStripLabel labelAdpcmStatus;
         private System.Windows.Forms.ToolStripTextBox textboxAdpcmStatus;
+        private System.Windows.Forms.ToolStripButton ButtonAutoSendMarkers;
+        protected internal System.Windows.Forms.PropertyGrid propertyGrid1;
     }
 }

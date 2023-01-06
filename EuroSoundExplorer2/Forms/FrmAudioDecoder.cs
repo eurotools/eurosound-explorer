@@ -1,6 +1,6 @@
 ﻿using AudioDecoders;
-using sb_explorer.Classes;
 using NAudio.Wave;
+using sb_explorer.Classes;
 using System;
 using System.IO;
 using System.Windows.Forms;

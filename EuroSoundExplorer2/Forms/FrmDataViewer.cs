@@ -2,8 +2,8 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using static sb_explorer.Enumerations;
 using static MusX.Readers.SfxFunctions;
+using static sb_explorer.Enumerations;
 
 namespace sb_explorer
 {

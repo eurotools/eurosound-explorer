@@ -113,9 +113,9 @@ namespace sb_explorer
 
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel labelCount;
-        private System.Windows.Forms.ToolStripTextBox textboxCount;
-        private CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
         private System.Windows.Forms.ColumnHeader colHashCode;
         private System.Windows.Forms.ColumnHeader colSlotNumber;
+        protected internal CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
+        protected internal System.Windows.Forms.ToolStripTextBox textboxCount;
     }
 }

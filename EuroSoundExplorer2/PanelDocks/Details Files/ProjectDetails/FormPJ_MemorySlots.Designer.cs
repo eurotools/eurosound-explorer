@@ -117,13 +117,12 @@ namespace sb_explorer
         }
 
         #endregion
-
-        private CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
         private System.Windows.Forms.ColumnHeader colMemSlotNo;
         private System.Windows.Forms.ColumnHeader colMemSize;
         private System.Windows.Forms.ColumnHeader colMemQuant;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel labelCount;
-        private System.Windows.Forms.ToolStripTextBox textboxCount;
+        protected internal CustomControls.ListView_ColumnSortingClick listView_ColumnSortingClick1;
+        protected internal System.Windows.Forms.ToolStripTextBox textboxCount;
     }
 }
