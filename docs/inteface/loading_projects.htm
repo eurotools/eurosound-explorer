@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+  <script type="text/javascript" language="JavaScript">
+    //<![CDATA[
+    function reDo() {
+      if (innerWidth != origWidth || innerHeight != origHeight)
+        location.reload();
+    }
+    if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+      origWidth = innerWidth;
+      origHeight = innerHeight;
+      onresize = reDo;
+    }
+    onerror = null;
+  //]]>
+  </script>
+  <style type="text/css">/*<![CDATA[*/
+
+    < !-- div.WebHelpPopupMenu {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 4;
+      visibility: hidden;
+    }
+
+    p.WebHelpNavBar {
+      text-align: right;
+    }
+
+    -->
+  
+/*]]>*/</style>
+
+  <script type="text/javascript">//<![CDATA[
+
+    gRootRelPath = "..";
+    gCommonRootRelPath = "..";
+    gTopicId = "2.0_1";
+  
+//]]></script>
+
+  <script type="text/javascript" src="../template/scripts/rh.min.js"></script>
+  <script type="text/javascript" src="../template/scripts/common.min.js"></script>
+  <script type="text/javascript" src="../template/scripts/topic.min.js"></script>
+  <script type="text/javascript" src="../template/scripts/topicwidgets.min.js"></script>
+<script type="text/javascript" src="../whxdata/projectsettings.js"></script>
+  <link rel="stylesheet" type="text/css" href="../template/styles/topic.min.css"/>
+  <link rel="stylesheet" type="text/css" href="../template/single_page/topicheader.css"/>
+  <meta name="topic-status" content="Draft"/>
+<link rel="stylesheet" type="text/css" href="../assets/css/default.css"/><link rel="stylesheet" type="text/css" href="../assets/css/book.css"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="generator" content="Adobe RoboHelp 2020"/>
+  <title>Loading Projects</title>
+  <meta name="topic-status" content="Draft"/>
+  <meta name="template" content="../assets/masterpages/DefaultTemplate.htt"/>
+  <meta name="rh-authors" content=""/>
+  <meta name="topic-comment" content=""/>
+  <link rel="stylesheet" type="text/css" href="../assets/css/default.css"/>
+  <link rel="stylesheet" type="text/css" href="../assets/css/book.css"/>
+</head>
+
+<body>
+  <div class="topic-header rh-hide" id="rh-topic-header">
+    <div class="logo">
+    </div>
+    <div class="nav">
+      <div class="title" title="Loading Projects">
+        <span>Loading Projects</span>
+      </div>
+      <div class="gotohome" title="Click here to see this page in full context">
+        <a href="#" onclick="rh._.goToFullLayout()">Click here to see this page in full context</a>
+      </div>
+    </div>
+  </div>
+  <div class="topic-header-shadow rh-hide" id="rh-topic-header-shadow"></div>
+
+
+
+  <div class="headerStyle">
+    <table style="border-collapse:collapse;width:100%;border-width:0px;border-style:none;border-color:#000000;border-left-width:0px;border-left-style:none;border-left-color:#000000;border-top-width:0px;border-top-style:none;border-top-color:#000000;border-right-width:0px;border-right-style:none;border-right-color:#000000;border-bottom-width:0px;border-bottom-style:none;border-bottom-color:#000000">
+      <colgroup>
+        <col style="width: 881px;"/>
+        <col style="width: 273px;"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>
+            <p class="Title"> <span data-field="title" data-format="default">Loading Projects</span></p>
+          </td>
+          <td style="background-image: url(&#39;&#39;);">
+            <p align="right"><img alt="" border="0" class="hcp2" src="../assets/images/eurosound logo.png" style="cursor: nwse-resize; background-image: url(&#39;&#39;);"/></p>
+            <p align="right" style="color: #ffffff;"><span class="hcp3"></span><span data-keyref="File Version" style="color: #000000;border-width: 1px;border-color: #000000;border-left-width: 1px;border-left-color: #000000;border-top-width: 1px;border-top-color: #000000;border-right-width: 1px;border-right-color: #000000;border-bottom-width: 1px;border-bottom-color: #000000">v1.00 Updated: 07/01/23</span></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding-top: 20px;padding-bottom: 20px">
+  <p>When loading an EuroSound compiled project, you will have to use the Settings panel, that is presented as a property grid view. EngineX fields will be selected automatically, when selecting the game <span style="font-weight:bold;">Title.</span></p>
+  <p><img src="../assets/images/panelsettings.png"/></p>
+  <p>The user should only set the following parameters, here is an example of how to load the SFX files for the game cube version of Spryo:</p>
+  <table border="1" cellpadding="1" cellspacing="1" class="SimpleBlueGrid" style="border-collapse: collapse; width: 70%;">
+    <colgroup>
+      <col style="width: 163px;"/>
+      <col style="width: 642px;"/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <td style="">Field Name</td>
+        <td style="">Description</td>
+      </tr>
+      <tr>
+        <td style="">Files folder</td>
+        <td style="">eg: &quot;F:\Repositories\EuroTools\Soundbanks\spyro\binary\_bin_gc\audio&quot;</td>
+      </tr>
+      <tr>
+        <td style="">Platform</td>
+        <td style="">eg: &quot;GameCube&quot;</td>
+      </tr>
+      <tr>
+        <td style="">Sound.h File</td>
+        <td style="">eg: &quot;F:\Repositories\EuroTools\Soundbanks\spyro\binary\sonix\sound.h&quot;</td>
+      </tr>
+      <tr>
+        <td style="">Title</td>
+        <td style="">eg: &quot;Spyro&quot;</td>
+      </tr>
+    </tbody>
+  </table>
+  <p> </p>
+  <div>
+    <div>
+      <table border="1" cellpadding="1" cellspacing="1" class="TipTable" style="border-collapse: collapse; width: 90%;">
+        <colgroup>
+          <col style="width:100%"/>
+        </colgroup>
+        <tbody>
+          <tr>
+            <td>
+              <p><img src="../assets/images/hs-tip.gif"/><span style="font-weight:bold;">Tip:</span></p>
+              <p><span>If you have the <span style="font-weight:bold;">Sound.h</span> file for the game you want to load, is highly recommended to set it because this way all hashcodes will be displayed with a human-readable strings that will help you to identify the sounds by his name instead of by a hexadecimal value.</span></p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+  <div>
+    <table style="border-collapse:collapse;width:100%;border-width:1px;border-color:#000000;border-left-width:0;border-top-width:1px;border-top-color:#000000;border-right-width:0;border-bottom-width:0;border-style:solid;border-top-style:solid">
+      <colgroup>
+        <col style="width: 618px;"/>
+        <col style="width: 536px;"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td style="background-image: url(&#39;&#39;);">
+            <p><img height="30" src="../assets/images/eurotools.png" style="vertical-align: middle;" width="30"/><span style="font-weight:bold;">Eurotools Community.</span></p>
+          </td>
+          <td style="background-image: url(&#39;&#39;);">
+            <p style="text-align: right;padding-right: 7mm;"> </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body></html>

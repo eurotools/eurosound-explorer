@@ -1,0 +1,1 @@
+(function() {    var toc =  [{"name":"Local Files For EuroSound Explorer","type":"item","tilePath":"","description":"","url":"local_files_for_eurosound_explorer.htm"}];    window.rh.model.publish(rh.consts('KEY_TEMP_DATA'), toc, { sync:true });    })();

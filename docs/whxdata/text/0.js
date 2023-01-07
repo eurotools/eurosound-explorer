@@ -1,0 +1,1 @@
+rh._.exports({"0":[["Local Files For EuroSound Explorer"]],"1":[[" ","Local Files For EuroSound Explorer"," ","v1.00 Updated: 07/01/23"," ","These are the files that can be found in the program folder."," ","Eurotools Community."]],"id":"0"})

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+  <script type="text/javascript" language="JavaScript">
+    //<![CDATA[
+    function reDo() {
+      if (innerWidth != origWidth || innerHeight != origHeight)
+        location.reload();
+    }
+    if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+      origWidth = innerWidth;
+      origHeight = innerHeight;
+      onresize = reDo;
+    }
+    onerror = null;
+  //]]>
+  </script>
+  <style type="text/css">/*<![CDATA[*/
+
+    < !-- div.WebHelpPopupMenu {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 4;
+      visibility: hidden;
+    }
+
+    p.WebHelpNavBar {
+      text-align: right;
+    }
+
+    -->
+  
+/*]]>*/</style>
+
+  <script type="text/javascript">//<![CDATA[
+
+    gRootRelPath = ".";
+    gCommonRootRelPath = ".";
+    gTopicId = "0_1";
+  
+//]]></script>
+
+  <script type="text/javascript" src="./template/scripts/rh.min.js"></script>
+  <script type="text/javascript" src="./template/scripts/common.min.js"></script>
+  <script type="text/javascript" src="./template/scripts/topic.min.js"></script>
+  <script type="text/javascript" src="./template/scripts/topicwidgets.min.js"></script>
+<script type="text/javascript" src="./whxdata/projectsettings.js"></script>
+  <link rel="stylesheet" type="text/css" href="./template/styles/topic.min.css"/>
+  <link rel="stylesheet" type="text/css" href="./template/single_page/topicheader.css"/>
+  <meta name="topic-status" content="Draft"/>
+<link rel="stylesheet" type="text/css" href="assets/css/default.css"/><link rel="stylesheet" type="text/css" href="assets/css/book.css"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="generator" content="Adobe RoboHelp 2020"/>
+  <title>Introduction</title>
+  <meta name="topic-status" content="Draft"/>
+  <meta name="template" content="assets/masterpages/DefaultTemplate.htt"/>
+  <meta name="rh-authors" content=""/>
+  <meta name="topic-comment" content=""/>
+  <link rel="stylesheet" type="text/css" href="assets/css/default.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/book.css"/>
+</head>
+
+<body>
+  <div class="topic-header rh-hide" id="rh-topic-header">
+    <div class="logo">
+    </div>
+    <div class="nav">
+      <div class="title" title="Introduction">
+        <span>Introduction</span>
+      </div>
+      <div class="gotohome" title="Click here to see this page in full context">
+        <a href="#" onclick="rh._.goToFullLayout()">Click here to see this page in full context</a>
+      </div>
+    </div>
+  </div>
+  <div class="topic-header-shadow rh-hide" id="rh-topic-header-shadow"></div>
+
+
+
+  <div class="headerStyle">
+    <table style="border-collapse:collapse;width:100%;border-width:0px;border-style:none;border-color:#000000;border-left-width:0px;border-left-style:none;border-left-color:#000000;border-top-width:0px;border-top-style:none;border-top-color:#000000;border-right-width:0px;border-right-style:none;border-right-color:#000000;border-bottom-width:0px;border-bottom-style:none;border-bottom-color:#000000">
+      <colgroup>
+        <col style="width: 881px;"/>
+        <col style="width: 273px;"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>
+            <p class="Title"> <span data-field="title" data-format="default">Introduction</span></p>
+          </td>
+          <td style="background-image: url(&#39;&#39;);">
+            <p align="right"><img alt="" border="0" class="hcp2" src="assets/images/eurosound logo.png" style="cursor: nwse-resize; background-image: url(&#39;&#39;);"/></p>
+            <p align="right" style="color: #ffffff;"><span class="hcp3"></span><span data-keyref="File Version" style="color: #000000;border-width: 1px;border-color: #000000;border-left-width: 1px;border-left-color: #000000;border-top-width: 1px;border-top-color: #000000;border-right-width: 1px;border-right-color: #000000;border-bottom-width: 1px;border-bottom-color: #000000">v1.00 Updated: 07/01/23</span></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding-top: 20px;padding-bottom: 20px">
+  <p><img src="assets/images/cd_audio_cd_a-2.png"/><span style="font-weight:bold;">Welcome to EuroSound Explorer</span>, an asset to decompile, reproduce, and understand the structure of the EngineX SFX files. This tool is compatible will all file types that you can find in the different versions of the files used from 2003 to 2008, these are the files you can find:</p>
+  <ul class="Square">
+    <li>Soundbanks</li>
+    <li><span style="text-decoration:underline;">Streambanks:</span> Mainly used for ambient sounds and dialogs, if the sound is very long, usually is stored in this file instead of being duplicated in each soundbank.</li>
+    <li><span style="text-decoration:underline;">Musicbanks:</span> Are like streambanks, but each music is stored in a separated file and are loaded on demand. </li>
+  </ul>
+  <p> </p>
+  <p>There&#39;s a lot to EuroSound Explorer, so this manual is designed to help you to understand its features and how to use them.</p>
+  <p> </p>
+  <div>
+    <table border="1" cellpadding="1" cellspacing="1" class="NoteTable" style="border-collapse: collapse; width: 90%;">
+      <colgroup>
+        <col style="width:100%"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>
+            <p><img src="assets/images/hs-note.gif"/><span style="font-weight:bold;">Note:</span></p>
+            <p>Before using EuroSound Explorer, you will need to make sure that the game you are going to explore is compatible, for more information, see <a href="supported_games.htm">Supported Games</a>.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p> </p>
+  <h2>Browse this help</h2>
+  <table border="1" cellpadding="1" cellspacing="1" class="SimpleBlueGrid" style="border-collapse: collapse; width: 70%;">
+    <colgroup>
+      <col style="width:33.33%"/>
+      <col style="width:33.33%"/>
+      <col style="width:33.33%"/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <td>Getting Started</td>
+        <td>Using EuroSound Explorer</td>
+        <td>Additional information</td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="conventions_used_in_the_manual.htm">Conventions used in the manual</a></p>
+          <p><a href="local_files_for_eurosound_explorer.htm">Local Files For EuroSound Explorer</a></p>
+        </td>
+        <td>
+          <p><a href="inteface/basic_interface_layout.htm">Basic Interface Layout</a></p>
+          <p><a href="soundbanks/soundbanks.htm">Soundbanks</a></p>
+        </td>
+        <td> </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+  <div>
+    <table style="border-collapse:collapse;width:100%;border-width:1px;border-color:#000000;border-left-width:0;border-top-width:1px;border-top-color:#000000;border-right-width:0;border-bottom-width:0;border-style:solid;border-top-style:solid">
+      <colgroup>
+        <col style="width: 618px;"/>
+        <col style="width: 536px;"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td style="background-image: url(&#39;&#39;);">
+            <p><img height="30" src="assets/images/eurotools.png" style="vertical-align: middle;" width="30"/><span style="font-weight:bold;">Eurotools Community.</span></p>
+          </td>
+          <td style="background-image: url(&#39;&#39;);">
+            <p style="text-align: right;padding-right: 7mm;"> </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body></html>

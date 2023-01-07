@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ppfml version="2.00" project="eurosound-explorer" type="4">
+  <contextmap>
+    
+  </contextmap>
+  <topiclist defaulttopic="introduction.htm">
+    
+    <topic>
+      introduction.htm
+    </topic>
+    
+    <topic>
+      conventions_used_in_the_manual.htm
+    </topic>
+    
+    <topic>
+      local_files_for_eurosound_explorer.htm
+    </topic>
+    
+    <topic>
+      inteface\loading_projects.htm
+    </topic>
+    
+    <topic>
+      inteface\basic_interface_layout.htm
+    </topic>
+    
+    <topic>
+      soundbanks\soundbanks.htm
+    </topic>
+    
+    <topic>
+      soundbanks\soundbank_hashcodes.htm
+    </topic>
+    
+    <topic>
+      soundbanks\wav_header_data.htm
+    </topic>
+    
+    <topic>
+      soundbanks\sample_pool.htm
+    </topic>
+    
+  </topiclist>
+  <filenamemap>
+    <filenameentry moniker="wh_languagetype">
+      <filename>
+        en_US
+      </filename>
+    </filenameentry>
+    <filenameentry moniker="wh_stoplist">
+      <filename>
+        whxdata/stopwords.xml
+      </filename>
+    </filenameentry>
+    <filenameentry moniker="startpage">
+      <filename>
+        index.htm
+      </filename>
+    </filenameentry>
+        
+    <filenameentry moniker="favicon">
+      <filename>
+        F:/Repositories/EuroTools/Development/Help/eurosound-explorer/contents/assets/images/headerLogo.png
+      </filename>
+    </filenameentry>
+    
+  </filenamemap>
+</ppfml>

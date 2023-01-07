@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="Adobe RoboHelp" />
+		<title><%= output.title %></title>
+		<% if(favicon && favicon.path && favicon.mediaType) { %>
+			<link rel='shortcut icon' type='<%= favicon.mediaType %>' href='<%= favicon.path %>' />
+		<% } %>
+		<script type="text/javascript">//<![CDATA[
+
+			gRootRelPath = ".";
+			gCommonRootRelPath = ".";
+			gDefaultTopic = "#<%= output.firstTopic %>";
+//]]></script>
+		<script type="text/javascript" src="template/scripts/csh-core.min.js"></script>
+		<script type="text/javascript" src="whxdata/projectsettings.js"></script>
+		<script type="text/javascript" src="template/scripts/csh-redirect.min.js"></script>
+	</head>
+	<body></body>
+</html>

@@ -1,0 +1,201 @@
+/*Created with Adobe RoboHelp*/
+a {
+  text-decoration: underline;
+}
+/*TOC Styling*/
+div.pdf-toc-body {}
+h1.pdf-toc-title {}
+a.pdf-toc-level-1 {
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+}
+a.pdf-toc-level-2 {
+  font-size: 16px;
+  text-decoration: none;
+}
+a.pdf-toc-level-3 {
+  font-size: 14px;
+  text-decoration: none;
+}
+a.pdf-toc-level-4 {
+  font-size: 14px;
+  text-decoration: none;
+}
+a.pdf-toc-level-5 {
+  font-size: 14px;
+  text-decoration: none;
+}
+a.pdf-toc-level-6 {
+  font-size: 14px;
+  text-decoration: none;
+}
+/*Index Styling*/
+div.book-idx-body {
+  column-count: 2;
+  column-fill: balance;
+}
+h1.book-idx-title {
+  column-span: all;
+}
+div.book-idx-unit {}
+p.book-idx-keyword {}
+span.book-idx-name {}
+a.book-idx-link {
+  text-decoration: none;
+}
+div.book-idx-child {
+  padding-left: 10px;
+}
+/*Glossary Styling*/
+div.book-glo-body {}
+h1.book-glo-title {}
+div.book-glo-unit {}
+p.book-glo-term {
+  font-weight: bold;
+}
+p.book-glo-definition {}
+div.headerStyle {
+  background-image: url('../images/robohelp_banner.jpg');
+  background-repeat: no-repeat;
+}
+ul.Square {
+  list-style: square;
+}
+table.evenrows {
+  border-collapse: collapse;
+}
+table.evenrows td {
+  padding-top: 2px;
+  padding-right: 4px;
+  padding-bottom: 2px;
+  padding-left: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: ;
+}
+table.evenrows tr:nth-child(even) td {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+table.thickhdrevenrows {
+  border-collapse: collapse;
+}
+table.thickhdrevenrows tr:first-child {
+  border-width: 3px;
+  border-style: solid;
+  border-color: #666666;
+  border-left: 0;
+  border-top: 0;
+  border-right: 0;
+}
+table.thickhdrevenrows td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #666666;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+table.thickhdrevenrows tr:nth-child(even) td {
+  background-color: rgba(102, 102, 102, 0.5);
+}
+table.thickhdrevenrows tr:first-child td {
+  text-align: center;
+}
+table.firstcolrow {
+  border-collapse: collapse;
+}
+table.firstcolrow td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ffffff;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+table.firstcolrow tr:nth-child(even) td {
+  background-color: rgba(102, 102, 102, 0.5);
+}
+table.firstcolrow tr:nth-child(odd) td {
+  background-color: rgba(102, 102, 102, 0.25);
+}
+table.firstcolrow tr:first-child td {
+  background-color: #666666;
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: center;
+}
+table.firstcolrow tr td:first-child {
+  background-color: #666666;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+table.hdrevenrows {
+  border-collapse: collapse;
+}
+table.hdrevenrows td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(160, 160, 160, 0.5);
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+table.hdrevenrows tr:first-child td {
+  background-color: #A0A0A0;
+  color: #FFFFFF;
+}
+table.hdrevenrows tr:nth-child(even) td {
+  background-color: rgba(160, 160, 160, 0.25);
+}
+table.CautionTable {
+  border-right: 1px dotted;
+  border-top: 1px dotted;
+  border-left: 1px dotted;
+  border-bottom: 1px dotted;
+  font-family: Verdana;
+  font-size: 8pt;
+  margin-bottom: 1px;
+  margin-top: 1px;
+  border-left-style: none;
+  border-right-style: none;
+  border-top-style: none;
+  border-bottom-style: none;
+  border-collapse: collapse;
+  width: 90%;
+  border-width: 1px;
+  border-color: #000000;
+  border-left-width: 1px;
+  border-left-color: #000000;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-right-width: 1px;
+  border-right-color: #000000;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+}
+ol.Decimal {
+  list-style: decimal;
+}
+table.hdrevenrowsnobdr {
+  border-collapse: collapse;
+}
+table.hdrevenrowsnobdr td {
+  border-width: 1px;
+  border-style: none;
+  border-color: transparent;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+table.hdrevenrowsnobdr tr:first-child td {
+  background-color: #ed7d31;
+  color: #FFFFFF;
+}
+table.hdrevenrowsnobdr tr:nth-child(even) td {
+  background-color: rgba(237, 125, 49, 0.25);
+}

@@ -1,0 +1,1354 @@
+h1 {
+    font-weight:bold;
+    color:#004080;
+    font-family:Arial;
+    border-bottom:solid #000000;
+    border-width:1px;
+    margin-bottom:8pt;
+    margin-top:12pt;
+    x-next-type:P;
+    font-size:18pt;
+}
+h2 {
+    color:#004080;
+    font-family:Arial;
+    font-weight:bold;
+    margin-bottom:8pt;
+    margin-top:12pt;
+    x-next-type:P;
+    font-size:14pt;
+}
+h3 {
+    font-weight:bold;
+    font-family:Arial;
+    margin-bottom:8pt;
+    margin-top:12pt;
+    font-size:12pt;
+    x-next-type:P;
+    color:#1e1e1e;
+}
+h4 {
+    font-weight:bold;
+    color:#004080;
+    font-family:Arial;
+    margin-bottom:8pt;
+    margin-top:12pt;
+    x-next-type:P;
+    font-size:10pt;
+}
+h5 {
+    font-weight:bold;
+    font-size:8pt;
+    color:#000000;
+    font-family:Verdana;
+    margin-top:8pt;
+    margin-bottom:8pt;
+}
+.Table {
+        border-right:1px dotted;
+        border-top:1px dotted;
+        border-left:1px dotted;
+        border-bottom:1px dotted;
+        font-family:Verdana;
+        font-size:8pt;
+        margin-bottom:1px;
+        margin-top:1px;
+        border-left-style:none;
+        border-right-style:none;
+        border-top-style:none;
+        border-bottom-style:none;
+}
+p {
+   margin-right:0pt;
+   font-family:Verdana;
+   margin-bottom:4pt;
+   font-size:8pt;
+   margin-left:4pt;
+   margin-top:4pt;
+}
+ol {
+    font-family:Verdana;
+    font-size:8pt;
+}
+ul {
+    font-family:Verdana;
+    font-size:8pt;
+}
+table.CautionTable {
+                    background-color:#ffe0e0;
+                    font-family:Verdana;
+                    font-size:8pt;
+                    border-left-style:Solid;
+                    border-right-style:Solid;
+                    border-top-style:Solid;
+                    border-bottom-style:Solid;
+                    x-border-spacing:0px;
+                    border-left-width:1px;
+                    border-right-width:1px;
+                    border-top-width:1px;
+                    border-bottom-width:1px;
+                    border-left-color:#000000;
+                    border-right-color:#000000;
+                    border-top-color:#000000;
+                    border-bottom-color:#000000;
+                    margin-left:30pt;
+                    margin-right:24pt;
+                    margin-top:8pt;
+                    margin-bottom:8pt;
+}
+table.NoteTable {
+                 font-family:Verdana;
+                 background-color:#e0e0e0;
+                 font-size:8pt;
+                 border-left-style:Solid;
+                 border-right-style:Solid;
+                 border-top-style:Solid;
+                 border-bottom-style:Solid;
+                 x-border-spacing:0px;
+                 border-left-width:1px;
+                 border-right-width:1px;
+                 border-top-width:1px;
+                 border-bottom-width:1px;
+                 border-left-color:#000000;
+                 border-right-color:#000000;
+                 border-top-color:#000000;
+                 border-bottom-color:#000000;
+                 margin-top:8pt;
+                 margin-bottom:8pt;
+                 margin-left:30pt;
+}
+table.TipTable {
+                font-family:Verdana;
+                background-color:#cfffcf;
+                font-size:8pt;
+                x-border-spacing:0px;
+                border-left-style:Solid;
+                border-right-style:Solid;
+                border-top-style:Solid;
+                border-bottom-style:Solid;
+                border-left-width:1px;
+                border-right-width:1px;
+                border-top-width:1px;
+                border-bottom-width:1px;
+                border-left-color:#000000;
+                border-right-color:#000000;
+                border-top-color:#000000;
+                border-bottom-color:#000000;
+                margin-left:30pt;
+                margin-right:24pt;
+                margin-top:8pt;
+                margin-bottom:8pt;
+}
+table.SimpleBlueGrid {
+                      font-family:Verdana;
+                      font-size:8pt;
+                      background-color:#f4f4ff;
+                      border-left-style:None;
+                      border-right-style:None;
+                      border-top-style:None;
+                      border-bottom-style:None;
+                      border-right-color:#ffffff;
+                      border-bottom-color:#ffffff;
+                      x-row-pat-count:2;
+                      x-1st-row:1;
+}
+table.Example {
+               font-family:Verdana;
+               font-size:8pt;
+               border-left-style:Solid;
+               border-right-style:Solid;
+               border-top-style:Solid;
+               border-bottom-style:Solid;
+               border-left-color:#c0c0c0;
+               border-right-color:#c0c0c0;
+               border-top-color:#c0c0c0;
+               border-bottom-color:#c0c0c0;
+               x-border-spacing:0px;
+               margin-left:12px;
+               margin-right:12px;
+               margin-top:18px;
+               margin-bottom:18px;
+               border-left-width:1px;
+               border-right-width:1px;
+               border-top-width:1px;
+               border-bottom-width:1px;
+               background-color:Transparent;
+}
+table.WIPTable {
+                font-family:Verdana;
+                font-size:8pt;
+                x-border-spacing:0px;
+                border-left-style:Solid;
+                border-left-width:1px;
+                border-left-color:#c0c0c0;
+                border-right-style:Solid;
+                border-right-width:1px;
+                border-right-color:#c0c0c0;
+                border-top-style:Solid;
+                border-top-width:1px;
+                border-top-color:#c0c0c0;
+                border-bottom-style:Solid;
+                border-bottom-width:1px;
+                border-bottom-color:#c0c0c0;
+                background-color:#b7b7ff;
+                margin-left:12px;
+                margin-right:12px;
+                margin-top:18px;
+                margin-bottom:18px;
+}
+table.NoBorders {
+                 font-family:Verdana;
+                 font-size:8pt;
+                 x-border-spacing:0px;
+                 margin-top:0px;
+                 margin-bottom:0px;
+}
+span.NewUpdated {
+                 font-family:Verdana;
+                 font-size:8pt;
+                 font-weight:bold;
+                 color:#ff0000;
+                 text-transform:uppercase;
+}
+a.dropspot {
+            font-family:Verdana;
+            font-size:8pt;
+            font-weight:bold;
+}
+a.popupspot {
+}
+a.expandspot {
+              font-family:Verdana;
+              font-size:8pt;
+              font-weight:bold;
+}
+table.1LineBorder {
+                   font-family:Verdana;
+                   margin-top:18px;
+                   margin-bottom:18px;
+                   font-size:8pt;
+                   x-border-spacing:0px;
+                   border-left-style:Solid;
+                   border-left-width:1px;
+                   border-left-color:#000000;
+}
+span.glosstext {
+                color:#0000ff;
+                font-style:italic;
+                font-family:Verdana;
+                font-size:8pt;
+}
+a.glossterm {
+             font-family:Verdana;
+             color:#800000;
+             font-size:8pt;
+             text-decoration:none;
+}
+span.rls-7-MuiltLevelLinkedHeading {
+                                    font-size:7pt;
+}
+span.rls-8-MuiltLevelLinkedHeading {
+                                    font-size:7pt;
+}
+span.rls-9-MuiltLevelLinkedHeading {
+                                    font-size:7pt;
+}
+p.AuthorComments {
+                  font-family:Times New Roman;
+                  color:#ff0000;
+                  font-size:11pt;
+}
+p.Title {
+         color:#ffffff;
+         font-size:16pt;
+         margin-left:0;
+         font-family:Verdana;
+         font-weight:bold;
+}
+span.ShowMe_link {
+                  font-weight:bold;
+                  font-size:6pt;
+                  font-family:Verdana;
+}
+span.WhiteText-DropShadow {
+                           font-family:Verdana;
+                           font-size:8pt;
+                           color:#ffffff;
+                           x-on-pageload:dropshadow(color=#000000, offx=1, offy=1);
+}
+ol.DoubleSpace_NumList {
+    list-style:decimal;
+}
+ol.DoubleSpace_NumList>li {
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0;
+    margin-top:6px;
+    margin-bottom:6px;
+}
+ul.DoubleSpace_Bullets {
+    list-style:square;
+}
+ul.DoubleSpace_Bullets>li {
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0;
+    margin-top:6px;
+    margin-bottom:6px;
+}
+h2.LessonStyle1 {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    position:relative;
+}
+h2.LessonStyle1:before {
+    counter-increment:h2lessonstyle11;
+    x-count:10;
+    x-2:1.2;
+    x-3:1.3;
+    x-4:1.4;
+    x-5:1.5;
+    x-6:1.6;
+    x-7:1.7;
+    x-8:1.8;
+    x-9:1.9;
+    x-10:1.10;
+    content:"1.1"".";
+    text-align:left;
+    left:-36px;
+    margin-right:12px;
+    width:24px;
+}
+h2.LessonStyle1[data-list-level="2"] {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    margin-left:20px;
+    position:relative;
+}
+h2.LessonStyle1[data-list-level="2"]:before {
+    counter-increment:item2;
+    content:counter(item2, decimal)"."counter(item2, decimal)".";
+    text-align:left;
+    left:-72px;
+    margin-right:24px;
+    width:48px;
+}
+h3.LessonStyle1[data-list-level="3"] {
+    color:#1e1e1e;
+    font-size:12pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    font-weight:bold;
+    margin-left:40px;
+    position:relative;
+}
+h3.LessonStyle1[data-list-level="3"]:before {
+    counter-increment:item3;
+    content:counter(item3, decimal)"."counter(item3, decimal)"."counter(item3, decimal)".";
+    text-align:left;
+    left:-60px;
+    margin-right:12px;
+    width:48px;
+}
+h4.LessonStyle1[data-list-level="4"] {
+    font-size:10pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    color:#004080;
+    font-weight:bold;
+    margin-left:60px;
+    position:relative;
+}
+h4.LessonStyle1[data-list-level="4"]:before {
+    counter-increment:item4;
+    content:counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)".";
+    text-align:left;
+    left:-96px;
+    margin-right:24px;
+    width:72px;
+}
+h5.LessonStyle1[data-list-level="5"] {
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    color:#000000;
+    font-size:8pt;
+    font-weight:bold;
+    margin-left:80px;
+    position:relative;
+}
+h5.LessonStyle1[data-list-level="5"]:before {
+    counter-increment:item5;
+    content:counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)".";
+    text-align:left;
+    left:-84px;
+    margin-right:12px;
+    width:72px;
+}
+h6.LessonStyle1[data-list-level="6"] {
+    margin-left:100px;
+    position:relative;
+}
+h6.LessonStyle1[data-list-level="6"]:before {
+    counter-increment:item6;
+    content:counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)".";
+    text-align:left;
+    left:-120px;
+    margin-right:24px;
+    width:96px;
+}
+p.LessonStyle1[data-list-level="7"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:120px;
+    position:relative;
+}
+p.LessonStyle1[data-list-level="7"]:before {
+    counter-increment:item7;
+    content:counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-95px;
+    margin-right:23px;
+    width:72px;
+}
+p.LessonStyle1[data-list-level="8"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:140px;
+    position:relative;
+}
+p.LessonStyle1[data-list-level="8"]:before {
+    counter-increment:item8;
+    content:counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-88px;
+    margin-right:16px;
+    width:72px;
+}
+p.LessonStyle1[data-list-level="9"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:160px;
+    position:relative;
+}
+p.LessonStyle1[data-list-level="9"]:before {
+    counter-increment:item9;
+    content:counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-81px;
+    margin-right:9px;
+    width:72px;
+}
+p.MultilevelIntegers {
+    margin-top:4pt;
+    margin-left:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    position:relative;
+}
+p.MultilevelIntegers:before {
+    counter-increment:pmultilevelintegers1;
+    content:counter(pmultilevelintegers1, decimal)".";
+    text-align:left;
+    left:-36px;
+    margin-right:12px;
+    width:24px;
+}
+p.MultilevelIntegers[data-list-level="2"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:20px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="2"]:before {
+    counter-increment:item2;
+    content:counter(item2, decimal)"."counter(item2, decimal)".";
+    text-align:left;
+    left:-72px;
+    margin-right:24px;
+    width:48px;
+}
+p.MultilevelIntegers[data-list-level="3"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:40px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="3"]:before {
+    counter-increment:item3;
+    content:counter(item3, decimal)"."counter(item3, decimal)"."counter(item3, decimal)".";
+    text-align:left;
+    left:-60px;
+    margin-right:12px;
+    width:48px;
+}
+p.MultilevelIntegers[data-list-level="4"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:60px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="4"]:before {
+    counter-increment:item4;
+    content:counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)".";
+    text-align:left;
+    left:-96px;
+    margin-right:24px;
+    width:72px;
+}
+p.MultilevelIntegers[data-list-level="5"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:80px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="5"]:before {
+    counter-increment:item5;
+    content:counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)".";
+    text-align:left;
+    left:-84px;
+    margin-right:12px;
+    width:72px;
+}
+p.MultilevelIntegers[data-list-level="6"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:100px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="6"]:before {
+    counter-increment:item6;
+    content:counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)".";
+    text-align:left;
+    left:-120px;
+    margin-right:24px;
+    width:96px;
+}
+p.MultilevelIntegers[data-list-level="7"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:120px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="7"]:before {
+    counter-increment:item7;
+    content:counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)".";
+    text-align:left;
+    left:-108px;
+    margin-right:12px;
+    width:96px;
+}
+p.MultilevelIntegers[data-list-level="8"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:140px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="8"]:before {
+    counter-increment:item8;
+    content:counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)".";
+    text-align:left;
+    left:-144px;
+    margin-right:24px;
+    width:120px;
+}
+p.MultilevelIntegers[data-list-level="9"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:160px;
+    position:relative;
+}
+p.MultilevelIntegers[data-list-level="9"]:before {
+    counter-increment:item9;
+    content:counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)".";
+    text-align:left;
+    left:-132px;
+    margin-right:12px;
+    width:120px;
+}
+h2.LessonStyle2 {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    position:relative;
+}
+h2.LessonStyle2:before {
+    counter-increment:h2lessonstyle21;
+    x-count:10;
+    x-2:2.2;
+    x-3:2.3;
+    x-4:2.4;
+    x-5:2.5;
+    x-6:2.6;
+    x-7:2.7;
+    x-8:2.8;
+    x-9:2.9;
+    x-10:2.10;
+    content:"2.1"".";
+    text-align:left;
+    left:-36px;
+    margin-right:12px;
+    width:24px;
+}
+h2.LessonStyle2[data-list-level="2"] {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    margin-left:20px;
+    position:relative;
+}
+h2.LessonStyle2[data-list-level="2"]:before {
+    counter-increment:item2;
+    content:counter(item2, decimal)"."counter(item2, decimal)".";
+    text-align:left;
+    left:-72px;
+    margin-right:24px;
+    width:48px;
+}
+h3.LessonStyle2[data-list-level="3"] {
+    color:#1e1e1e;
+    font-size:12pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    font-weight:bold;
+    margin-left:40px;
+    position:relative;
+}
+h3.LessonStyle2[data-list-level="3"]:before {
+    counter-increment:item3;
+    content:counter(item3, decimal)"."counter(item3, decimal)"."counter(item3, decimal)".";
+    text-align:left;
+    left:-60px;
+    margin-right:12px;
+    width:48px;
+}
+h4.LessonStyle2[data-list-level="4"] {
+    font-size:10pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    color:#004080;
+    font-weight:bold;
+    margin-left:60px;
+    position:relative;
+}
+h4.LessonStyle2[data-list-level="4"]:before {
+    counter-increment:item4;
+    content:counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)".";
+    text-align:left;
+    left:-96px;
+    margin-right:24px;
+    width:72px;
+}
+h5.LessonStyle2[data-list-level="5"] {
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    color:#000000;
+    font-size:8pt;
+    font-weight:bold;
+    margin-left:80px;
+    position:relative;
+}
+h5.LessonStyle2[data-list-level="5"]:before {
+    counter-increment:item5;
+    content:counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)".";
+    text-align:left;
+    left:-84px;
+    margin-right:12px;
+    width:72px;
+}
+h6.LessonStyle2[data-list-level="6"] {
+    margin-left:100px;
+    position:relative;
+}
+h6.LessonStyle2[data-list-level="6"]:before {
+    counter-increment:item6;
+    content:counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)".";
+    text-align:left;
+    left:-120px;
+    margin-right:24px;
+    width:96px;
+}
+p.LessonStyle2[data-list-level="7"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:120px;
+    position:relative;
+}
+p.LessonStyle2[data-list-level="7"]:before {
+    counter-increment:item7;
+    content:counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-95px;
+    margin-right:23px;
+    width:72px;
+}
+p.LessonStyle2[data-list-level="8"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:140px;
+    position:relative;
+}
+p.LessonStyle2[data-list-level="8"]:before {
+    counter-increment:item8;
+    content:counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-88px;
+    margin-right:16px;
+    width:72px;
+}
+p.LessonStyle2[data-list-level="9"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:160px;
+    position:relative;
+}
+p.LessonStyle2[data-list-level="9"]:before {
+    counter-increment:item9;
+    content:counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-81px;
+    margin-right:9px;
+    width:72px;
+}
+h2.LessonStyle3 {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    position:relative;
+}
+h2.LessonStyle3:before {
+    counter-increment:h2lessonstyle31;
+    x-count:10;
+    x-2:3.2;
+    x-3:3.3;
+    x-4:3.4;
+    x-5:3.5;
+    x-6:3.6;
+    x-7:3.7;
+    x-8:3.8;
+    x-9:3.9;
+    x-10:3.10;
+    content:"3.1"".";
+    text-align:left;
+    left:-36px;
+    margin-right:12px;
+    width:24px;
+}
+h2.LessonStyle3[data-list-level="2"] {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    margin-left:20px;
+    position:relative;
+}
+h2.LessonStyle3[data-list-level="2"]:before {
+    counter-increment:item2;
+    content:counter(item2, decimal)"."counter(item2, decimal)".";
+    text-align:left;
+    left:-72px;
+    margin-right:24px;
+    width:48px;
+}
+h3.LessonStyle3[data-list-level="3"] {
+    color:#1e1e1e;
+    font-size:12pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    font-weight:bold;
+    margin-left:40px;
+    position:relative;
+}
+h3.LessonStyle3[data-list-level="3"]:before {
+    counter-increment:item3;
+    content:counter(item3, decimal)"."counter(item3, decimal)"."counter(item3, decimal)".";
+    text-align:left;
+    left:-60px;
+    margin-right:12px;
+    width:48px;
+}
+h4.LessonStyle3[data-list-level="4"] {
+    font-size:10pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    color:#004080;
+    font-weight:bold;
+    margin-left:60px;
+    position:relative;
+}
+h4.LessonStyle3[data-list-level="4"]:before {
+    counter-increment:item4;
+    content:counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)".";
+    text-align:left;
+    left:-96px;
+    margin-right:24px;
+    width:72px;
+}
+h5.LessonStyle3[data-list-level="5"] {
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    color:#000000;
+    font-size:8pt;
+    font-weight:bold;
+    margin-left:80px;
+    position:relative;
+}
+h5.LessonStyle3[data-list-level="5"]:before {
+    counter-increment:item5;
+    content:counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)".";
+    text-align:left;
+    left:-84px;
+    margin-right:12px;
+    width:72px;
+}
+h6.LessonStyle3[data-list-level="6"] {
+    margin-left:100px;
+    position:relative;
+}
+h6.LessonStyle3[data-list-level="6"]:before {
+    counter-increment:item6;
+    content:counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)".";
+    text-align:left;
+    left:-120px;
+    margin-right:24px;
+    width:96px;
+}
+p.LessonStyle3[data-list-level="7"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:120px;
+    position:relative;
+}
+p.LessonStyle3[data-list-level="7"]:before {
+    counter-increment:item7;
+    content:counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-95px;
+    margin-right:23px;
+    width:72px;
+}
+p.LessonStyle3[data-list-level="8"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:140px;
+    position:relative;
+}
+p.LessonStyle3[data-list-level="8"]:before {
+    counter-increment:item8;
+    content:counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-88px;
+    margin-right:16px;
+    width:72px;
+}
+p.LessonStyle3[data-list-level="9"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:160px;
+    position:relative;
+}
+p.LessonStyle3[data-list-level="9"]:before {
+    counter-increment:item9;
+    content:counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-81px;
+    margin-right:9px;
+    width:72px;
+}
+ul.NoteList {
+    list-style:inside url(../images/hs-note.gif);
+}
+ul.NoteList>li {
+    border-left-style:Solid;
+    border-left-color:#000000;
+    border-right-style:Solid;
+    border-right-color:#000000;
+    border-top-style:Solid;
+    border-top-color:#000000;
+    border-bottom-style:Solid;
+    border-bottom-color:#000000;
+    padding-left:3px;
+    padding-right:3px;
+    padding-top:3px;
+    padding-bottom:3px;
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0pt;
+    margin-right:24pt;
+    border-left-width:1px;
+    border-right-width:1px;
+    border-top-width:1px;
+    border-bottom-width:1px;
+    background-color:#dcdcdc;
+}
+ul.TipList {
+    list-style:inside url(../images/hs-tip.gif);
+}
+ul.TipList>li {
+    border-left-style:Solid;
+    border-left-color:#000000;
+    border-right-style:Solid;
+    border-right-color:#000000;
+    border-top-style:Solid;
+    border-top-color:#000000;
+    border-bottom-style:Solid;
+    border-bottom-color:#000000;
+    padding-right:3px;
+    padding-top:3px;
+    padding-bottom:3px;
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    font-size:8pt;
+    margin-right:24pt;
+    background-color:#ceffce;
+    border-left-width:1px;
+    border-right-width:1px;
+    border-top-width:1px;
+    border-bottom-width:1px;
+    padding-left:3px;
+    margin-left:0pt;
+}
+ul.CautionList {
+    list-style:inside url(../images/hs-caution.gif);
+}
+ul.CautionList>li {
+    border-left-style:Solid;
+    border-left-color:#000000;
+    border-right-style:Solid;
+    border-right-color:#000000;
+    border-top-style:Solid;
+    border-top-color:#000000;
+    border-bottom-style:Solid;
+    border-bottom-color:#000000;
+    padding-left:3px;
+    padding-right:3px;
+    padding-top:3px;
+    padding-bottom:3px;
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0pt;
+    border-left-width:1px;
+    border-right-width:1px;
+    border-top-width:1px;
+    border-bottom-width:1px;
+    margin-right:24pt;
+    background-color:#ffdddd;
+}
+ul.WIPList {
+    list-style:inside url(../images/WorkInProgress.gif);
+}
+ul.WIPList>li {
+    border-left-style:Solid;
+    border-left-color:#000000;
+    border-right-style:Solid;
+    border-right-color:#000000;
+    border-top-style:Solid;
+    border-top-color:#000000;
+    border-bottom-style:Solid;
+    border-bottom-color:#000000;
+    padding-left:3px;
+    padding-right:3px;
+    padding-top:3px;
+    padding-bottom:3px;
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0pt;
+    border-left-width:1px;
+    border-right-width:1px;
+    border-top-width:1px;
+    border-bottom-width:1px;
+    margin-right:24pt;
+    background-color:#b7b7ff;
+}
+ul.ExampleList {
+    list-style:inside url(../images/example.gif);
+}
+ul.ExampleList>li {
+    border-left-style:Solid;
+    border-left-color:#000000;
+    border-right-style:Solid;
+    border-right-color:#000000;
+    border-top-style:Solid;
+    border-top-color:#000000;
+    border-bottom-style:Solid;
+    border-bottom-color:#000000;
+    padding-left:3px;
+    padding-right:3px;
+    padding-top:3px;
+    padding-bottom:3px;
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0pt;
+    border-left-width:1px;
+    border-right-width:1px;
+    border-top-width:1px;
+    border-bottom-width:1px;
+    margin-right:24pt;
+}
+h2.LessonStyle4 {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    position:relative;
+}
+h2.LessonStyle4:before {
+    counter-increment:h2lessonstyle41;
+    x-count:10;
+    x-2:4.2;
+    x-3:4.3;
+    x-4:4.4;
+    x-5:4.5;
+    x-6:4.6;
+    x-7:4.7;
+    x-8:4.8;
+    x-9:4.9;
+    x-10:4.10;
+    content:"4.1"".";
+    text-align:left;
+    left:-36px;
+    margin-right:12px;
+    width:24px;
+}
+h2.LessonStyle4[data-list-level="2"] {
+    font-size:14pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-weight:bold;
+    font-family:Arial;
+    color:#004080;
+    margin-left:20px;
+    position:relative;
+}
+h2.LessonStyle4[data-list-level="2"]:before {
+    counter-increment:item2;
+    content:counter(item2, decimal)"."counter(item2, decimal)".";
+    text-align:left;
+    left:-72px;
+    margin-right:24px;
+    width:48px;
+}
+h3.LessonStyle4[data-list-level="3"] {
+    color:#1e1e1e;
+    font-size:12pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    font-weight:bold;
+    margin-left:40px;
+    position:relative;
+}
+h3.LessonStyle4[data-list-level="3"]:before {
+    counter-increment:item3;
+    content:counter(item3, decimal)"."counter(item3, decimal)"."counter(item3, decimal)".";
+    text-align:left;
+    left:-60px;
+    margin-right:12px;
+    width:48px;
+}
+h4.LessonStyle4[data-list-level="4"] {
+    font-size:10pt;
+    margin-top:12pt;
+    margin-bottom:8pt;
+    font-family:Arial;
+    color:#004080;
+    font-weight:bold;
+    margin-left:60px;
+    position:relative;
+}
+h4.LessonStyle4[data-list-level="4"]:before {
+    counter-increment:item4;
+    content:counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)"."counter(item4, decimal)".";
+    text-align:left;
+    left:-96px;
+    margin-right:24px;
+    width:72px;
+}
+h5.LessonStyle4[data-list-level="5"] {
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    color:#000000;
+    font-size:8pt;
+    font-weight:bold;
+    margin-left:80px;
+    position:relative;
+}
+h5.LessonStyle4[data-list-level="5"]:before {
+    counter-increment:item5;
+    content:counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)"."counter(item5, decimal)".";
+    text-align:left;
+    left:-84px;
+    margin-right:12px;
+    width:72px;
+}
+h6.LessonStyle4[data-list-level="6"] {
+    margin-left:100px;
+    position:relative;
+}
+h6.LessonStyle4[data-list-level="6"]:before {
+    counter-increment:item6;
+    content:counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)"."counter(item6, decimal)".";
+    text-align:left;
+    left:-120px;
+    margin-right:24px;
+    width:96px;
+}
+p.LessonStyle4[data-list-level="7"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:120px;
+    position:relative;
+}
+p.LessonStyle4[data-list-level="7"]:before {
+    counter-increment:item7;
+    content:counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)"."counter(item7, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-95px;
+    margin-right:23px;
+    width:72px;
+}
+p.LessonStyle4[data-list-level="8"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:140px;
+    position:relative;
+}
+p.LessonStyle4[data-list-level="8"]:before {
+    counter-increment:item8;
+    content:counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)"."counter(item8, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-88px;
+    margin-right:16px;
+    width:72px;
+}
+p.LessonStyle4[data-list-level="9"] {
+    margin-top:4pt;
+    font-size:8pt;
+    margin-bottom:4pt;
+    font-family:Verdana;
+    margin-right:0pt;
+    margin-left:160px;
+    position:relative;
+}
+p.LessonStyle4[data-list-level="9"]:before {
+    counter-increment:item9;
+    content:counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)"."counter(item9, decimal)".";
+    font-size:7pt;
+    text-align:left;
+    left:-81px;
+    margin-right:9px;
+    width:72px;
+}
+ol.RelatedTopicList {
+    list-style:inside;
+}
+ol.RelatedTopicList>li {
+    border-left-style:Solid;
+    border-left-color:#000000;
+    border-right-style:Solid;
+    border-right-color:#000000;
+    border-top-style:Solid;
+    border-top-color:#000000;
+    border-bottom-style:Solid;
+    border-bottom-color:#000000;
+    padding-left:3px;
+    padding-right:3px;
+    padding-top:3px;
+    padding-bottom:3px;
+    margin-bottom:8pt;
+    margin-top:8pt;
+    font-family:Verdana;
+    font-size:8pt;
+    margin-left:0pt;
+    margin-right:24pt;
+    border-left-width:1px;
+    border-right-width:1px;
+    border-top-width:1px;
+    border-bottom-width:1px;
+}
+ul.DoubleSpace_IndentedBullets {
+    list-style:square;
+}
+ul.DoubleSpace_IndentedBullets>li {
+    font-family:Verdana;
+    font-size:8pt;
+    margin-top:6px;
+    margin-bottom:6px;
+    margin-left:16px;
+}
+body {
+    counter-reset:h2lessonstyle11 0 pmultilevelintegers1 0 h2lessonstyle21 0 h2lessonstyle31 0 h2lessonstyle41 0;
+}
+:not([data-list-level])+[data-list-level="2"] {
+    counter-reset:item2 0;
+}
+[data-list-level="2"]+[data-list-level="3"] {
+    counter-reset:item3 0;
+}
+[data-list-level="3"]+[data-list-level="4"] {
+    counter-reset:item4 0;
+}
+[data-list-level="4"]+[data-list-level="5"] {
+    counter-reset:item5 0;
+}
+[data-list-level="5"]+[data-list-level="6"] {
+    counter-reset:item6 0;
+}
+[data-list-level="6"]+[data-list-level="7"] {
+    counter-reset:item7 0;
+}
+[data-list-level="7"]+[data-list-level="8"] {
+    counter-reset:item8 0;
+}
+[data-list-level="8"]+[data-list-level="9"] {
+    counter-reset:item9 0;
+}
+a.dropspot::before {
+    vertical-align:middle;
+    margin-right:0.25rem;
+    content:url(../images/../images/twisty_plus.gif);
+}
+a.dropspot.pressed::before {
+    vertical-align:middle;
+    margin-right:0.25rem;
+    content:url(../images/../images/twisty_minus.gif);
+}
+a.expandspot::before {
+    vertical-align:middle;
+    margin-right:0.25rem;
+    content:url(../images/../images/twisty_plus.gif);
+}
+a.expandspot.pressed::before {
+    vertical-align:middle;
+    margin-right:0.25rem;
+    content:url(../images/../images/twisty_minus.gif);
+}
+table.CautionTable td {padding-left:3px;padding-right:3px;padding-top:2px;padding-bottom:3px;
+}
+table.Example td {padding-left:3px;padding-right:3px;padding-top:2px;padding-bottom:2px;
+}
+table.NoteTable td {padding-left:3px;padding-right:3px;padding-top:2px;padding-bottom:2px;
+}
+table.TipTable td {padding-left:3px;padding-right:3px;padding-top:2px;padding-bottom:2px;
+}
+table.WIPTable td {padding-left:3px;padding-right:3px;padding-top:2px;padding-bottom:2px;
+}
+table.NoBorders td {padding-left:4px;padding-right:4px;padding-top:2px;padding-bottom:2px;
+}
+table.SimpleBlueGrid tr:first-child td {font-weight:bold;background-color:#e0e0ed;border-right-style:Solid;border-right-color:#c0c0c0;border-bottom-style:Solid;border-bottom-color:#c0c0c0;border-left-style:Solid;border-left-width:1px;border-right-width:1px;border-top-style:Solid;border-top-width:1px;border-bottom-width:1px;border-left-color:#ffffff;border-top-color:#ffffff;font-family:Verdana;font-size:8pt;
+}
+table.SimpleBlueGrid tr:nth-child(even) td {border-left-style:Solid;border-left-color:#ffffff;border-top-style:Solid;border-top-color:#ffffff;border-left-width:1px;border-right-style:Solid;border-right-width:1px;border-top-width:1px;border-bottom-style:Solid;border-bottom-width:1px;border-right-color:#c0c0c0;border-bottom-color:#c0c0c0;
+}
+table.SimpleBlueGrid td.t2Col {background-color:#f4f4ff;font-family:Verdana;font-size:8pt;border-left-style:None;border-left-width:1px;border-left-color:#ffffff;
+}
+table.SimpleBlueGrid tr:nth-child(odd) td {background-color:#f4f4ff;font-family:Verdana;font-size:8pt;border-left-style:Solid;border-left-color:#ffffff;border-top-style:Solid;border-top-color:#ffffff;border-right-style:Solid;border-bottom-style:Solid;border-right-color:#c0c0c0;border-bottom-color:#c0c0c0;border-left-width:1px;border-right-width:1px;border-top-width:1px;border-bottom-width:1px;
+}
