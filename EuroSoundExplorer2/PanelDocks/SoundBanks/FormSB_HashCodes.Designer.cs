@@ -95,14 +95,14 @@ namespace sb_explorer
             this.MenuItem_CopyLabel});
             this.contextMenuListView.Name = "contextMenuStrip1";
             this.contextMenuListView.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuListView.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuListView.Size = new System.Drawing.Size(161, 48);
             // 
             // MenuItem_CopyHashCode
             // 
             this.MenuItem_CopyHashCode.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyHashCode.Image")));
             this.MenuItem_CopyHashCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_CopyHashCode.Name = "MenuItem_CopyHashCode";
-            this.MenuItem_CopyHashCode.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_CopyHashCode.Size = new System.Drawing.Size(160, 22);
             this.MenuItem_CopyHashCode.Text = "Copy HashCode";
             this.MenuItem_CopyHashCode.Click += new System.EventHandler(this.MenuItem_CopyHashCode_Click);
             // 
@@ -111,7 +111,7 @@ namespace sb_explorer
             this.MenuItem_CopyLabel.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyLabel.Image")));
             this.MenuItem_CopyLabel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_CopyLabel.Name = "MenuItem_CopyLabel";
-            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(160, 22);
             this.MenuItem_CopyLabel.Text = "Copy Label";
             this.MenuItem_CopyLabel.Click += new System.EventHandler(this.MenuItem_CopyLabel_Click);
             // 
@@ -192,8 +192,8 @@ namespace sb_explorer
             this.HideOnClose = true;
             this.Name = "FormSB_HashCodes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.TabText = "SoundBank HashCodes";
-            this.Text = "SoundBank HashCodes";
+            this.TabText = "SoundBank SFXs";
+            this.Text = "SoundBank SFXs";
             this.contextMenuListView.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

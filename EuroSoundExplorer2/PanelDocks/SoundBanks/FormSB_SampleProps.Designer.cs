@@ -161,8 +161,8 @@ namespace sb_explorer
             this.HideOnClose = true;
             this.Name = "FormSB_SampleProps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.TabText = "Sample Properties";
-            this.Text = "Sample Properties";
+            this.TabText = "SFX Properties";
+            this.Text = "SFX Properties";
             this.tabControl1.ResumeLayout(false);
             this.tabPage_Properties.ResumeLayout(false);
             this.tabPage_Flags.ResumeLayout(false);

@@ -16,6 +16,7 @@ namespace sb_explorer
     {
         public AppConfig configuration = new AppConfig();
         public HashcodeParser hashTable = new HashcodeParser();
+        private bool ResetSettingsOnExit;
 
         //Collections
         private readonly List<DockContent> m_DockForms = new List<DockContent>();
@@ -119,6 +120,17 @@ namespace sb_explorer
             {
                 dockForm.Close();
             }
+
+            //Check if user wants to restore the default values
+            if (ResetSettingsOnExit)
+            {
+                File.Delete("ESEx\\General Settings.ini");
+                File.Delete("ESEx\\Dock Settings.xml");
+                foreach (Form dockForm in m_DockForms)
+                {
+                    File.Delete(GetConfigFile(dockForm));
+                }
+            }
         }
 
         //-------------------------------------------------------------------------------------------
@@ -152,6 +164,14 @@ namespace sb_explorer
             {
                 dataViewer.ShowDialog();
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_File_ResetSettings_Click(object sender, EventArgs e)
+        {
+            ResetSettingsOnExit = true;
+            Close();
+            Application.Restart();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

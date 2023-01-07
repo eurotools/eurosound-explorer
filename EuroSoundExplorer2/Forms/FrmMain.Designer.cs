@@ -123,44 +123,45 @@ namespace sb_explorer
             // MenuItem_File_Settings
             // 
             this.MenuItem_File_Settings.Name = "MenuItem_File_Settings";
-            this.MenuItem_File_Settings.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_Settings.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_Settings.Text = "Settings";
             this.MenuItem_File_Settings.Click += new System.EventHandler(this.MenuItem_File_Settings_Click);
             // 
             // MenuItem_File_DecodeAudio
             // 
             this.MenuItem_File_DecodeAudio.Name = "MenuItem_File_DecodeAudio";
-            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_DecodeAudio.Text = "Decode Audio File";
             this.MenuItem_File_DecodeAudio.Click += new System.EventHandler(this.MenuItem_File_DecodeAudio_Click);
             // 
             // MenuItem_File_DataViewer
             // 
             this.MenuItem_File_DataViewer.Name = "MenuItem_File_DataViewer";
-            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_DataViewer.Text = "Data Viewer";
             this.MenuItem_File_DataViewer.Click += new System.EventHandler(this.MenuItem_File_DataViewer_Click);
             // 
             // MenuItem_File_Separator1
             // 
             this.MenuItem_File_Separator1.Name = "MenuItem_File_Separator1";
-            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(167, 6);
+            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_File_ResetSettings
             // 
             this.MenuItem_File_ResetSettings.Name = "MenuItem_File_ResetSettings";
-            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_ResetSettings.Text = "Reset Settings";
+            this.MenuItem_File_ResetSettings.Click += new System.EventHandler(this.MenuItem_File_ResetSettings_Click);
             // 
             // MenuItem_File_Separator2
             // 
             this.MenuItem_File_Separator2.Name = "MenuItem_File_Separator2";
-            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(167, 6);
+            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(177, 6);
             // 
             // MenuItem_File_Exit
             // 
             this.MenuItem_File_Exit.Name = "MenuItem_File_Exit";
-            this.MenuItem_File_Exit.Size = new System.Drawing.Size(170, 22);
+            this.MenuItem_File_Exit.Size = new System.Drawing.Size(180, 22);
             this.MenuItem_File_Exit.Text = "Exit";
             this.MenuItem_File_Exit.Click += new System.EventHandler(this.MenuItem_File_Exit_Click);
             // 
@@ -286,21 +287,21 @@ namespace sb_explorer
             // MenuItem_Music_MusicData
             // 
             this.MenuItem_Music_MusicData.Name = "MenuItem_Music_MusicData";
-            this.MenuItem_Music_MusicData.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Music_MusicData.Size = new System.Drawing.Size(143, 22);
             this.MenuItem_Music_MusicData.Text = "Music Data";
             this.MenuItem_Music_MusicData.Click += new System.EventHandler(this.MenuItem_Music_MusicData_Click);
             // 
             // MenuItem_Music_StartMarkers
             // 
             this.MenuItem_Music_StartMarkers.Name = "MenuItem_Music_StartMarkers";
-            this.MenuItem_Music_StartMarkers.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Music_StartMarkers.Size = new System.Drawing.Size(143, 22);
             this.MenuItem_Music_StartMarkers.Text = "Start Markers";
             this.MenuItem_Music_StartMarkers.Click += new System.EventHandler(this.MenuItem_Music_StartMarkers_Click);
             // 
             // MenuItem_Music_Markers
             // 
             this.MenuItem_Music_Markers.Name = "MenuItem_Music_Markers";
-            this.MenuItem_Music_Markers.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Music_Markers.Size = new System.Drawing.Size(143, 22);
             this.MenuItem_Music_Markers.Text = "Markers";
             this.MenuItem_Music_Markers.Click += new System.EventHandler(this.MenuItem_Music_Markers_Click);
             // 
@@ -325,7 +326,7 @@ namespace sb_explorer
             this.MenuItem_Project_MemorySlots,
             this.MenuItem_Project_Soundbank});
             this.MenuItem_ProjectDetails.Name = "MenuItem_ProjectDetails";
-            this.MenuItem_ProjectDetails.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_ProjectDetails.Size = new System.Drawing.Size(149, 22);
             this.MenuItem_ProjectDetails.Text = "Project Details";
             // 
             // MenuItem_Project_ProjectData
@@ -352,14 +353,14 @@ namespace sb_explorer
             // MenuItem_SoundDetails
             // 
             this.MenuItem_SoundDetails.Name = "MenuItem_SoundDetails";
-            this.MenuItem_SoundDetails.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SoundDetails.Size = new System.Drawing.Size(149, 22);
             this.MenuItem_SoundDetails.Text = "Sound Details";
             this.MenuItem_SoundDetails.Click += new System.EventHandler(this.MenuItem_SoundDetails_Click);
             // 
             // MenuItem_MusicDetails
             // 
             this.MenuItem_MusicDetails.Name = "MenuItem_MusicDetails";
-            this.MenuItem_MusicDetails.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_MusicDetails.Size = new System.Drawing.Size(149, 22);
             this.MenuItem_MusicDetails.Text = "Music Details";
             this.MenuItem_MusicDetails.Click += new System.EventHandler(this.MenuItem_MusicDetails_Click);
             // 

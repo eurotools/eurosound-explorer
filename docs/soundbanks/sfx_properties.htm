@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+  <script type="text/javascript" language="JavaScript">
+    //<![CDATA[
+    function reDo() {
+      if (innerWidth != origWidth || innerHeight != origHeight)
+        location.reload();
+    }
+    if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+      origWidth = innerWidth;
+      origHeight = innerHeight;
+      onresize = reDo;
+    }
+    onerror = null;
+  //]]>
+  </script>
+  <style type="text/css">/*<![CDATA[*/
+
+    < !-- div.WebHelpPopupMenu {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      z-index: 4;
+      visibility: hidden;
+    }
+
+    p.WebHelpNavBar {
+      text-align: right;
+    }
+
+    -->
+  
+/*]]>*/</style>
+
+  <script type="text/javascript">//<![CDATA[
+
+    gRootRelPath = "..";
+    gCommonRootRelPath = "..";
+    gTopicId = "1";
+  
+//]]></script>
+
+  <script type="text/javascript" src="../template/scripts/rh.min.js"></script>
+  <script type="text/javascript" src="../template/scripts/common.min.js"></script>
+  <script type="text/javascript" src="../template/scripts/topic.min.js"></script>
+  <script type="text/javascript" src="../template/scripts/topicwidgets.min.js"></script>
+<script type="text/javascript" src="../whxdata/projectsettings.js"></script>
+  <link rel="stylesheet" type="text/css" href="../template/styles/topic.min.css"/>
+  <link rel="stylesheet" type="text/css" href="../template/single_page/topicheader.css"/>
+  <meta name="topic-status" content="Draft"/>
+<link rel="stylesheet" type="text/css" href="../assets/css/default.css"/><link rel="stylesheet" type="text/css" href="../assets/css/book.css"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="generator" content="Adobe RoboHelp 2020"/>
+  <title>SFX Properties</title>
+  <meta name="topic-status" content="Draft"/>
+  <meta name="template" content="../assets/masterpages/DefaultTemplate.htt"/>
+  <meta http-equiv="Content-Language" content="en-UK"/>
+  <link rel="stylesheet" type="text/css" href="../assets/css/default.css"/>
+  <link rel="stylesheet" type="text/css" href="../assets/css/book.css"/>
+</head>
+
+<body>
+  <div class="topic-header rh-hide" id="rh-topic-header">
+    <div class="logo">
+    </div>
+    <div class="nav">
+      <div class="title" title="SFX Properties">
+        <span>SFX Properties</span>
+      </div>
+      <div class="gotohome" title="Click here to see this page in full context">
+        <a href="#" onclick="rh._.goToFullLayout()">Click here to see this page in full context</a>
+      </div>
+    </div>
+  </div>
+  <div class="topic-header-shadow rh-hide" id="rh-topic-header-shadow"></div>
+
+
+
+  <div class="headerStyle">
+    <table style="border-collapse:collapse;width:100%;border-width:0px;border-style:none;border-color:#000000;border-left-width:0px;border-left-style:none;border-left-color:#000000;border-top-width:0px;border-top-style:none;border-top-color:#000000;border-right-width:0px;border-right-style:none;border-right-color:#000000;border-bottom-width:0px;border-bottom-style:none;border-bottom-color:#000000">
+      <colgroup>
+        <col style="width: 881px;"/>
+        <col style="width: 273px;"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>
+            <p class="Title"> <span data-field="title" data-format="default">SFX Properties</span></p>
+          </td>
+          <td style="background-image: url(&#39;&#39;);">
+            <p align="right"><img alt="" border="0" class="hcp2" src="../assets/images/eurosound logo.png" style="cursor: nwse-resize; background-image: url(&#39;&#39;);"/></p>
+            <p align="right" style="color: #ffffff;"><span class="hcp3"></span><span data-keyref="File Version" style="color: #000000;border-width: 1px;border-color: #000000;border-left-width: 1px;border-left-color: #000000;border-top-width: 1px;border-top-color: #000000;border-right-width: 1px;border-right-color: #000000;border-bottom-width: 1px;border-bottom-color: #000000">v1.00 Updated: 07/01/23</span></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding-top: 20px;padding-bottom: 20px">
+  <h2>SFX Properties</h2>
+  <p>This panel allows the user to see the parameters for selected SFX. The data is presented as a property grid.</p>
+  <p><img src="../assets/images/panelsoundbankproperties.png" style="font-size: 8pt;"/></p>
+  <p> </p>
+  <h3>Properties Information</h3>
+  <table border="1" cellpadding="1" cellspacing="1" class="SimpleBlueGrid" style="border-collapse: collapse; width: 774px;">
+    <colgroup>
+      <col style="width: 171px;"/>
+      <col style="width: 547px;"/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <td style="text-align: center">Name</td>
+        <td style="text-align: center">Description</td>
+      </tr>
+      <tr>
+        <td>Ducker</td>
+        <td style="">In ducking, the level of one audio signal is reduced by the presence of another signal, this field specifies the percentage to duck to.</td>
+      </tr>
+      <tr>
+        <td>Ducker Length</td>
+        <td style="">Duration to apply the duck for, in hundreds of a second, seemingly, internally gets turned into milliseconds.</td>
+      </tr>
+      <tr>
+        <td>Min Delay</td>
+        <td style="">Minimum delay to apply before this sample starts playing.</td>
+      </tr>
+      <tr>
+        <td>Max Delay</td>
+        <td style="">Maximum delay to apply before this sample starts playing.</td>
+      </tr>
+      <tr>
+        <td>Inner Radius</td>
+        <td style="">The start point where getting close enough to the source will max out the &quot;distance&quot; &quot;volume&quot; and won&#39;t be attenuated.</td>
+      </tr>
+      <tr>
+        <td>Outer Radius</td>
+        <td style="">The point where getting far enough from the center of the source will mute it, between the inner and the outer radius there will be a proportional falloff, fading in and out depending on the distance.</td>
+      </tr>
+      <tr>
+        <td>Reverb Send</td>
+        <td style="">Specifies the reverberation that this sound will have when playing</td>
+      </tr>
+      <tr>
+        <td>Priority</td>
+        <td style="">The higher the priority, the higher the probability that the SFX instance won&#39;t be killed when there are <i>too</i> many sounds playing at the same time. There&#39;s a hardcoded number of maximum playable sounds, and it will start killing the lower-priority ones.</td>
+      </tr>
+      <tr>
+        <td>Master Volume</td>
+        <td style="">Shared volume of all the samples contained in this SFX.</td>
+      </tr>
+      <tr>
+        <td>Max Voices</td>
+        <td style="">How many simultaneous instances can be played back during gameplay.</td>
+      </tr>
+      <tr>
+        <td>Tracking Type</td>
+        <td style="">
+          <table border="1" cellpadding="1" cellspacing="1" style="border-collapse:collapse; width:100%">
+            <colgroup>
+              <col style="width: 83px;"/>
+              <col style="width: 496px;"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <td style="">Type</td>
+                <td style="">Description</td>
+              </tr>
+              <tr>
+                <td style="">2D</td>
+                <td style=""><i>The sound won&#39;t be panned in the left-right channels. Inherently stereo, uses: musical effects, menu sounds, narratior speech...</i></td>
+              </tr>
+              <tr>
+                <td style="">2D PL2</td>
+                <td style=""><i><a href="" rel="nofollow noreferrer noopener" target="_blank">Dolby Pro Logic 2</a>. A proprietary surround encoding. U<i>ses: musical effects, menu sounds, narratior speech...</i></i></td>
+              </tr>
+              <tr>
+                <td style="">AMB</td>
+                <td style=""><i>Ambient sound, uses: Environment sounds which surround player eg. rain</i></td>
+              </tr>
+              <tr>
+                <td style="">3D</td>
+                <td style=""><i>Three-dimensional sound. Inherently mono. Uses: most sounds, sound acts as point source and is tracked.</i></td>
+              </tr>
+              <tr>
+                <td style="">3D Rnd Pos</td>
+                <td style=""><i>Three-dimensional sound <i>with a random positional offset</i>. Inherently mono. <i>Uses: seagulls, monkeys etc..</i></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>Group Hashcode</td>
+        <td style="">Number of the group in which this SFX is setted.</td>
+      </tr>
+      <tr>
+        <td>Group Max Channels</td>
+        <td style="">Limit of voices that all SFXs stored in this group could have playing at the same time.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p> </p>
+  <h2>SFX Flags</h2>
+  <p>The selected flags are presented as a checked listbox, depending on the SFX version there are some slights differences</p>
+  <p><img src="../assets/images/sfxflags.png"/></p>
+  <p> </p>
+  <h3>Flags Information</h3>
+  <table border="1" cellpadding="1" cellspacing="1" class="SimpleBlueGrid" style="border-collapse: collapse; width: 774px;">
+    <colgroup>
+      <col style="width: 147px;"/>
+      <col style="width: 233px;"/>
+      <col style="width: 385px;"/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <td style="">Name V4 and upcoming</td>
+        <td>Names V201 and 1</td>
+        <td style="">Description</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Max Reject</td>
+        <td style="text-align: center">Max Reject</td>
+        <td style="">There&#39;s a hard limit of voices playing at the same time, this flag specifies that when the limit has been reached, and this SFX is being setup, we can choose to kill either the oldest (playing) one of the same type, or this one that it was about to play.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">UnPausable</td>
+        <td style="text-align: center">Doppler</td>
+        <td style=""> </td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Ignore Master Volume</td>
+        <td style="text-align: center">Ignore Age</td>
+        <td style="">If is set the samples of the list will play in different volumes.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Multi Sample</td>
+        <td style="text-align: center">Multi Sample</td>
+        <td style="">If false it will pick and play randomly one of the samples in the list.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Random Pick</td>
+        <td style="text-align: center">Random Pick</td>
+        <td style="">When multisample is off and there are more than one sample, if is set on, will pick and play randomly one of the samples in the list</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Shuffled</td>
+        <td style="text-align: center">Shuffled</td>
+        <td style="">When <code>multiSample</code> is <code>true</code> and <code>polyphonic</code> is <code>false</code>, and this is enabled, it will interpret the list of samples as a (randomly) shuffled sequence.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Loop</td>
+        <td style="text-align: center">Loop</td>
+        <td style="">If the SFX has ended it will either loop and restart it back anew or kill it.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Polyphonic</td>
+        <td style="text-align: center">Polyphonic</td>
+        <td style="">
+          <p>If multiSample is true, and this is enabled, it plays back all the samples of the list at the same time, give or take. If there&#39;s a random delay that will affect the start time.</p>
+          <p><br/>
+            Otherwise, if this is disabled, it will interpret the list as a sequence of multiple samples. If shuffled is false, in order. </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Underwater</td>
+        <td style="text-align: center">Underwater</td>
+        <td style="">If set to false, the volume will be halved when the camera goes underwater.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Pause Instant</td>
+        <td style="text-align: center">PauseInNis</td>
+        <td style="">Platform-specific stuff for the original Nintendo console</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Has Sub-SFX</td>
+        <td style="text-align: center">Hash Sub-SFX</td>
+        <td style="">If true, the file reference of the first &quot;sample&quot; entry gets interpreted as a SFX hashcode and played as a 3D sound at the current position.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Steal On Louder</td>
+        <td style="text-align: center">Steal On Louder</td>
+        <td style="">Replace similar sounds of the same type when this one is louder. Works as an alternative to maxReject in similar circumstances. Instead of killing the oldest one we kill and combine both volumes to get a similar sound envelope without losing too much sonority.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Treat Like Music</td>
+        <td style="text-align: center">Treat Like Music</td>
+        <td style="">This sound uses the master music volume, think of the nomad or trading outpost jingles. If you disable music you can&#39;t hear them, even if they are ambient sounds.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Kill Me Own Group</td>
+        <td style="text-align: center">-</td>
+        <td style="">If set on, when the sound instance is killed, will kill the other instances from the same hashcode group</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">Group Steal Reject</td>
+        <td style="text-align: center">-</td>
+        <td style="">Works like max reject, and steal on louder but in a group level.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center">One Instance Per Frame</td>
+        <td style="text-align: center">-</td>
+        <td style="">If set on, will play/create an instance of this sound in each frame.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p> </p>
+  <p> </p>
+
+</div>
+  <div>
+    <table style="border-collapse:collapse;width:100%;border-width:1px;border-color:#000000;border-left-width:0;border-top-width:1px;border-top-color:#000000;border-right-width:0;border-bottom-width:0;border-style:solid;border-top-style:solid">
+      <colgroup>
+        <col style="width: 618px;"/>
+        <col style="width: 536px;"/>
+      </colgroup>
+      <tbody>
+        <tr>
+          <td style="background-image: url(&#39;&#39;);">
+            <p><img height="30" src="../assets/images/eurotools.png" style="vertical-align: middle;" width="30"/><span style="font-weight:bold;">Eurotools Community.</span></p>
+          </td>
+          <td style="background-image: url(&#39;&#39;);">
+            <p style="text-align: right;padding-right: 7mm;"> </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body></html>
