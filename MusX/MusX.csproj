@@ -42,6 +42,9 @@
   <ItemGroup>
     <Compile Include="BinaryFunctions.cs" />
     <Compile Include="CalculusLoopOffsets.cs" />
+    <Compile Include="Objects\Header\ProjectDetailsHeader.cs" />
+    <Compile Include="Objects\Header\SoundbankInfoHeader.cs" />
+    <Compile Include="Objects\Header\StreambankHeader.cs" />
     <Compile Include="Objects\Markers\Marker.cs" />
     <Compile Include="Objects\Markers\StartMarker.cs" />
     <Compile Include="Objects\MusicDetails.cs" />
@@ -50,7 +53,8 @@
     <Compile Include="Objects\ProjectSoundBank.cs" />
     <Compile Include="Objects\SampleData.cs" />
     <Compile Include="Objects\SbiFile.cs" />
-    <Compile Include="Objects\SfxHeaderData.cs" />
+    <Compile Include="Objects\Header\SfxCommonHeader.cs" />
+    <Compile Include="Objects\Header\SoundbankHeader.cs" />
     <Compile Include="Objects\SampleInfo.cs" />
     <Compile Include="Objects\Sample.cs" />
     <Compile Include="Objects\SoundDetails.cs" />

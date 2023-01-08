@@ -168,6 +168,15 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_File_GenerateSoundh_Click(object sender, EventArgs e)
+        {
+            using (SoundhGenerator createhashtable = new SoundhGenerator())
+            {
+                createhashtable.ShowDialog();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_File_ResetSettings_Click(object sender, EventArgs e)
         {
             ResetSettingsOnExit = true;

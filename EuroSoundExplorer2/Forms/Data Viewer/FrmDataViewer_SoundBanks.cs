@@ -17,7 +17,7 @@ namespace sb_explorer
             List<SampleData> waveData = new List<SampleData>();
 
             //Read File Data 
-            SfxHeaderData headerData = sbReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SoundbankHeader headerData = sbReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             sbReader.ReadSoundBank(filePath, headerData, SfxSamples, waveData);
 
             //Add data
@@ -116,7 +116,7 @@ namespace sb_explorer
             List<StreamSample> waveData = new List<StreamSample>();
 
             //Read File Data 
-            SfxHeaderData headerData = strReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            StreambankHeader headerData = strReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             strReader.ReadStreamBank(filePath, headerData, waveData);
 
             //Add data
@@ -163,7 +163,7 @@ namespace sb_explorer
             List<StreamSample> waveData = new List<StreamSample>();
 
             //Read File Data 
-            SfxHeaderData headerData = musReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            StreambankHeader headerData = musReader.ReadMusicHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             MusicSample fileData = musReader.ReadMusicBank(filePath, headerData);
 
             //Add data
@@ -194,8 +194,8 @@ namespace sb_explorer
         private void ShowSbiBank(string filePath)
         {
             //Read File Data 
-            SfxHeaderData headerData = sbiReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            SbiFile fileData = sbiReader.ReadStreamFile(filePath, headerData);
+            SoundbankInfoHeader headerData = sbiReader.ReadSoundbankInfoHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SbiFile fileData = sbiReader.ReadSoundbankInfoFile(filePath, headerData);
 
             //Add data
             TreeNode soundbankInfo = ShowHeaderData(headerData, "SoundbankInfo");
@@ -205,9 +205,6 @@ namespace sb_explorer
 
             TreeAdd(soundbankInfo, nameof(headerData.FileStart2), headerData.FileStart2);
             TreeAdd(soundbankInfo, nameof(headerData.FileLength2), headerData.FileLength2);
-
-            TreeAdd(soundbankInfo, nameof(headerData.FileStart3), headerData.FileStart3);
-            TreeAdd(soundbankInfo, nameof(headerData.FileLength3), headerData.FileLength3);
 
             //Print SoundBanks
             TreeNode soundBanksNode = new TreeNode("SoundBanks " + fileData.projectSoundBanks.Length);
@@ -230,7 +227,7 @@ namespace sb_explorer
         private void ShowProjectDetails(string filePath)
         {
             //Read File Data 
-            SfxHeaderData headerData = projDetReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            ProjectDetailsHeader headerData = projDetReader.ReadProjectFileHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             ProjectDetails fileData = projDetReader.ReadProjectFile(filePath, headerData);
 
             //Add data
@@ -286,7 +283,7 @@ namespace sb_explorer
         private void ShowSoundDetails(string filePath)
         {
             //Read File Data 
-            SfxHeaderData headerData = soundDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SfxCommonHeader headerData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             SoundDetails fileData = soundDetailsReader.ReadSoundDetailsFile(filePath, headerData);
 
             //Add data
@@ -318,7 +315,7 @@ namespace sb_explorer
         private void ShowMusicDetails(string filePath)
         {
             //Read File Data 
-            SfxHeaderData headerData = musicDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SfxCommonHeader headerData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             MusicDetails fileData = musicDetailsReader.ReadMusicDetailsFile(filePath, headerData);
 
             //Add data
@@ -343,7 +340,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private TreeNode ShowHeaderData(SfxHeaderData headerData, string nodeName)
+        private TreeNode ShowHeaderData(SfxCommonHeader headerData, string nodeName)
         {
             //Update Toolbar
             labelPlatformValue.Text = string.Format("{0}", headerData.Platform);
@@ -370,7 +367,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void PrintMarkers(TreeNode strSample, SfxHeaderData headerData, StartMarker[] StartMarkers, Marker[] Markers)
+        private void PrintMarkers(TreeNode strSample, StreambankHeader headerData, StartMarker[] StartMarkers, Marker[] Markers)
         {
             //Print Start Markers
             TreeNode streamStartMarker = new TreeNode("Stream Start Markers " + StartMarkers.Length);

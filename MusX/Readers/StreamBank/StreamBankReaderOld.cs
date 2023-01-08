@@ -8,10 +8,10 @@ namespace MusX.Readers
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
-    public class StreamBankReaderOld
+    public class StreamBankReaderOld : StreamBankReader
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal void ReadStreamFile(string filePath, SfxHeaderData headerData, List<StreamSample> StreamFileDictionaryData)
+        internal void ReadStreamFile(string filePath, StreambankHeader headerData, List<StreamSample> StreamFileDictionaryData)
         {
             using (BinaryReader binaryReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {

@@ -102,7 +102,7 @@ namespace sb_explorer
             }
 
             //Display
-            propertyGrid1.SelectedObject = gridObj;
+            propertyGrid1.propsGrid.SelectedObject = gridObj;
 
             //Update Flags
             if (MusXheaderData.FileVersion == 201 || MusXheaderData.FileVersion == 1)

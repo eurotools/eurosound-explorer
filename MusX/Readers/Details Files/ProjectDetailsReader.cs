@@ -1,6 +1,5 @@
 ﻿using MusX.Objects;
 using System.IO;
-using System.Text;
 
 namespace MusX.Readers
 {
@@ -10,67 +9,25 @@ namespace MusX.Readers
     public class ProjectDetailsReader : SfxFunctions
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        public override SfxHeaderData ReadSfxHeader(string filePath, string platform)
+        public ProjectDetailsHeader ReadProjectFileHeader(string filePath, string platform)
         {
-            SfxHeaderData headerData = new SfxHeaderData
-            {
-                Platform = platform
-            };
+            SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
+            ProjectDetailsHeader headerData = new ProjectDetailsHeader(commonHeader);
 
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-                //Magic value MUSX
-                string Magic = Encoding.ASCII.GetString(BReader.ReadBytes(4));
-                if (Magic.Equals("MUSX"))
-                {
-                    //Hashcode for the current soundbank 
-                    headerData.FileHashCode = BReader.ReadUInt32();
-                    //Current version of the file
-                    headerData.FileVersion = BReader.ReadUInt32();
-                    if (headerData.FileVersion < 7 || headerData.FileVersion == 201)
-                    {
-                        //Size of the whole file, in bytes
-                        headerData.FileSize = BReader.ReadUInt32();
-
-                        //Fields in the new versions
-                        if (headerData.FileVersion > 3 && headerData.FileVersion < 10)
-                        {
-                            //Platform PS2_ PC__ GC__ XB__
-                            headerData.Platform = Encoding.ASCII.GetString(BReader.ReadBytes(4));
-                            //Seconds from 1/1/2000, 1:00:00 (946684800)
-                            headerData.Timespan = BReader.ReadUInt32();
-                            //Seems padding but when the platform is PC__ or GC__ is set to 1
-                            headerData.UsesAdpcm = BReader.ReadUInt32();
-                            //Padding??
-                            BReader.ReadUInt32();
-                        }
-
-                        //Big endian
-                        if (headerData.Platform.Contains("GC") || headerData.Platform.Contains("GameCube"))
-                        {
-                            headerData.IsBigEndian = true;
-                        }
-
-                        //Get the start offset where memmory slots start.
-                        headerData.MemoryStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the first section, in bytes
-                        headerData.MemoryLength = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                    }
-                    else
-                    {
-                        throw new InvalidDataException(string.Format("This file version ({0}) is unsupported by this version of the EuroSound Explorer", headerData.FileVersion));
-                    }
-                }
-
-                //Close
-                BReader.Close();
+                BReader.BaseStream.Seek(headerData.EndOffset, SeekOrigin.Begin);
+                //Get the start offset where memmory slots start.
+                headerData.MemoryStart = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+                //Size of the first section, in bytes
+                headerData.MemoryLength = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
             }
 
             return headerData;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public ProjectDetails ReadProjectFile(string filePath, SfxHeaderData headerData)
+        public ProjectDetails ReadProjectFile(string filePath, ProjectDetailsHeader headerData)
         {
             ProjectDetails projectData = new ProjectDetails();
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))

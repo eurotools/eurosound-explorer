@@ -120,7 +120,7 @@ namespace sb_explorer
         {
             soundSampleData = sampleData;
 
-            SfxHeaderData MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.soundBankHeaderData;
+            SoundbankHeader MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.soundBankHeaderData;
             List<SampleData> wavHeaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
             HashcodeParser Hashcodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).hashTable;
 

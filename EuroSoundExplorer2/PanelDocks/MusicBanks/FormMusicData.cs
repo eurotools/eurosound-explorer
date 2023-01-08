@@ -25,7 +25,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ShowMusicData()
         {
-            SfxHeaderData headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
+            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
             MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
             propertyGrid1.SelectedObject = musicData;
 
@@ -75,7 +75,7 @@ namespace sb_explorer
             int frequency = 32000;
 
             MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
-            SfxHeaderData headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
+            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
             if (headerFileData.FileVersion == 201 || headerFileData.FileVersion == 1)
             {
                 if (headerFileData.Platform.Equals("PC") || headerFileData.Platform.Contains("GC") || headerFileData.Platform.Contains("GameCube"))
@@ -147,7 +147,7 @@ namespace sb_explorer
         {
             //First we need to know the frequency, to convert samples to milliseconds we need to know the frequency
             int frequency = 32000;
-            SfxHeaderData headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
+            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
             if ((headerFileData.Platform.Equals("XB") || headerFileData.Platform.Equals("Xbox") || headerFileData.Platform.Equals("XB__") || headerFileData.Platform.Equals("XB1_")))
             {
                 frequency = 44100;

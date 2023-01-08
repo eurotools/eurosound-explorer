@@ -57,9 +57,9 @@ namespace MusX.Readers
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public virtual SfxHeaderData ReadSfxHeader(string filePath, string platform)
+        public SfxCommonHeader ReadCommonHeader(string filePath, string platform)
         {
-            SfxHeaderData headerData = new SfxHeaderData
+            SfxCommonHeader headerData = new SfxCommonHeader
             {
                 Platform = platform
             };
@@ -73,7 +73,7 @@ namespace MusX.Readers
                     //Hashcode for the current soundbank 
                     headerData.FileHashCode = BReader.ReadUInt32();
                     //Current version of the file
-                    headerData.FileVersion = BReader.ReadUInt32();
+                    headerData.FileVersion = BReader.ReadInt32();
                     if (headerData.FileVersion < 7 || headerData.FileVersion == 201)
                     {
                         //Size of the whole file, in bytes
@@ -86,35 +86,19 @@ namespace MusX.Readers
                             headerData.Platform = Encoding.ASCII.GetString(BReader.ReadBytes(4));
                             //Seconds from 1/1/2000, 1:00:00 (946684800)
                             headerData.Timespan = BReader.ReadUInt32();
-
-                            //Seems padding but when the platform is PC__ or GC__ is set to 1
+                            //Seems that when the data is encoded in adpcm is set to 1.
                             headerData.UsesAdpcm = BReader.ReadUInt32();
                             //Padding??
                             BReader.ReadUInt32();
                         }
 
+                        //Store the last SFX
+                        headerData.EndOffset = BReader.BaseStream.Position;
+
                         //Big endian
                         if (headerData.Platform.Contains("GC") || headerData.Platform.Contains("GameCube"))
                         {
                             headerData.IsBigEndian = true;
-                        }
-
-                        //Points to the stream look-up file details
-                        headerData.FileStart1 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the first section, in bytes. 
-                        headerData.FileLength1 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-
-                        //Offset to the second section with the sample data. 
-                        headerData.FileStart2 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                        //Size of the second section, in bytes. 
-                        headerData.FileLength2 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-
-                        if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
-                        {
-                            //Unused offset. Set to zero.
-                            headerData.FileStart3 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
-                            //Unused. Set to zero.
-                            headerData.FileLength3 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                         }
                     }
                     else
@@ -131,7 +115,7 @@ namespace MusX.Readers
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public int GetNumberOfSFXs(string filePath, SfxHeaderData sbData)
+        public int GetNumberOfSFXs(string filePath, SoundbankHeader sbData)
         {
             int totalSfx = -1;
             using (BinaryReader br = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))

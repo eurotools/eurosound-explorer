@@ -38,7 +38,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static byte[] DecodeSfxSample(SampleData selectedSample, AudioFunctions audioFunctions)
         {
-            SfxHeaderData headerData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.soundBankHeaderData;
+            SoundbankHeader headerData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.soundBankHeaderData;
 
             byte[] decodedData = null;
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
@@ -88,7 +88,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static byte[] DecodeStreamSample(StreamSample selectedSample, AudioFunctions audioFunctions)
         {
-            SfxHeaderData headerData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
+            StreambankHeader headerData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
 
             byte[] decodedData = null;
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)

@@ -28,32 +28,32 @@ namespace sb_explorer
         private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
 
         //SoundBanks
-        public SfxHeaderData soundBankHeaderData = new SfxHeaderData();
+        public SoundbankHeader soundBankHeaderData = new SoundbankHeader();
         public readonly SortedDictionary<uint, Sample> sfxSamples = new SortedDictionary<uint, Sample>();
         public readonly List<SampleData> sfxStoredData = new List<SampleData>();
 
         //Streams
-        public SfxHeaderData streamBankHeaderData = new SfxHeaderData();
+        public StreambankHeader streamBankHeaderData = new StreambankHeader();
         public readonly List<StreamSample> streamSamples = new List<StreamSample>();
 
         //Musics
-        public SfxHeaderData musicBankHeaderData = new SfxHeaderData();
+        public StreambankHeader musicBankHeaderData = new StreambankHeader();
         public MusicSample musicData = new MusicSample();
 
         //SBI
-        public SfxHeaderData sbiBankHeaderData = new SfxHeaderData();
+        public SoundbankInfoHeader sbiBankHeaderData = new SoundbankInfoHeader();
         public SbiFile sbiFileData = new SbiFile();
 
         //Project Details
-        public SfxHeaderData projDetailsHeaderData = new SfxHeaderData();
+        public ProjectDetailsHeader projDetailsHeaderData = new ProjectDetailsHeader();
         public ProjectDetails projDetailsData = new ProjectDetails();
 
         //Sound Details
-        public SfxHeaderData soundDetailsHeaderData = new SfxHeaderData();
+        public SfxCommonHeader soundDetailsHeaderData = new SfxCommonHeader();
         public SoundDetails soundDetails = new SoundDetails();
 
         //Music Details
-        public SfxHeaderData musicDetailsHeaderData = new SfxHeaderData();
+        public SfxCommonHeader musicDetailsHeaderData = new SfxCommonHeader();
         public MusicDetails musicDetails = new MusicDetails();
 
         //-------------------------------------------------------------------------------------------
@@ -69,20 +69,20 @@ namespace sb_explorer
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
             HashcodeParser hashTable = parentForm.hashTable;
-            int selectedVersion = parentForm.configuration.FileVersion;
-            string folder = parentForm.configuration.ProjectFolder;
+            Platform selectedPlatform = parentForm.configuration.PlatformSelected;
             Title selectedTitle = parentForm.configuration.TitleSelected;
+            string folder = parentForm.configuration.ProjectFolder;
 
             if (Directory.Exists(folder))
             {
                 if (btnListView.Checked)
                 {
-                    FillListView(folder, selectedVersion, selectedTitle, hashTable);
+                    FillListView(folder, selectedPlatform, selectedTitle, hashTable);
                     txtTotal.Text = lvwFiles.Items.Count.ToString();
                 }
                 else
                 {
-                    FillTreeView(folder, selectedVersion, selectedTitle);
+                    FillTreeView(folder, selectedPlatform, selectedTitle);
                     txtTotal.Text = treeView1.GetNodeCount(true).ToString();
                 }
             }
@@ -404,7 +404,7 @@ namespace sb_explorer
             ClearLoadedData(FileType.StreamFile);
 
             //Load data
-            streamBankHeaderData = streamReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            streamBankHeaderData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             streamReader.ReadStreamBank(filePath, streamBankHeaderData, streamSamples);
 
             //Display Data
@@ -417,7 +417,7 @@ namespace sb_explorer
             ClearLoadedData(FileType.MusicFile);
 
             //Load data
-            musicBankHeaderData = musicReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            musicBankHeaderData = musicReader.ReadMusicHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             musicData = musicReader.ReadMusicBank(filePath, musicBankHeaderData);
 
             //Display Data
@@ -430,8 +430,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.SBI);
 
             //Load data
-            sbiBankHeaderData = sbiReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            sbiFileData = sbiReader.ReadStreamFile(filePath, sbiBankHeaderData);
+            sbiBankHeaderData = sbiReader.ReadSoundbankInfoHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            sbiFileData = sbiReader.ReadSoundbankInfoFile(filePath, sbiBankHeaderData);
 
             //Display Data
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbiSoundbanks.DisplayHashCodes();
@@ -444,7 +444,7 @@ namespace sb_explorer
             ClearLoadedData(FileType.ProjectDetails);
 
             //Load data
-            projDetailsHeaderData = projDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            projDetailsHeaderData = projDetailsReader.ReadProjectFileHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             projDetailsData = projDetailsReader.ReadProjectFile(filePath, projDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlProjDetailsMemSlots.ShowData();
@@ -458,7 +458,7 @@ namespace sb_explorer
             ClearLoadedData(FileType.SoundDetailsFile);
 
             //Load data
-            soundDetailsHeaderData = soundDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            soundDetailsHeaderData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             soundDetails = soundDetailsReader.ReadSoundDetailsFile(filePath, projDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundDetailsData.ShowData();
@@ -470,7 +470,7 @@ namespace sb_explorer
             ClearLoadedData(FileType.MusicDetails);
 
             //Load data
-            musicDetailsHeaderData = musicDetailsReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            musicDetailsHeaderData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
             musicDetails = musicDetailsReader.ReadMusicDetailsFile(filePath, projDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicDetailsData.ShowData();
@@ -485,7 +485,7 @@ namespace sb_explorer
             switch (fileType)
             {
                 case FileType.SoundbankFile:
-                    soundBankHeaderData = new SfxHeaderData();
+                    soundBankHeaderData = new SoundbankHeader();
                     sfxSamples.Clear();
                     sfxStoredData.Clear();
 
@@ -495,7 +495,7 @@ namespace sb_explorer
                     mainForm.pnlSbSamplePool.listView1.Items.Clear();
                     break;
                 case FileType.StreamFile:
-                    streamBankHeaderData = new SfxHeaderData();
+                    streamBankHeaderData = new StreambankHeader();
                     streamSamples.Clear();
 
                     //Clear UI
@@ -504,14 +504,14 @@ namespace sb_explorer
                     mainForm.pnlStreamData.lvwStreamData.Items.Clear();
                     break;
                 case FileType.MusicFile:
-                    musicBankHeaderData = new SfxHeaderData();
+                    musicBankHeaderData = new StreambankHeader();
                     musicData = new MusicSample();
 
                     //Clear UI
                     mainForm.pnlMusicData.propertyGrid1.SelectedObject = null;
                     break;
                 case FileType.SBI:
-                    sbiBankHeaderData = new SfxHeaderData();
+                    sbiBankHeaderData = new SoundbankInfoHeader();
                     sbiFileData = new SbiFile();
 
                     //Clear UI
@@ -521,7 +521,7 @@ namespace sb_explorer
                     mainForm.pnlSbiSoundbanks.listView_ColumnSortingClick1.Items.Clear();
                     break;
                 case FileType.ProjectDetails:
-                    projDetailsHeaderData = new SfxHeaderData();
+                    projDetailsHeaderData = new ProjectDetailsHeader();
                     projDetailsData = new ProjectDetails();
 
                     //Clear UI
@@ -532,14 +532,14 @@ namespace sb_explorer
                     mainForm.pnlProjDetailsData.ClearData();
                     break;
                 case FileType.SoundDetailsFile:
-                    soundDetailsHeaderData = new SfxHeaderData();
+                    soundDetailsHeaderData = new SoundbankHeader();
                     soundDetails = new SoundDetails();
 
                     //Clear UI
                     mainForm.pnlSoundDetailsData.ClearData();
                     break;
                 case FileType.MusicDetails:
-                    musicDetailsHeaderData = new SfxHeaderData();
+                    musicDetailsHeaderData = new StreambankHeader();
                     musicDetails = new MusicDetails();
 
                     //Clear UI
@@ -566,12 +566,12 @@ namespace sb_explorer
             switch (fileType)
             {
                 case FileType.SoundbankFile:
-                    SfxHeaderData sbData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+                    SoundbankHeader sbData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
                     total = reader.GetNumberOfSFXs(filePath, sbData);
                     break;
                 case FileType.StreamFile:
-                    sbData = streamReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-                    total = (int)(sbData.FileLength1 / 4);
+                    StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+                    total = (int)(strData.FileLength1 / 4);
                     break;
                 case FileType.MusicFile:
                     total = 1;
@@ -581,7 +581,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void FillListView(string folder, int selectedVersion, Title selectedTitle, HashcodeParser hashTable)
+        private void FillListView(string folder, Platform selectedPlatform, Title selectedTitle, HashcodeParser hashTable)
         {
             string[] files = Directory.GetFiles(folder, "*.sfx", SearchOption.AllDirectories);
             if (files.Length > 0)
@@ -590,21 +590,21 @@ namespace sb_explorer
                 lvwFiles.Items.Clear();
                 for (int i = 0; i < files.Length; i++)
                 {
-                    int hashCode = reader.GetFileHashCode(files[i]);
+                    SfxCommonHeader headerDat = reader.ReadCommonHeader(files[i], selectedPlatform.ToString());
 
                     //Get version of MusX Files
-                    FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, files[i], selectedTitle);
+                    FileType fileType = GenericMethods.GetFileType((int)headerDat.FileHashCode, headerDat.FileVersion, files[i], selectedTitle);
 
                     //Create item
                     ListViewItem itemToAdd = new ListViewItem(new string[]
                     {
-                            string.Format("0x{0:X8}", hashCode),
-                            hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(fileType, hashCode, selectedVersion, selectedTitle)),
-                            files[i].Substring(folder.Length),
-                            "Unloaded",
-                            GenericMethods.GetFileSize(files[i]),
-                            GetNumberOfSFXs(files[i], fileType).ToString(),
-                            fileType.ToString()
+                        string.Format("0x{0:X8}", headerDat.FileHashCode),
+                        hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(fileType, (int)headerDat.FileHashCode, headerDat.FileVersion, selectedTitle)),
+                        files[i].Substring(folder.Length),
+                        "Unloaded",
+                        GenericMethods.GetFileSize(files[i]),
+                        GetNumberOfSFXs(files[i], fileType).ToString(),
+                        fileType.ToString()
                     })
                     {
                         UseItemStyleForSubItems = false,
@@ -626,12 +626,12 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void FillTreeView(string folder, int selectedVersion, Title selectedTitle)
+        private void FillTreeView(string folder, Platform selectedPlatform, Title selectedTitle)
         {
             treeView1.BeginUpdate();
             treeView1.Nodes.Clear();
             DirectoryInfo rootDirectoryInfo = new DirectoryInfo(folder);
-            treeView1.Nodes.Add(CreateDirectoryNode(rootDirectoryInfo, selectedVersion, selectedTitle));
+            treeView1.Nodes.Add(CreateDirectoryNode(rootDirectoryInfo, selectedPlatform, selectedTitle));
             if (treeView1.Nodes.Count > 0 && treeView1.Nodes[0].Nodes.Count > 0)
             {
                 treeView1.Nodes[0].Expand();
@@ -640,13 +640,13 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo, int selectedVersion, Title selectedTitle)
+        private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo, Platform selectedPlatform, Title selectedTitle)
         {
             TreeNode directoryNode = new TreeNode(directoryInfo.Name);
             foreach (DirectoryInfo directory in directoryInfo.GetDirectories())
             {
                 //Create node and set image
-                TreeNode nodeData = CreateDirectoryNode(directory, selectedVersion, selectedTitle);
+                TreeNode nodeData = CreateDirectoryNode(directory, selectedPlatform, selectedTitle);
                 nodeData.ImageIndex = 0;
                 nodeData.SelectedImageIndex = 0;
                 //Add node
@@ -656,10 +656,10 @@ namespace sb_explorer
             {
                 if (Path.GetExtension(file.Name).Equals(".sfx", StringComparison.OrdinalIgnoreCase))
                 {
-                    int hashCode = reader.GetFileHashCode(file.FullName);
+                    SfxCommonHeader headerData = reader.ReadCommonHeader(file.FullName, selectedPlatform.ToString());
 
                     //Get version of MusX Files
-                    FileType fileType = GenericMethods.GetFileType(hashCode, selectedVersion, file.FullName, selectedTitle);
+                    FileType fileType = GenericMethods.GetFileType((int)headerData.FileHashCode, headerData.FileVersion, file.FullName, selectedTitle);
 
                     //Create Node
                     TreeNode fileNode = new TreeNode(file.Name)

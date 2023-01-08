@@ -29,28 +29,18 @@ namespace sb_explorer
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_Properties = new System.Windows.Forms.TabPage();
             this.tabPage_Flags = new System.Windows.Forms.TabPage();
             this.tabPage_UserFlags = new System.Windows.Forms.TabPage();
+            this.propertyGrid1 = new sb_explorer.CustomControls.TitlePropertyGrid();
             this.tabControl1.SuspendLayout();
             this.tabPage_Properties.SuspendLayout();
             this.tabPage_Flags.SuspendLayout();
             this.tabPage_UserFlags.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(515, 391);
-            this.propertyGrid1.TabIndex = 0;
-            this.propertyGrid1.ToolbarVisible = false;
             // 
             // checkedListBox1
             // 
@@ -152,6 +142,15 @@ namespace sb_explorer
             this.tabPage_UserFlags.TabIndex = 2;
             this.tabPage_UserFlags.Text = "User Flags";
             // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(515, 391);
+            this.propertyGrid1.TabIndex = 0;
+            this.propertyGrid1.Title = "SFX Parameters";
+            // 
             // FormSB_SampleProps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,13 +171,12 @@ namespace sb_explorer
         }
 
         #endregion
-
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         protected internal System.Windows.Forms.CheckedListBox checkedListBox2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage_Properties;
         private System.Windows.Forms.TabPage tabPage_Flags;
         private System.Windows.Forms.TabPage tabPage_UserFlags;
+        private CustomControls.TitlePropertyGrid propertyGrid1;
     }
 }

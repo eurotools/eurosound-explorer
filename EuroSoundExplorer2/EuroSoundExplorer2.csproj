@@ -85,6 +85,12 @@
     <Compile Include="Classes\PropertyGridHelpers\CustomFileBrowser.cs" />
     <Compile Include="Classes\PropertyGridHelpers\CustomFolderBrowser.cs" />
     <Compile Include="Classes\PropertyGridHelpers\FileVersions.cs" />
+    <Compile Include="CustomControls\TitlePropertyGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\TitlePropertyGrid.Designer.cs">
+      <DependentUpon>TitlePropertyGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\UserControl_ListViewColumnSortingClick.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -103,13 +109,13 @@
     <Compile Include="Forms\FrmAudioDecoder.Designer.cs">
       <DependentUpon>FrmAudioDecoder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmDataViewer.cs">
+    <Compile Include="Forms\Data Viewer\FrmDataViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmDataViewer.Designer.cs">
+    <Compile Include="Forms\Data Viewer\FrmDataViewer.Designer.cs">
       <DependentUpon>FrmDataViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmDataViewer_SoundBanks.cs">
+    <Compile Include="Forms\Data Viewer\FrmDataViewer_SoundBanks.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmFileRefUsage.cs">
@@ -117,6 +123,12 @@
     </Compile>
     <Compile Include="Forms\FrmFileRefUsage.Designer.cs">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SoundhGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SoundhGenerator.Designer.cs">
+      <DependentUpon>SoundhGenerator.cs</DependentUpon>
     </Compile>
     <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.cs">
       <SubType>Form</SubType>
@@ -238,11 +250,14 @@
     <EmbeddedResource Include="Forms\FrmAudioDecoder.resx">
       <DependentUpon>FrmAudioDecoder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmDataViewer.resx">
+    <EmbeddedResource Include="Forms\Data Viewer\FrmDataViewer.resx">
       <DependentUpon>FrmDataViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmFileRefUsage.resx">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SoundhGenerator.resx">
+      <DependentUpon>SoundhGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.resx">
       <DependentUpon>FrmMusicDetails.cs</DependentUpon>

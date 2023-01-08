@@ -9,7 +9,31 @@ namespace MusX.Readers
     public class SbiBankReader : SfxFunctions
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        public SbiFile ReadStreamFile(string filePath, SfxHeaderData headerData)
+        public SoundbankInfoHeader ReadSoundbankInfoHeader(string filePath, string platform)
+        {
+            SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
+            SoundbankInfoHeader headerData = new SoundbankInfoHeader(commonHeader);
+
+            using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            {
+                BReader.BaseStream.Seek(headerData.EndOffset, SeekOrigin.Begin);
+
+                //Points to the stream look-up file details
+                headerData.FileStart1 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+                //Size of the first section, in bytes. 
+                headerData.FileLength1 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+
+                //Offset to the second section with the sample data. 
+                headerData.FileStart2 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+                //Size of the second section, in bytes. 
+                headerData.FileLength2 = BinaryFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+            }
+
+            return headerData;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public SbiFile ReadSoundbankInfoFile(string filePath, SoundbankInfoHeader headerData)
         {
             SbiFile sbiFileObj = new SbiFile();
 

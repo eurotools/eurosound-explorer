@@ -10,7 +10,7 @@ namespace MusX.Readers
     public class MusicBankReaderNew
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal MusicSample ReadMusicFile(string filePath, SfxHeaderData headerData, int interleave_block_size)
+        internal MusicSample ReadMusicFile(string filePath, StreambankHeader headerData, int interleave_block_size)
         {
             MusicSample musicDat = null;
 

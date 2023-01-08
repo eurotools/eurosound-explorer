@@ -91,7 +91,7 @@ namespace sb_explorer
                 lvwStreamData.EndUpdate();
 
                 //Enable or disable button
-                SfxHeaderData streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
+                StreambankHeader streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
                 if (streamHeader.FileVersion == 201 || streamHeader.FileVersion == 1)
                 {
                     ButtonValidateAllStreams.Enabled = false;

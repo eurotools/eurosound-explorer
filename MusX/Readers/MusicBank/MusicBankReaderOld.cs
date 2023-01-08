@@ -10,7 +10,7 @@ namespace MusX.Readers
     public class MusicBankReaderOld
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        public MusicSample ReadMusicFile(string filePath, SfxHeaderData headerData, int interleave_block_size)
+        public MusicSample ReadMusicFile(string filePath, StreambankHeader headerData, int interleave_block_size)
         {
             MusicSample musicDat;
             using (BinaryReader binaryReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
