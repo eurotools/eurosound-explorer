@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
 [assembly: AssemblyTitle("AudioDecoders")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("EuroSound Audio Decoders")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AudioDecoders")]
