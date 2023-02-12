@@ -56,9 +56,9 @@ namespace MusX.Readers
                     //Read flags and sample pool
                     if (headerData.Platform.Contains("PS2") || (headerData.Platform.Contains("XB") && headerData.FileVersion < 5) || (headerData.Platform.Contains("GC") && headerData.FileVersion < 5))
                     {
-                        sample.GroupHashCode = BReader.ReadInt16();
-                        sample.GroupMaxChannels = (sbyte)(sample.GroupHashCode & 15);
-                        sample.GroupHashCode >>= 4;
+                        short groupHashCode = (short)BReader.ReadUInt16();
+                        sample.GroupHashCode = (short)((groupHashCode & 0xFFF0) >> 4);
+                        sample.GroupMaxChannels = (sbyte)(groupHashCode & 0xF);
 
                         //Read Flags
                         sample.Flags = BReader.ReadUInt16();
@@ -73,7 +73,7 @@ namespace MusX.Readers
                     }
                     else
                     {
-                        sample.GroupHashCode = BinaryFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian);
+                        sample.GroupHashCode = (short)BinaryFunctions.FlipData(BReader.ReadUInt16(), headerData.IsBigEndian);
                         sample.GroupMaxChannels = BReader.ReadSByte();
                         BReader.ReadSByte();
 

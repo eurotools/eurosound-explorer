@@ -21,7 +21,7 @@
         //-------------------------------------------------------------------------------------------------------------------------------
         public static uint GetSoundBankEurocomImaLoopOffset(uint loopOffsetPS2)
         {
-            uint positionAligned = (uint)(loopOffsetPS2 * 2.972);
+            uint positionAligned = (uint)(loopOffsetPS2 * 3.498389);
             return GetLoopOffsetAligned(positionAligned);
         }
 
