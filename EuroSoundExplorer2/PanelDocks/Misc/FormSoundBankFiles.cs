@@ -489,6 +489,7 @@ namespace sb_explorer
                     soundBankHeaderData = new SoundbankHeader();
                     sfxSamples.Clear();
                     sfxStoredData.Clear();
+                    duplicatedHashCodes.Clear();
 
                     //Clear UI
                     mainForm.pnlSbHashCodes.listView1.Items.Clear();
