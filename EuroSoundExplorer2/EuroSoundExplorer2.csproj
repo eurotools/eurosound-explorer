@@ -118,6 +118,12 @@
     <Compile Include="Forms\Data Viewer\FrmDataViewer_SoundBanks.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\FrmDuplicatedHashCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDuplicatedHashCodes.Designer.cs">
+      <DependentUpon>FrmDuplicatedHashCodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmFileRefUsage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Data Viewer\FrmDataViewer.resx">
       <DependentUpon>FrmDataViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDuplicatedHashCodes.resx">
+      <DependentUpon>FrmDuplicatedHashCodes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmFileRefUsage.resx">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>

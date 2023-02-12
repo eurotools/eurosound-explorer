@@ -44,17 +44,17 @@ namespace MusX.Readers
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void ReadSoundBank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList)
+        public void ReadSoundBank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList, List<uint> duplicatedHashCodes)
         {
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
             {
                 SoundBankReaderOld oldReader = new SoundBankReaderOld();
-                oldReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList);
+                oldReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
             }
             else
             {
                 SoundBankReaderNew newReader = new SoundBankReaderNew();
-                newReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList);
+                newReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
             }
         }
     }

@@ -200,11 +200,12 @@ namespace sb_explorer
         {
             SoundBankReader sbReader = new SoundBankReader();
             SoundbankHeader sbHeaderData = sbReader.ReadSfxHeader(filePath, headerData.Platform);
+            List<uint> DuplicatedHashCodes = new List<uint>();
 
             //Read SoundBank Data
             SortedDictionary<uint, Sample> samplesData = new SortedDictionary<uint, Sample>();
             List<SampleData> wavData = new List<SampleData>();
-            sbReader.ReadSoundBank(filePath, sbHeaderData, samplesData, wavData);
+            sbReader.ReadSoundBank(filePath, sbHeaderData, samplesData, wavData, DuplicatedHashCodes);
 
             //Get Soundbank HashCode Label
             string fileName = Path.GetFileNameWithoutExtension(filePath);

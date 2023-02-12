@@ -41,6 +41,8 @@ namespace sb_explorer
             //Print Data
             if (dictToShow.Count > 0)
             {
+                txtSfxCount.Text = dictToShow.Count.ToString();
+
                 listView1.BeginUpdate();
                 listView1.Items.Clear();
                 foreach (KeyValuePair<uint, Sample> itemToShow in dictToShow)
@@ -66,6 +68,23 @@ namespace sb_explorer
                     ListView_ColumnSortingClick.AddImageToSubItem(itemToAdd, 1, 2, listView1.Handle);
                 }
                 listView1.EndUpdate();
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonCheckDuplicated_Click(object sender, System.EventArgs e)
+        {
+            List<uint> duplicatedHashCodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.duplicatedHashCodes;
+            if (duplicatedHashCodes.Count > 0)
+            {
+                using(FrmDuplicatedHashCodes duplHashCodes = new FrmDuplicatedHashCodes(duplicatedHashCodes))
+                {
+                    duplHashCodes.ShowDialog();
+                }
+            }
+            else
+            {
+                MessageBox.Show("No duplicated hashcodes found", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -118,7 +137,7 @@ namespace sb_explorer
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                Clipboard.SetText(listView1.SelectedItems[0].SubItems[1].Text);
+                Clipboard.SetText(listView1.SelectedItems[0].SubItems[2].Text);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace MusX.Readers
     internal class SoundBankReaderOld : SoundBankReader
     {
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal void ReadSoundbank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList)
+        internal void ReadSoundbank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList, List<uint> duplicatedHashCodes)
         {
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
@@ -71,7 +71,11 @@ namespace MusX.Readers
                     }
 
                     //Save in dictionary
-                    if (!samplesDictionary.ContainsKey(hashcode))
+                    if (samplesDictionary.ContainsKey(hashcode))
+                    {
+                        duplicatedHashCodes.Add(hashcode);
+                    }
+                    else
                     {
                         samplesDictionary.Add(hashcode, sample);
                     }

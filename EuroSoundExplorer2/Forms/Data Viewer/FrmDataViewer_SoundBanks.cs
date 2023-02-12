@@ -15,10 +15,11 @@ namespace sb_explorer
         {
             SortedDictionary<uint, Sample> SfxSamples = new SortedDictionary<uint, Sample>();
             List<SampleData> waveData = new List<SampleData>();
+            List<uint> duplicatedHashCodes = new List<uint>();
 
             //Read File Data 
             SoundbankHeader headerData = sbReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            sbReader.ReadSoundBank(filePath, headerData, SfxSamples, waveData);
+            sbReader.ReadSoundBank(filePath, headerData, SfxSamples, waveData, duplicatedHashCodes);
 
             //Add data
             TreeNode soundbankInfo = ShowHeaderData(headerData, "SoundbankInfo");

@@ -46,6 +46,9 @@ namespace sb_explorer
             this.ButtonListProperties = new System.Windows.Forms.ToolStripButton();
             this.ButtonApplyFilter = new System.Windows.Forms.ToolStripButton();
             this.txtBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.lblTotalHashCodes = new System.Windows.Forms.ToolStripLabel();
+            this.txtSfxCount = new System.Windows.Forms.ToolStripTextBox();
+            this.ButtonCheckDuplicated = new System.Windows.Forms.ToolStripButton();
             this.contextMenuListView.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -129,11 +132,14 @@ namespace sb_explorer
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ButtonSendToSamplePool,
             this.ButtonListProperties,
+            this.ButtonCheckDuplicated,
             this.ButtonApplyFilter,
-            this.txtBoxSearch});
+            this.txtBoxSearch,
+            this.lblTotalHashCodes,
+            this.txtSfxCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(599, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(599, 35);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -147,7 +153,7 @@ namespace sb_explorer
             this.ButtonSendToSamplePool.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonSendToSamplePool.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonSendToSamplePool.Name = "ButtonSendToSamplePool";
-            this.ButtonSendToSamplePool.Size = new System.Drawing.Size(28, 28);
+            this.ButtonSendToSamplePool.Size = new System.Drawing.Size(28, 32);
             this.ButtonSendToSamplePool.Text = "List samples in the sample pool";
             // 
             // ButtonListProperties
@@ -160,7 +166,7 @@ namespace sb_explorer
             this.ButtonListProperties.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonListProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonListProperties.Name = "ButtonListProperties";
-            this.ButtonListProperties.Size = new System.Drawing.Size(28, 28);
+            this.ButtonListProperties.Size = new System.Drawing.Size(28, 32);
             this.ButtonListProperties.Text = "List selected item properties";
             this.ButtonListProperties.ToolTipText = "List selected item properties";
             // 
@@ -172,7 +178,7 @@ namespace sb_explorer
             this.ButtonApplyFilter.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ButtonApplyFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ButtonApplyFilter.Name = "ButtonApplyFilter";
-            this.ButtonApplyFilter.Size = new System.Drawing.Size(23, 28);
+            this.ButtonApplyFilter.Size = new System.Drawing.Size(23, 32);
             this.ButtonApplyFilter.Text = "Apply Filter";
             this.ButtonApplyFilter.Click += new System.EventHandler(this.ButtonApplyFilter_Click);
             // 
@@ -180,7 +186,34 @@ namespace sb_explorer
             // 
             this.txtBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtBoxSearch.Name = "txtBoxSearch";
-            this.txtBoxSearch.Size = new System.Drawing.Size(100, 31);
+            this.txtBoxSearch.Size = new System.Drawing.Size(100, 35);
+            // 
+            // lblTotalHashCodes
+            // 
+            this.lblTotalHashCodes.Name = "lblTotalHashCodes";
+            this.lblTotalHashCodes.Size = new System.Drawing.Size(35, 32);
+            this.lblTotalHashCodes.Text = "Total:";
+            // 
+            // txtSfxCount
+            // 
+            this.txtSfxCount.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSfxCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtSfxCount.Name = "txtSfxCount";
+            this.txtSfxCount.ReadOnly = true;
+            this.txtSfxCount.Size = new System.Drawing.Size(50, 35);
+            this.txtSfxCount.Text = "0";
+            // 
+            // ButtonCheckDuplicated
+            // 
+            this.ButtonCheckDuplicated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonCheckDuplicated.Image = ((System.Drawing.Image)(resources.GetObject("ButtonCheckDuplicated.Image")));
+            this.ButtonCheckDuplicated.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonCheckDuplicated.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonCheckDuplicated.Name = "ButtonCheckDuplicated";
+            this.ButtonCheckDuplicated.Size = new System.Drawing.Size(30, 32);
+            this.ButtonCheckDuplicated.Text = "toolStripButton1";
+            this.ButtonCheckDuplicated.ToolTipText = "Check for duplicated";
+            this.ButtonCheckDuplicated.Click += new System.EventHandler(this.ButtonCheckDuplicated_Click);
             // 
             // FormSB_HashCodes
             // 
@@ -216,5 +249,8 @@ namespace sb_explorer
         private System.Windows.Forms.ContextMenuStrip contextMenuListView;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyHashCode;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyLabel;
+        private System.Windows.Forms.ToolStripLabel lblTotalHashCodes;
+        private System.Windows.Forms.ToolStripTextBox txtSfxCount;
+        private System.Windows.Forms.ToolStripButton ButtonCheckDuplicated;
     }
 }

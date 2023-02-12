@@ -31,6 +31,7 @@ namespace sb_explorer
         public SoundbankHeader soundBankHeaderData = new SoundbankHeader();
         public readonly SortedDictionary<uint, Sample> sfxSamples = new SortedDictionary<uint, Sample>();
         public readonly List<SampleData> sfxStoredData = new List<SampleData>();
+        public readonly List<uint> duplicatedHashCodes = new List<uint>();
 
         //Streams
         public StreambankHeader streamBankHeaderData = new StreambankHeader();
@@ -391,7 +392,7 @@ namespace sb_explorer
 
             //Load data
             soundBankHeaderData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            reader.ReadSoundBank(filePath, soundBankHeaderData, sfxSamples, sfxStoredData);
+            reader.ReadSoundBank(filePath, soundBankHeaderData, sfxSamples, sfxStoredData, duplicatedHashCodes);
 
             //Display Data
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbHashCodes.SetHashCodesToListView();
