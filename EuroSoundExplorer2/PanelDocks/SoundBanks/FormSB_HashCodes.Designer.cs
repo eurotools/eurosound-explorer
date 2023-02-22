@@ -44,11 +44,11 @@ namespace sb_explorer
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSendToSamplePool = new System.Windows.Forms.ToolStripButton();
             this.ButtonListProperties = new System.Windows.Forms.ToolStripButton();
+            this.ButtonCheckDuplicated = new System.Windows.Forms.ToolStripButton();
             this.ButtonApplyFilter = new System.Windows.Forms.ToolStripButton();
             this.txtBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             this.lblTotalHashCodes = new System.Windows.Forms.ToolStripLabel();
             this.txtSfxCount = new System.Windows.Forms.ToolStripTextBox();
-            this.ButtonCheckDuplicated = new System.Windows.Forms.ToolStripButton();
             this.contextMenuListView.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -170,6 +170,18 @@ namespace sb_explorer
             this.ButtonListProperties.Text = "List selected item properties";
             this.ButtonListProperties.ToolTipText = "List selected item properties";
             // 
+            // ButtonCheckDuplicated
+            // 
+            this.ButtonCheckDuplicated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonCheckDuplicated.Image = ((System.Drawing.Image)(resources.GetObject("ButtonCheckDuplicated.Image")));
+            this.ButtonCheckDuplicated.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonCheckDuplicated.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonCheckDuplicated.Name = "ButtonCheckDuplicated";
+            this.ButtonCheckDuplicated.Size = new System.Drawing.Size(30, 32);
+            this.ButtonCheckDuplicated.Text = "toolStripButton1";
+            this.ButtonCheckDuplicated.ToolTipText = "Check for duplicated";
+            this.ButtonCheckDuplicated.Click += new System.EventHandler(this.ButtonCheckDuplicated_Click);
+            // 
             // ButtonApplyFilter
             // 
             this.ButtonApplyFilter.CheckOnClick = true;
@@ -191,8 +203,8 @@ namespace sb_explorer
             // lblTotalHashCodes
             // 
             this.lblTotalHashCodes.Name = "lblTotalHashCodes";
-            this.lblTotalHashCodes.Size = new System.Drawing.Size(35, 32);
-            this.lblTotalHashCodes.Text = "Total:";
+            this.lblTotalHashCodes.Size = new System.Drawing.Size(43, 32);
+            this.lblTotalHashCodes.Text = "Count:";
             // 
             // txtSfxCount
             // 
@@ -202,18 +214,6 @@ namespace sb_explorer
             this.txtSfxCount.ReadOnly = true;
             this.txtSfxCount.Size = new System.Drawing.Size(50, 35);
             this.txtSfxCount.Text = "0";
-            // 
-            // ButtonCheckDuplicated
-            // 
-            this.ButtonCheckDuplicated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonCheckDuplicated.Image = ((System.Drawing.Image)(resources.GetObject("ButtonCheckDuplicated.Image")));
-            this.ButtonCheckDuplicated.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.ButtonCheckDuplicated.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonCheckDuplicated.Name = "ButtonCheckDuplicated";
-            this.ButtonCheckDuplicated.Size = new System.Drawing.Size(30, 32);
-            this.ButtonCheckDuplicated.Text = "toolStripButton1";
-            this.ButtonCheckDuplicated.ToolTipText = "Check for duplicated";
-            this.ButtonCheckDuplicated.Click += new System.EventHandler(this.ButtonCheckDuplicated_Click);
             // 
             // FormSB_HashCodes
             // 

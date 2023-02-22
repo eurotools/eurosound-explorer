@@ -58,6 +58,8 @@ namespace sb_explorer
             this.Col_SamplePool_PitchRnd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_SamplePool_Pan = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_SamplePool_PanRnd = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.labelCount = new System.Windows.Forms.ToolStripLabel();
+            this.TextboxSamplesCount = new System.Windows.Forms.ToolStripTextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -137,7 +139,9 @@ namespace sb_explorer
             this.ButtonSendToMediaPlayer,
             this.ButtonApplyEffects,
             this.toolStripSeparator4,
-            this.ButtonItemUsage});
+            this.ButtonItemUsage,
+            this.labelCount,
+            this.TextboxSamplesCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(425, 35);
@@ -272,6 +276,19 @@ namespace sb_explorer
             this.Col_SamplePool_PanRnd.Text = "Pan +/-";
             this.Col_SamplePool_PanRnd.Width = 90;
             // 
+            // labelCount
+            // 
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(43, 32);
+            this.labelCount.Text = "Count:";
+            // 
+            // TextboxSamplesCount
+            // 
+            this.TextboxSamplesCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.TextboxSamplesCount.Name = "TextboxSamplesCount";
+            this.TextboxSamplesCount.Size = new System.Drawing.Size(40, 35);
+            this.TextboxSamplesCount.Text = "0";
+            // 
             // FormSB_SamplePool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,5 +335,7 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripButton ButtonItemUsage;
         protected internal ListView_ColumnSortingClick listView1;
         private System.Windows.Forms.ToolStripButton ButtonApplyEffects;
+        private System.Windows.Forms.ToolStripLabel labelCount;
+        private System.Windows.Forms.ToolStripTextBox TextboxSamplesCount;
     }
 }

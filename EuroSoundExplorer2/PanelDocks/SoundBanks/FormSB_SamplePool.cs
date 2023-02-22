@@ -211,6 +211,7 @@ namespace sb_explorer
                 listView1.Items.Add(listViewItem);
             }
             listView1.EndUpdate();
+            TextboxSamplesCount.Text = listView1.Items.Count.ToString();
         }
 
         //-------------------------------------------------------------------------------------------

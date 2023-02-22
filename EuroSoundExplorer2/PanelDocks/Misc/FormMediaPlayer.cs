@@ -111,6 +111,7 @@ namespace sb_explorer
                         //Save Data
                         if (soundToPlay.channels > 1)
                         {
+
                             WaveFileWriter.CreateWaveFile16(filePath, audioFunctions.CreateStereoWav(ref providerLeft, ref providerRight, soundToPlay.PcmData, soundToPlay).ToSampleProvider());
                         }
                         else
