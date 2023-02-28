@@ -56,6 +56,7 @@ namespace sb_explorer
                     case Platform.PS2:
                         SonyAdpcm vagDecoder = new SonyAdpcm();
                         decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref selectedSample.LoopStartOffset);
+                        selectedSample.LoopStartOffset /= 2;
                         break;
                     case Platform.Xbox:
                         XboxAdpcm xboxDecoder = new XboxAdpcm();
@@ -79,6 +80,7 @@ namespace sb_explorer
                 {
                     SonyAdpcm vagDecoder = new SonyAdpcm();
                     decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref selectedSample.LoopStartOffset);
+                    selectedSample.LoopStartOffset /= 2;
                 }
             }
 

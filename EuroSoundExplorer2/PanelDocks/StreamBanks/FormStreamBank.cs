@@ -54,7 +54,7 @@ namespace sb_explorer
                     }
 
                     //Create item
-                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (i+1).ToString(), "??", blockPos, currentSample.MarkerSize.ToString(), audioOff, currentSample.AudioSize.ToString(), currentSample.BaseVolume.ToString() })
+                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (i + 1).ToString(), "??", blockPos, currentSample.MarkerSize.ToString(), audioOff, currentSample.AudioSize.ToString(), currentSample.BaseVolume.ToString() })
                     {
                         ImageIndex = 0,
                         Tag = i

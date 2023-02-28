@@ -1,80 +1,45 @@
-﻿namespace MusX
+﻿using System;
+
+namespace MusX
 {
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     internal static class CalculusLoopOffsets
     {
-        //-------------------------------------------------------------------------------------------
-        //  SOUNDBANKS - OLD
-        //-------------------------------------------------------------------------------------------
-        public static uint ReverseGetXboxAlignedNumber(uint inputValue)
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public static uint EurocomImaToSamples(uint bytes, int channels)
         {
-            uint alignedNumber = 0;
-            if (inputValue > 31)
-            {
-                alignedNumber = (((inputValue / 36) - 1) * 64) + 32;
-            }
-            return alignedNumber;
+            int block_align = 0x20 * channels;
+            if (channels <= 0) return 0;
+
+            /* DAT4 IMA blocks have a 4 byte header per channel; 2 samples per byte (2 nibbles) */
+            long samples = (bytes / block_align) * (block_align - 4 * channels) * 2 / channels
+            + (Convert.ToBoolean(bytes % block_align) ? ((bytes % block_align) - 4 * channels) * 2 / channels : 0); /* unlikely (encoder aligns) */
+
+            return (uint)samples;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint GetSoundBankEurocomImaLoopOffset(uint loopOffsetPS2)
+        public static uint XboxAdpcmToSamples(uint bytes, int channels)
         {
-            uint positionAligned = (uint)(loopOffsetPS2 * 3.4453125);
-            return GetLoopOffsetAligned(positionAligned);
-        }
+            int mod;
+            int block_align = 0x24 * channels;
+            if (channels <= 0) return 0;
 
-        //-------------------------------------------------------------------------------------------
-        //  STREAMBANKS - OLD
-        //-------------------------------------------------------------------------------------------
-        public static uint GetStreamLoopOffsetPlayStation2(uint loopOffsetPS2)
-        {
-            uint positionAligned = (uint)(loopOffsetPS2 * 3.5);
-            return GetLoopOffsetAligned(positionAligned);
-        }
+            mod = (int)(bytes % block_align);
+            /* XBOX IMA blocks have a 4 byte header per channel; 2 samples per byte (2 nibbles) */
+            long samples = (bytes / block_align) * (block_align - 4 * channels) * 2 / channels
+                    + ((mod > 0 && mod > 0x04 * channels) ? (mod - 0x04 * channels) * 2 / channels : 0); /* unlikely (encoder aligns) */
 
-        //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint GetStreamLoopOffsetXbox(uint loopOffsetXbox)
-        {
-            uint parsedLoopOffset = (uint)(loopOffsetXbox * 1.7777777777);
-            uint positionAligned = parsedLoopOffset * 2;
-            return GetLoopOffsetAligned(positionAligned);
-        }
-
-        //-------------------------------------------------------------------------------------------
-        //  MUSICBANKS - NEW
-        //-------------------------------------------------------------------------------------------
-        public static uint GetMusicLoopOffsetXboxNew(uint loopOffsetXbox)
-        {
-            uint positionAligned = (uint)(loopOffsetXbox * 3.5003);
-            return GetLoopOffsetAligned(positionAligned);
-        }
-
-        //-------------------------------------------------------------------------------------------
-        //  FUNCTIONS
-        //-------------------------------------------------------------------------------------------
-        public static uint GetLoopOffsetAligned(uint markerPosition)
-        {
-            uint PositionAligned;
-
-            //Align position
-            if ((markerPosition & 1) == 1) //Odd number
-            {
-                PositionAligned = ((markerPosition + 1) / 4 * 4);
-            }
-            else //Even number
-            {
-                PositionAligned = AlignNumber(markerPosition, 4);
-            }
-            return PositionAligned;
+            return (uint)samples;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public static uint AlignNumber(uint valueToAlign, uint blockSize)
+        public static uint SonyVagToSamples(uint bytes, int channels)
         {
-            uint PositionAligned = (valueToAlign + (blockSize - 1)) & ~(blockSize - 1);
-            return PositionAligned;
+            if (channels <= 0) return 0;
+            return (uint)(bytes / channels / 0x10 * 28);
         }
     }
 

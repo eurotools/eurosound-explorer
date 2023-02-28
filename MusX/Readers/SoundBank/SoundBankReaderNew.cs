@@ -163,7 +163,11 @@ namespace MusX.Readers
                     //Parse Xbox Offset
                     if (headerData.Platform.IndexOf("PC", System.StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("XB", System.StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        wavHeaderData.LoopStartOffset = (int)CalculusLoopOffsets.GetSoundBankEurocomImaLoopOffset((uint)wavHeaderData.LoopStartOffset);
+                        wavHeaderData.LoopStartOffset = (int)CalculusLoopOffsets.EurocomImaToSamples((uint)wavHeaderData.LoopStartOffset, 1);
+                    }
+                    else
+                    {
+                        wavHeaderData.LoopStartOffset /= 2;
                     }
 
                     //Store current position

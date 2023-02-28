@@ -77,7 +77,7 @@ namespace sb_explorer
             List<uint> duplicatedHashCodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.duplicatedHashCodes;
             if (duplicatedHashCodes.Count > 0)
             {
-                using(FrmDuplicatedHashCodes duplHashCodes = new FrmDuplicatedHashCodes(duplicatedHashCodes))
+                using (FrmDuplicatedHashCodes duplHashCodes = new FrmDuplicatedHashCodes(duplicatedHashCodes))
                 {
                     duplHashCodes.ShowDialog();
                 }

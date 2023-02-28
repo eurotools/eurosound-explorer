@@ -45,16 +45,8 @@ namespace MusX.Readers
                     };
 
                     //Parse loop Offsets
-                    if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("WI", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        StartMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.Position);
-                        StartMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
-                    }
-                    else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        StartMarker.Position = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(StartMarker.Position);
-                        StartMarker.LoopStart = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(StartMarker.LoopStart);
-                    }
+                    StartMarker.Position = CalculusLoopOffsets.EurocomImaToSamples(StartMarker.Position, 2);
+                    StartMarker.LoopStart = CalculusLoopOffsets.EurocomImaToSamples(StartMarker.LoopStart, 2);
 
                     //Add marker
                     musicDat.StartMarkers[j] = StartMarker;
@@ -74,16 +66,8 @@ namespace MusX.Readers
                     };
 
                     //Parse loop Offsets
-                    if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("WI", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        DataMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.Position);
-                        DataMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
-                    }
-                    else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        DataMarker.Position = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(DataMarker.Position);
-                        DataMarker.LoopStart = CalculusLoopOffsets.GetMusicLoopOffsetXboxNew(DataMarker.LoopStart);
-                    }
+                    DataMarker.Position = CalculusLoopOffsets.EurocomImaToSamples(DataMarker.Position, 2);
+                    DataMarker.LoopStart = CalculusLoopOffsets.EurocomImaToSamples(DataMarker.LoopStart, 2);
 
                     //Add marker
                     musicDat.Markers[k] = DataMarker;

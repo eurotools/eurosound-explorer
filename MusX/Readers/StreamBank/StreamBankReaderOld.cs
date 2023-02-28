@@ -70,18 +70,18 @@ namespace MusX.Readers
                         //Parse loop Offsets
                         if (headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            StartMarker.Position = CalculusLoopOffsets.GetLoopOffsetAligned(StartMarker.Position);
-                            StartMarker.LoopStart = CalculusLoopOffsets.GetLoopOffsetAligned(StartMarker.LoopStart);
+                            StartMarker.Position /= 2;
+                            StartMarker.LoopStart /= 2;
                         }
                         else if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            StartMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.Position);
-                            StartMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(StartMarker.LoopStart);
+                            StartMarker.Position = CalculusLoopOffsets.SonyVagToSamples(StartMarker.Position, 1);
+                            StartMarker.LoopStart = CalculusLoopOffsets.SonyVagToSamples(StartMarker.LoopStart, 1);
                         }
                         else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            StartMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetXbox(StartMarker.Position);
-                            StartMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetXbox(StartMarker.LoopStart);
+                            StartMarker.Position = CalculusLoopOffsets.XboxAdpcmToSamples(StartMarker.Position, 1);
+                            StartMarker.LoopStart = CalculusLoopOffsets.XboxAdpcmToSamples(StartMarker.LoopStart, 1);
                         }
 
                         //Add marker
@@ -107,18 +107,18 @@ namespace MusX.Readers
                         //Parse loop Offsets
                         if (headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("Ga", StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("GC", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            DataMarker.Position = CalculusLoopOffsets.GetLoopOffsetAligned(DataMarker.Position);
-                            DataMarker.LoopStart = CalculusLoopOffsets.GetLoopOffsetAligned(DataMarker.LoopStart);
+                            DataMarker.Position /= 2;
+                            DataMarker.LoopStart /= 2;
                         }
                         else if (headerData.Platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            DataMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.Position);
-                            DataMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetPlayStation2(DataMarker.LoopStart);
+                            DataMarker.Position = CalculusLoopOffsets.SonyVagToSamples(DataMarker.Position, 1);
+                            DataMarker.LoopStart = CalculusLoopOffsets.SonyVagToSamples(DataMarker.LoopStart, 1);
                         }
                         else if (headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            DataMarker.Position = CalculusLoopOffsets.GetStreamLoopOffsetXbox(DataMarker.Position);
-                            DataMarker.LoopStart = CalculusLoopOffsets.GetStreamLoopOffsetXbox(DataMarker.LoopStart);
+                            DataMarker.Position = CalculusLoopOffsets.XboxAdpcmToSamples(DataMarker.Position, 1);
+                            DataMarker.LoopStart = CalculusLoopOffsets.XboxAdpcmToSamples(DataMarker.LoopStart, 1);
                         }
 
                         //Add marker
