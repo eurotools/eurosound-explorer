@@ -14,6 +14,7 @@
         public int Channels;
         public int Bits;
         public int LoopStartOffset;
+        public int TotalSamples;
         public int Duration;
         public byte[] EncodedData;
         public short[] DspCoeffs;

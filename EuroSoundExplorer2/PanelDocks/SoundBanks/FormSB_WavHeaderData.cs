@@ -48,7 +48,7 @@ namespace sb_explorer
                         ImageIndex = 0,
                         Tag = index
                     };
-                    if (waveData.LoopStartOffset > waveData.MemorySize)
+                    if (waveData.LoopStartOffset > waveData.TotalSamples)
                     {
                         listViewItem2.UseItemStyleForSubItems = false;
                         listViewItem2.SubItems[6].ForeColor = Color.Red;

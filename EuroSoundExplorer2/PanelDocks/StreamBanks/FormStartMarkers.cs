@@ -11,8 +11,6 @@ namespace sb_explorer
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FormStartMarkers : DockContent
     {
-        //private readonly CalculusLoopOffsets loopOffsets = new CalculusLoopOffsets();
-
         //-------------------------------------------------------------------------------------------------------------------------------
         public FormStartMarkers()
         {
@@ -20,7 +18,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void ShowMarkers(StreamSample sampleToDisplay, int frequency)
+        public void ShowMarkers(StreamSample sampleToDisplay)
         {
             //Clear listview
             lvwStartMarkers.BeginUpdate();
@@ -34,7 +32,7 @@ namespace sb_explorer
 
                 for (int i = 0; i < sampleToDisplay.StartMarkers.Length; i++)
                 {
-                    PrintMarkers(sampleToDisplay.StartMarkers[i], ref i, frequency, null, sampleToDisplay);
+                    PrintMarkers(sampleToDisplay.StartMarkers[i], ref i, null, sampleToDisplay);
                 }
             }
             else
@@ -45,7 +43,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void ShowMarkers(MusicSample sampleToDisplay, int frequency)
+        public void ShowMarkers(MusicSample sampleToDisplay)
         {
             //Clear listview
             lvwStartMarkers.BeginUpdate();
@@ -59,7 +57,7 @@ namespace sb_explorer
 
                 for (int i = 0; i < sampleToDisplay.StartMarkers.Length; i++)
                 {
-                    PrintMarkers(sampleToDisplay.StartMarkers[i], ref i, frequency, sampleToDisplay, null);
+                    PrintMarkers(sampleToDisplay.StartMarkers[i], ref i, sampleToDisplay, null);
                 }
             }
             else
@@ -70,7 +68,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void PrintMarkers(StartMarker startMarker, ref int i, int frequency, MusicSample musicObj, StreamSample sampleObj)
+        private void PrintMarkers(StartMarker startMarker, ref int i, MusicSample musicObj, StreamSample sampleObj)
         {
             //Create listview item
             ListViewItem listViewItem = new ListViewItem(new string[] { "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A" })
@@ -80,14 +78,10 @@ namespace sb_explorer
 
             ushort errors = 0;
 
-
-            //Check Conversion
-            decimal freqDiv = decimal.Divide(frequency, 1000);
-
             //Update UI
             listViewItem.Text = i.ToString();
             listViewItem.SubItems[1].Text = startMarker.Index.ToString();
-            listViewItem.SubItems[2].Text = string.Format("{0:G7} ms", startMarker.Position / freqDiv);
+            listViewItem.SubItems[2].Text = startMarker.Position.ToString();
             switch (startMarker.Type)
             {
                 case 10:
@@ -112,9 +106,9 @@ namespace sb_explorer
                     listViewItem.SubItems[3].Text = "Error";
                     break;
             }
-            listViewItem.SubItems[4].Text = string.Format("{0:G7} ms", startMarker.LoopStart / freqDiv);
+            listViewItem.SubItems[4].Text = startMarker.LoopStart.ToString();
             listViewItem.SubItems[5].Text = startMarker.LoopMarkerCount.ToString();
-            listViewItem.SubItems[6].Text = string.Format("{0:G7} ms", startMarker.MarkerPos / freqDiv);
+            listViewItem.SubItems[6].Text = startMarker.MarkerPos.ToString();
 
             //Check for errors
             if (musicObj != null)

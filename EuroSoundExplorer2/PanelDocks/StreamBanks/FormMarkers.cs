@@ -18,7 +18,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void ShowMarkers(StreamSample sampleToDisplay, int frequency)
+        public void ShowMarkers(StreamSample sampleToDisplay)
         {
             //Print markers
             lvwMarkers.BeginUpdate();
@@ -31,7 +31,7 @@ namespace sb_explorer
                 for (int i = 0; i < sampleToDisplay.Markers.Length; i++)
                 {
                     Marker musicMarkerStartData = sampleToDisplay.Markers[i];
-                    PrintMarkers(musicMarkerStartData, ref i, frequency, null, sampleToDisplay);
+                    PrintMarkers(musicMarkerStartData, ref i, null, sampleToDisplay);
                 }
             }
             else
@@ -42,7 +42,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void ShowMarkers(MusicSample sampleToDisplay, int frequency)
+        public void ShowMarkers(MusicSample sampleToDisplay)
         {
             //Print markers
             lvwMarkers.BeginUpdate();
@@ -55,7 +55,7 @@ namespace sb_explorer
                 for (int i = 0; i < sampleToDisplay.Markers.Length; i++)
                 {
                     Marker musicMarkerStartData = sampleToDisplay.Markers[i];
-                    PrintMarkers(musicMarkerStartData, ref i, frequency, sampleToDisplay, null);
+                    PrintMarkers(musicMarkerStartData, ref i, sampleToDisplay, null);
                 }
             }
             else
@@ -66,7 +66,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void PrintMarkers(Marker musicMarkerStartData, ref int i, int frequency, MusicSample musicObj, StreamSample sampleObj)
+        private void PrintMarkers(Marker musicMarkerStartData, ref int i, MusicSample musicObj, StreamSample sampleObj)
         {
             //Create listview item
             ListViewItem listViewItem = new ListViewItem(new string[] { "N/A", "N/A", "N/A", "N/A", "N/A", "N/A" })
@@ -76,13 +76,10 @@ namespace sb_explorer
 
             ushort errors = 0;
 
-            //Check Conversion
-            decimal freqDiv = decimal.Divide(frequency, 1000);
-
             //Update UI
             listViewItem.Text = i.ToString();
             listViewItem.SubItems[1].Text = musicMarkerStartData.Index.ToString();
-            listViewItem.SubItems[2].Text = string.Format("{0:G7} ms", musicMarkerStartData.Position / freqDiv);
+            listViewItem.SubItems[2].Text = musicMarkerStartData.Position.ToString();
             switch (musicMarkerStartData.Type)
             {
                 case 10:
@@ -107,7 +104,7 @@ namespace sb_explorer
                     listViewItem.SubItems[3].Text = "Error";
                     break;
             }
-            listViewItem.SubItems[4].Text = string.Format("{0:G7} ms", musicMarkerStartData.LoopStart / freqDiv);
+            listViewItem.SubItems[4].Text = musicMarkerStartData.LoopStart.ToString();
             listViewItem.SubItems[5].Text = musicMarkerStartData.LoopMarkerCount.ToString();
 
             //Check for errors
