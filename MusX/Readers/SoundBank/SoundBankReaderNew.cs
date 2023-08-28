@@ -159,6 +159,7 @@ namespace MusX.Readers
                         LoopStartOffset = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian),
                         Duration = BinaryFunctions.FlipData(BReader.ReadInt32(), headerData.IsBigEndian)
                     };
+                    wavHeaderData.OriginalLoopOffset = wavHeaderData.LoopStartOffset;
 
                     //Parse Xbox Offset
                     if (headerData.Platform.IndexOf("PC", System.StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("XB", System.StringComparison.OrdinalIgnoreCase) >= 0)

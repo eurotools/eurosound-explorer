@@ -5,6 +5,7 @@
     //-------------------------------------------------------------------------------------------------------------------------------
     public class SampleInfo
     {
+        public string FilePath;
         public short FileRef;
         public float Pitch;
         public float PitchOffset;

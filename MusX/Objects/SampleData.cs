@@ -14,6 +14,7 @@
         public int Channels;
         public int Bits;
         public int LoopStartOffset;
+        public int OriginalLoopOffset;
         public int TotalSamples;
         public int Duration;
         public byte[] EncodedData;

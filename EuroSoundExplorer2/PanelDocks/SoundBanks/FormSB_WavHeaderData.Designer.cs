@@ -60,6 +60,7 @@ namespace sb_explorer
             this.col_Frequency = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.col_LoopStartOffset = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.col_Duration = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colLoopSample = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -231,6 +232,7 @@ namespace sb_explorer
             this.col_SampleSize,
             this.col_Frequency,
             this.col_LoopStartOffset,
+            this.colLoopSample,
             this.col_Duration});
             this.listView1.ContextMenuStrip = this.contextMenuStrip1;
             this.listView1.FullRowSelect = true;
@@ -285,6 +287,11 @@ namespace sb_explorer
             this.col_Duration.Text = "Duration (ms)";
             this.col_Duration.Width = 80;
             // 
+            // colLoopSample
+            // 
+            this.colLoopSample.Text = "Loop Sample";
+            this.colLoopSample.Width = 89;
+            // 
             // FormSB_WavHeaderData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -332,5 +339,6 @@ namespace sb_explorer
         protected internal ListView_ColumnSortingClick listView1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton ButtonHexView;
+        private System.Windows.Forms.ColumnHeader colLoopSample;
     }
 }

@@ -43,7 +43,7 @@ namespace sb_explorer
                     }
 
                     //Create item and add it to list
-                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, waveData.MemorySize.ToString(), waveData.SampleSize.ToString(), waveData.Frequency.ToString(), waveData.LoopStartOffset.ToString(), waveData.Duration.ToString() })
+                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, waveData.MemorySize.ToString(), waveData.SampleSize.ToString(), waveData.Frequency.ToString(), waveData.OriginalLoopOffset.ToString(), waveData.LoopStartOffset.ToString(), waveData.Duration.ToString() })
                     {
                         ImageIndex = 0,
                         Tag = index
