@@ -2,6 +2,8 @@
 using sb_explorer.CustomControls;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -85,6 +87,22 @@ namespace sb_explorer
             else
             {
                 MessageBox.Show("No duplicated hashcodes found", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonSaveList_Click(object sender, System.EventArgs e)
+        {
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Create text file
+                using (StreamWriter writer = new StreamWriter(File.Open(saveFileDialog.FileName, FileMode.Create, FileAccess.Write, FileShare.Read), Encoding.UTF8))
+                {
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        writer.WriteLine(listView1.Items[i].SubItems[2].Text);
+                    }
+                }
             }
         }
 

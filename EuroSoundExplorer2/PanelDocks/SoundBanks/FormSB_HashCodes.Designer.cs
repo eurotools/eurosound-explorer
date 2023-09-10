@@ -49,6 +49,8 @@ namespace sb_explorer
             this.txtBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             this.lblTotalHashCodes = new System.Windows.Forms.ToolStripLabel();
             this.txtSfxCount = new System.Windows.Forms.ToolStripTextBox();
+            this.ButtonSaveList = new System.Windows.Forms.ToolStripButton();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuListView.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -133,6 +135,7 @@ namespace sb_explorer
             this.ButtonSendToSamplePool,
             this.ButtonListProperties,
             this.ButtonCheckDuplicated,
+            this.ButtonSaveList,
             this.ButtonApplyFilter,
             this.txtBoxSearch,
             this.lblTotalHashCodes,
@@ -215,6 +218,21 @@ namespace sb_explorer
             this.txtSfxCount.Size = new System.Drawing.Size(50, 35);
             this.txtSfxCount.Text = "0";
             // 
+            // ButtonSaveList
+            // 
+            this.ButtonSaveList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonSaveList.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSaveList.Image")));
+            this.ButtonSaveList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonSaveList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSaveList.Name = "ButtonSaveList";
+            this.ButtonSaveList.Size = new System.Drawing.Size(26, 32);
+            this.ButtonSaveList.Text = "Save HashCodes List";
+            this.ButtonSaveList.Click += new System.EventHandler(this.ButtonSaveList_Click);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            // 
             // FormSB_HashCodes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,5 +270,7 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripLabel lblTotalHashCodes;
         private System.Windows.Forms.ToolStripTextBox txtSfxCount;
         private System.Windows.Forms.ToolStripButton ButtonCheckDuplicated;
+        private System.Windows.Forms.ToolStripButton ButtonSaveList;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }

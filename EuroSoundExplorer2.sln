@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EuroSoundExplorer2", "EuroSoundExplorer2\EuroSoundExplorer2.csproj", "{06EF9DE0-FECA-4704-97A9-CA37A4BFE086}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusX", "MusX\MusX.csproj", "{F176F5AC-1B44-436F-ADD6-BF12399E8C18}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioDecoders", "AudioDecoders\AudioDecoders.csproj", "{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusX", "..\MusX\MusX.csproj", "{F176F5AC-1B44-436F-ADD6-BF12399E8C18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{06EF9DE0-FECA-4704-97A9-CA37A4BFE086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06EF9DE0-FECA-4704-97A9-CA37A4BFE086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06EF9DE0-FECA-4704-97A9-CA37A4BFE086}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F176F5AC-1B44-436F-ADD6-BF12399E8C18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -347,13 +347,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MusX\MusX.csproj">
+      <Project>{f176f5ac-1b44-436f-add6-bf12399e8c18}</Project>
+      <Name>MusX</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AudioDecoders\AudioDecoders.csproj">
       <Project>{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}</Project>
       <Name>AudioDecoders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MusX\MusX.csproj">
-      <Project>{f176f5ac-1b44-436f-add6-bf12399e8c18}</Project>
-      <Name>MusX</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
