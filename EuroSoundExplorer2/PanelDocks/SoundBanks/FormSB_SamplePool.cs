@@ -40,6 +40,12 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void ButtonReplaceAudio_Click(object sender, EventArgs e)
+        {
+            MenuItem_ReplaceSound_Click(sender, e);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void ButtonPlayWithoutEffects_Click(object sender, EventArgs e)
         {
             MenuItem_SendToMediaPlayer_Click(sender, e);
@@ -77,6 +83,27 @@ namespace sb_explorer
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_SaveSound_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (ListViewItem selectedItem in listView1.SelectedItems)
+                    {
+                        short fileRef = (short)selectedItem.Tag;
+                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem);
+                        if (soundToPlay != null)
+                        {
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
+                            WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, fileRef + ".wav")), wavFile.ToSampleProvider());
+                        }
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_ReplaceSound_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count > 0)
             {
