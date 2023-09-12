@@ -169,6 +169,33 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_Replace_Click(object sender, EventArgs e)
+        {
+            //Output Selected Files
+            if (lvwStreamData.SelectedItems.Count > 0)
+            {
+                //Ask user for an output file
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    int sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                    List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+
+                    //Input samples
+                    foreach (ListViewItem selectedItem in lvwStreamData.SelectedItems)
+                    {
+                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem, streamedSamples, sampleRate);
+                        if (soundToPlay != null)
+                        {
+                            //Create Wav File
+                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
+                            WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (int)selectedItem.Tag + ".wav")), wavFile.ToSampleProvider());
+                        }
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_SendToMediaPlayer_Click(object sender, EventArgs e)
         {
             if (lvwStreamData.SelectedItems.Count == 1)
