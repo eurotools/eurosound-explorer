@@ -51,7 +51,7 @@ namespace sb_explorer
                         switch (lbxFormats.SelectedIndex)
                         {
                             case 0: // Sony ADPCM
-                                int loopOffset = 0;
+                                uint loopOffset = 0;
                                 SonyAdpcm sonyVag = new SonyAdpcm();
                                 pcmConvertedData = sonyVag.Decode(adpcmDataToDecode, ref loopOffset);
                                 break;
@@ -102,8 +102,8 @@ namespace sb_explorer
                     {
                         SoundFile soundToPlay = new SoundFile();
                         soundToPlay.PcmData[0] = pcmConvertedData;
-                        soundToPlay.sampleRate = (int)nudFrequency.Value;
-                        soundToPlay.channels = (int)nudChannels.Value;
+                        soundToPlay.sampleRate = (uint)nudFrequency.Value;
+                        soundToPlay.channels = (uint)nudChannels.Value;
 
                         //Create Wav file
                         RawSourceWaveStream rawLeftChannel = null;

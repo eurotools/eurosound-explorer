@@ -150,7 +150,7 @@ namespace sb_explorer
                 //Ask user for an output file
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    int sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                    uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
                     List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
 
                     //Output samples
@@ -173,7 +173,7 @@ namespace sb_explorer
         {
             if (lvwStreamData.SelectedItems.Count == 1)
             {
-                int sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
                 List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
 
                 //Get Sound data and play
@@ -203,7 +203,7 @@ namespace sb_explorer
                     if (selectedItemIndex <= streamedSamples.Count)
                     {
                         StreamSample sampleToDisplay = streamedSamples[selectedItemIndex];
-                        int sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                        uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
                         ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(sampleToDisplay);
                         ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(sampleToDisplay);
                     }
@@ -270,7 +270,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         //  FUNCTIONS
         //------------------------------------------------------------------------------------------
-        private SoundFile GetSoundFileFromListViewItem(ListViewItem selectedItem, List<StreamSample> streamedSamples, int sampleRate)
+        private SoundFile GetSoundFileFromListViewItem(ListViewItem selectedItem, List<StreamSample> streamedSamples, uint sampleRate)
         {
             StreamSample selectedSample = streamedSamples[(int)selectedItem.Tag];
             SoundFile soundToPlay = null;
@@ -286,7 +286,7 @@ namespace sb_explorer
                 soundToPlay.channels = 1;
                 soundToPlay.isLooped = SoundIsLooped(selectedSample.Markers);
                 soundToPlay.startPos = (int)GetStartPosition(selectedSample.Markers);
-                soundToPlay.loopStartPoint = (int)GetStartLoopPos(selectedSample.Markers);
+                soundToPlay.loopStartPoint = GetStartLoopPos(selectedSample.Markers);
                 soundToPlay.loopEndPoint = (int)GetEndLoopPos(selectedSample.Markers);
             }
 

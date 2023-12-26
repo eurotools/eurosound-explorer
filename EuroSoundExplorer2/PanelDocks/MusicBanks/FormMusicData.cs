@@ -72,7 +72,7 @@ namespace sb_explorer
         {
             byte[] decodedDataL = null;
             byte[] decodedDataR = null;
-            int frequency = 32000;
+            uint frequency = 32000;
 
             MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
             StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
@@ -86,7 +86,7 @@ namespace sb_explorer
                 }
                 else if (headerFileData.Platform.Equals("PS2"))
                 {
-                    int test = 0;
+                    uint test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
                     decodedDataL = vagDecoder.Decode(musicData.EncodedData[0], ref test);
                     decodedDataR = vagDecoder.Decode(musicData.EncodedData[1], ref test);
@@ -109,7 +109,7 @@ namespace sb_explorer
                 }
                 else if (headerFileData.Platform.Equals("PS2_"))
                 {
-                    int test = 0;
+                    uint test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
                     decodedDataL = vagDecoder.Decode(musicData.EncodedData[0], ref test);
                     decodedDataR = vagDecoder.Decode(musicData.EncodedData[1], ref test);
@@ -134,7 +134,7 @@ namespace sb_explorer
                     channels = 2,
                     isLooped = true,
                     startPos = (int)GetStartPosition(musicData.Markers),
-                    loopStartPoint = (int)GetStartLoopPos(musicData.Markers),
+                    loopStartPoint = GetStartLoopPos(musicData.Markers),
                     loopEndPoint = (int)GetEndLoopPos(musicData.Markers),
                 };
 

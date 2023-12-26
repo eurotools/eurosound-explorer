@@ -287,7 +287,7 @@ namespace sb_explorer
                     {
                         soundToPlay = new SoundFile();
                         soundToPlay.PcmData[0] = decodedData;
-                        soundToPlay.sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                        soundToPlay.sampleRate = (uint)((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
                         if (ButtonApplyEffects.Checked)
                         {
                             soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;

@@ -76,12 +76,14 @@ namespace sb_explorer
             pnlSettings.LoadSettings();
 
             //Load Panels State
-            if (!File.Exists("ESEx\\Dock Settings.xml"))
+            string dockSettings = Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml");
+            string defaultDockSettings = Path.Combine(Application.StartupPath, "ESEx", "Default Dock Settings.xml");
+            if (!File.Exists(dockSettings))
             {
-                File.Copy("ESEx\\Default Dock Settings.xml", "ESEx\\Dock Settings.xml", true);
-                File.SetAttributes("ESEx\\Dock Settings.xml", FileAttributes.Normal);
+                File.Copy(defaultDockSettings, dockSettings, true);
+                File.SetAttributes(dockSettings, FileAttributes.Normal);
             }
-            mainDockPanel.LoadFromXml("ESEx\\Dock Settings.xml", new DeserializeDockContent(GetContentFromPersistString));
+            mainDockPanel.LoadFromXml(dockSettings, new DeserializeDockContent(GetContentFromPersistString));
 
             //Load last state listview
             foreach (Form dockForm in m_DockForms)
@@ -114,7 +116,8 @@ namespace sb_explorer
             pnlSettings.SaveSettings();
 
             //Save previous config
-            mainDockPanel.SaveAsXml("ESEx\\Dock Settings.xml");
+            string dockSettings = Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml");
+            mainDockPanel.SaveAsXml(dockSettings);
 
             //Close all forms
             foreach (Form dockForm in m_DockForms)
@@ -125,8 +128,8 @@ namespace sb_explorer
             //Check if user wants to restore the default values
             if (ResetSettingsOnExit)
             {
-                File.Delete("ESEx\\General Settings.ini");
-                File.Delete("ESEx\\Dock Settings.xml");
+                File.Delete(Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"));
+                File.Delete(dockSettings);
                 foreach (Form dockForm in m_DockForms)
                 {
                     File.Delete(GetConfigFile(dockForm));
@@ -420,7 +423,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private string GetConfigFile(Form f) => "ESEx\\" + f.Name + ".ini";
+        private string GetConfigFile(Form f) => Path.Combine(Application.StartupPath, "ESEx", f.Name + ".ini");
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void SaveListViewConfig(Form f)

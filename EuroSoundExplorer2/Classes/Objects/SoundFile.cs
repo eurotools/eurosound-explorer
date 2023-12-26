@@ -7,11 +7,11 @@
     {
         public byte[][] PcmData = new byte[1][];
         public int startPos;
-        public int loopStartPoint;
+        public uint loopStartPoint;
         public int loopEndPoint;
         public bool isLooped;
-        public int sampleRate;
-        public int channels;
+        public uint sampleRate;
+        public uint channels;
         public float volume = 1;
         public float pitch;
         public float panning;

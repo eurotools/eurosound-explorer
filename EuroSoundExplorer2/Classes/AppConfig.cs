@@ -15,13 +15,13 @@ namespace sb_explorer
         private Platform _PlatformSelected;
         private Title _TitleSelected;
         private string _SoundhFile, _ProjectFolder;
-        private int _StreamsFrequency = 22050;
+        private uint _StreamsFrequency = 22050;
         private int _FileVersion = 201;
 
         //-------------------------------------------------------------------------------------------------------------------------------
         [DisplayName("Streams Freq.")]
         [Category("EngineX")]
-        public int StreamsFrequency
+        public uint StreamsFrequency
         {
             get { return _StreamsFrequency; }
             set { _StreamsFrequency = value; }

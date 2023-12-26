@@ -46,17 +46,17 @@ namespace sb_explorer
                 splitContainer1.Panel2Collapsed = false;
 
                 //Left Channel
-                userControl_WaveViewer1.WaveStream = new RawSourceWaveStream(new MemoryStream(soundToPlay.PcmData[0]), new WaveFormat(soundToPlay.sampleRate, 16, 1));
+                userControl_WaveViewer1.WaveStream = new RawSourceWaveStream(new MemoryStream(soundToPlay.PcmData[0]), new WaveFormat((int)soundToPlay.sampleRate, 16, 1));
                 userControl_WaveViewer1.InitControl();
 
                 //Right Channel
-                userControl_WaveViewer2.WaveStream = new RawSourceWaveStream(new MemoryStream(soundToPlay.PcmData[1]), new WaveFormat(soundToPlay.sampleRate, 16, 1));
+                userControl_WaveViewer2.WaveStream = new RawSourceWaveStream(new MemoryStream(soundToPlay.PcmData[1]), new WaveFormat((int)soundToPlay.sampleRate, 16, 1));
                 userControl_WaveViewer2.InitControl();
             }
             else
             {
                 splitContainer1.Panel2Collapsed = true;
-                userControl_WaveViewer1.WaveStream = new RawSourceWaveStream(new MemoryStream(soundToPlay.PcmData[0]), new WaveFormat(soundToPlay.sampleRate, 16, 1));
+                userControl_WaveViewer1.WaveStream = new RawSourceWaveStream(new MemoryStream(soundToPlay.PcmData[0]), new WaveFormat((int)soundToPlay.sampleRate, 16, 1));
                 userControl_WaveViewer1.InitControl();
             }
 

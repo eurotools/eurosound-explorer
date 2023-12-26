@@ -31,7 +31,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         public void SaveSettings()
         {
-            using (StreamWriter sw = new StreamWriter(File.Open("ESEx\\General Settings.ini", FileMode.Create, FileAccess.Write, FileShare.Read)))
+            using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"), FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
                 sw.WriteLine("SoundhFile={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile);
                 sw.WriteLine("FilesFolder={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder);
@@ -43,7 +43,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadSettings()
         {
-            string filePath = "ESEx\\General Settings.ini";
+            string filePath = Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini");
             if (File.Exists(filePath))
             {
                 var parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);

@@ -104,7 +104,7 @@ namespace sb_explorer
                 }
                 else if (selectedPlatform == Platform.PS2)
                 {
-                    int test = 0;
+                    uint test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
                     decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref test);
                 }
@@ -123,7 +123,7 @@ namespace sb_explorer
                 }
                 else if (headerData.Platform.Equals("PS2_"))
                 {
-                    int test = 0;
+                    uint test = 0;
                     SonyAdpcm vagDecoder = new SonyAdpcm();
                     decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref test);
                 }
