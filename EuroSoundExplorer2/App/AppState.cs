@@ -8,9 +8,11 @@ namespace sb_explorer
         {
             Configuration = new AppConfig();
             HashTable = new HashcodeParser();
+            LoadedData = new LoadedProjectData();
         }
 
         public AppConfig Configuration { get; private set; }
         public HashcodeParser HashTable { get; private set; }
+        public LoadedProjectData LoadedData { get; private set; }
     }
 }

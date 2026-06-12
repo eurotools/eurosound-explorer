@@ -27,41 +27,44 @@ namespace sb_explorer
         private readonly SoundDetailsReader soundDetailsReader = new SoundDetailsReader();
         private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
 
+        public LoadedProjectData LoadedData { get; set; }
+
         //SoundBanks
-        public SoundbankHeader soundBankHeaderData = new SoundbankHeader();
-        public readonly SortedDictionary<uint, Sample> sfxSamples = new SortedDictionary<uint, Sample>();
-        public readonly List<SampleData> sfxStoredData = new List<SampleData>();
-        public readonly List<uint> duplicatedHashCodes = new List<uint>();
+        public SoundbankHeader soundBankHeaderData { get { return LoadedData.SoundBankHeaderData; } set { LoadedData.SoundBankHeaderData = value; } }
+        public SortedDictionary<uint, Sample> sfxSamples { get { return LoadedData.SfxSamples; } }
+        public List<SampleData> sfxStoredData { get { return LoadedData.SfxStoredData; } }
+        public List<uint> duplicatedHashCodes { get { return LoadedData.DuplicatedHashCodes; } }
 
         //Streams
-        public StreambankHeader streamBankHeaderData = new StreambankHeader();
-        public readonly List<StreamSample> streamSamples = new List<StreamSample>();
+        public StreambankHeader streamBankHeaderData { get { return LoadedData.StreamBankHeaderData; } set { LoadedData.StreamBankHeaderData = value; } }
+        public List<StreamSample> streamSamples { get { return LoadedData.StreamSamples; } }
 
         //Musics
-        public StreambankHeader musicBankHeaderData = new StreambankHeader();
-        public MusicSample musicData = new MusicSample();
+        public StreambankHeader musicBankHeaderData { get { return LoadedData.MusicBankHeaderData; } set { LoadedData.MusicBankHeaderData = value; } }
+        public MusicSample musicData { get { return LoadedData.MusicData; } set { LoadedData.MusicData = value; } }
 
         //SBI
-        public SoundbankInfoHeader sbiBankHeaderData = new SoundbankInfoHeader();
-        public SbiFile sbiFileData = new SbiFile();
+        public SoundbankInfoHeader sbiBankHeaderData { get { return LoadedData.SbiBankHeaderData; } set { LoadedData.SbiBankHeaderData = value; } }
+        public SbiFile sbiFileData { get { return LoadedData.SbiFileData; } set { LoadedData.SbiFileData = value; } }
 
         //Project Details
-        public ProjectDetailsHeader projDetailsHeaderData = new ProjectDetailsHeader();
-        public ProjectDetails projDetailsData = new ProjectDetails();
+        public ProjectDetailsHeader projDetailsHeaderData { get { return LoadedData.ProjectDetailsHeaderData; } set { LoadedData.ProjectDetailsHeaderData = value; } }
+        public ProjectDetails projDetailsData { get { return LoadedData.ProjectDetailsData; } set { LoadedData.ProjectDetailsData = value; } }
 
         //Sound Details
-        public SfxCommonHeader soundDetailsHeaderData = new SfxCommonHeader();
-        public SoundDetails soundDetails = new SoundDetails();
+        public SfxCommonHeader soundDetailsHeaderData { get { return LoadedData.SoundDetailsHeaderData; } set { LoadedData.SoundDetailsHeaderData = value; } }
+        public SoundDetails soundDetails { get { return LoadedData.SoundDetails; } set { LoadedData.SoundDetails = value; } }
 
         //Music Details
-        public SfxCommonHeader musicDetailsHeaderData = new SfxCommonHeader();
-        public MusicDetails musicDetails = new MusicDetails();
+        public SfxCommonHeader musicDetailsHeaderData { get { return LoadedData.MusicDetailsHeaderData; } set { LoadedData.MusicDetailsHeaderData = value; } }
+        public MusicDetails musicDetails { get { return LoadedData.MusicDetails; } set { LoadedData.MusicDetails = value; } }
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
         //-------------------------------------------------------------------------------------------
         public FormSoundBankFiles()
         {
+            LoadedData = new LoadedProjectData();
             InitializeComponent();
         }
 

@@ -49,6 +49,7 @@ namespace sb_explorer
         public FrmMain()
         {
             InitializeComponent();
+            pnlSoundBankFiles.LoadedData = AppState.LoadedData;
             configuration.SoundhFileChanged += Configuration_SoundhFileChanged;
             configuration.ProjectFolderChanged += Configuration_ProjectFolderChanged;
         }
@@ -91,10 +92,12 @@ namespace sb_explorer
             pnlSettings.LoadSettings();
 
             //Load Panels State
-            string dockSettings = Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml");
+            string dockSettings = GetDockSettingsFileToLoad();
             string defaultDockSettings = Path.Combine(Application.StartupPath, "ESEx", "Default Dock Settings.xml");
             if (!File.Exists(dockSettings))
             {
+                Directory.CreateDirectory(SettingsDirectory);
+                dockSettings = DockSettingsFilePath;
                 File.Copy(defaultDockSettings, dockSettings, true);
                 File.SetAttributes(dockSettings, FileAttributes.Normal);
             }
@@ -131,8 +134,8 @@ namespace sb_explorer
             pnlSettings.SaveSettings();
 
             //Save previous config
-            string dockSettings = Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml");
-            mainDockPanel.SaveAsXml(dockSettings);
+            Directory.CreateDirectory(SettingsDirectory);
+            mainDockPanel.SaveAsXml(DockSettingsFilePath);
 
             //Close all forms
             foreach (Form dockForm in m_DockForms)
@@ -144,10 +147,13 @@ namespace sb_explorer
             if (ResetSettingsOnExit)
             {
                 File.Delete(Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"));
-                File.Delete(dockSettings);
+                File.Delete(Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml"));
+                File.Delete(Path.Combine(SettingsDirectory, "General Settings.ini"));
+                File.Delete(DockSettingsFilePath);
                 foreach (Form dockForm in m_DockForms)
                 {
                     File.Delete(GetConfigFile(dockForm));
+                    File.Delete(GetLegacyConfigFile(dockForm));
                 }
             }
         }
@@ -438,7 +444,30 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private string GetConfigFile(Form f) => Path.Combine(Application.StartupPath, "ESEx", f.Name + ".ini");
+        private string SettingsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string DockSettingsFilePath => Path.Combine(SettingsDirectory, "Dock Settings.xml");
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string LegacyDockSettingsFilePath => Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml");
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string GetDockSettingsFileToLoad()
+        {
+            if (File.Exists(DockSettingsFilePath))
+            {
+                return DockSettingsFilePath;
+            }
+
+            return LegacyDockSettingsFilePath;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string GetConfigFile(Form f) => Path.Combine(SettingsDirectory, f.Name + ".ini");
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string GetLegacyConfigFile(Form f) => Path.Combine(Application.StartupPath, "ESEx", f.Name + ".ini");
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void SaveListViewConfig(Form f)
@@ -456,13 +485,14 @@ namespace sb_explorer
                     contents += "\n";
                 }
             }
+            Directory.CreateDirectory(SettingsDirectory);
             File.WriteAllText(GetConfigFile(f), contents);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void LoadListViewConfig(Form frm)
         {
-            string filePath = GetConfigFile(frm);
+            string filePath = File.Exists(GetConfigFile(frm)) ? GetConfigFile(frm) : GetLegacyConfigFile(frm);
             if (File.Exists(filePath))
             {
                 string[] fileContent = File.ReadAllLines(filePath);

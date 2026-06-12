@@ -31,7 +31,9 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         public void SaveSettings()
         {
-            using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"), FileMode.Create, FileAccess.Write, FileShare.Read)))
+            Directory.CreateDirectory(SettingsDirectory);
+
+            using (StreamWriter sw = new StreamWriter(File.Open(SettingsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
                 sw.WriteLine("SoundhFile={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile);
                 sw.WriteLine("FilesFolder={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder);
@@ -43,7 +45,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadSettings()
         {
-            string filePath = Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini");
+            string filePath = GetSettingsFileToLoad();
             if (File.Exists(filePath))
             {
                 var parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
@@ -52,7 +54,7 @@ namespace sb_explorer
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        string[] lineData = line.Split('=');
+                        string[] lineData = line.Split(new[] { '=' }, 2);
                         if (lineData.Length == 2)
                         {
                             switch (lineData[0])
@@ -80,6 +82,35 @@ namespace sb_explorer
                     }
                 }
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string SettingsDirectory
+        {
+            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName); }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string SettingsFilePath
+        {
+            get { return Path.Combine(SettingsDirectory, "General Settings.ini"); }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string LegacySettingsFilePath
+        {
+            get { return Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"); }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string GetSettingsFileToLoad()
+        {
+            if (File.Exists(SettingsFilePath))
+            {
+                return SettingsFilePath;
+            }
+
+            return LegacySettingsFilePath;
         }
     }
 

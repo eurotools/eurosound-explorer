@@ -41,6 +41,15 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        [DisplayName("EuroSound Version")]
+        [Category("EngineX")]
+        [ReadOnly(true)]
+        public EuroSoundVersion EuroSoundVersion
+        {
+            get { return EuroSoundVersions.FromFileVersion(FileVersion); }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         [DisplayName("Sound.h File")]
         [Category("Project")]
         [Editor(typeof(CustomFileBrowser), typeof(UITypeEditor))]

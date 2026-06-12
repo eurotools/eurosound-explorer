@@ -75,11 +75,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\AppConfig.cs" />
+    <Compile Include="App\AppState.cs" />
+    <Compile Include="App\LoadedProjectData.cs" />
     <Compile Include="Classes\Audio\AudioFunctions.cs" />
-    <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\Enumerations.cs" />
     <Compile Include="Classes\GenericMethods.cs" />
-    <Compile Include="Classes\HashcodeParser.cs" />
     <Compile Include="Classes\Audio\LoopStream.cs" />
     <Compile Include="Classes\Objects\SampleForPropGrid.cs" />
     <Compile Include="Classes\Objects\SoundFile.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="CustomControls\UserControl_WaveViewer.Designer.cs">
       <DependentUpon>UserControl_WaveViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Domain\EuroSoundVersion.cs" />
     <Compile Include="Forms\FrmAudioDecoder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,7 +216,7 @@
     <Compile Include="Forms\FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\AppConfig.cs" />
+    <Compile Include="Services\HashcodeParser.cs" />
     <Compile Include="PanelDocks\Misc\FormSoundBankFiles.cs">
       <SubType>Form</SubType>
     </Compile>
