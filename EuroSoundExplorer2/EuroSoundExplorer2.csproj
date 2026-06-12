@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Audio\AudioFunctions.cs" />
+    <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\Enumerations.cs" />
     <Compile Include="Classes\GenericMethods.cs" />
     <Compile Include="Classes\HashcodeParser.cs" />
@@ -85,6 +86,11 @@
     <Compile Include="Classes\PropertyGridHelpers\CustomFileBrowser.cs" />
     <Compile Include="Classes\PropertyGridHelpers\CustomFolderBrowser.cs" />
     <Compile Include="Classes\PropertyGridHelpers\FileVersions.cs" />
+    <Compile Include="Core\DspAdpcm.cs" />
+    <Compile Include="Core\Eurocom_ImaAdpcm.cs" />
+    <Compile Include="Core\ImaAdpcm.cs" />
+    <Compile Include="Core\SonyAdpcm.cs" />
+    <Compile Include="Core\XboxAdpcm.cs" />
     <Compile Include="CustomControls\TitlePropertyGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -136,6 +142,48 @@
     <Compile Include="Forms\SoundhGenerator.Designer.cs">
       <DependentUpon>SoundhGenerator.cs</DependentUpon>
     </Compile>
+    <Compile Include="MusX\BytesFunctions.cs" />
+    <Compile Include="MusX\CalculusLoopOffsets.cs" />
+    <Compile Include="MusX\Objects\Header\ProjectDetailsHeader.cs" />
+    <Compile Include="MusX\Objects\Header\SfxCommonHeader.cs" />
+    <Compile Include="MusX\Objects\Header\SoundbankHeader.cs" />
+    <Compile Include="MusX\Objects\Header\SoundbankInfoHeader.cs" />
+    <Compile Include="MusX\Objects\Header\StreambankHeader.cs" />
+    <Compile Include="MusX\Objects\Markers\Marker.cs" />
+    <Compile Include="MusX\Objects\Markers\StartMarker.cs" />
+    <Compile Include="MusX\Objects\MusicDetails.cs" />
+    <Compile Include="MusX\Objects\MusicSample.cs" />
+    <Compile Include="MusX\Objects\ProjectDetails.cs" />
+    <Compile Include="MusX\Objects\ProjectSlots.cs" />
+    <Compile Include="MusX\Objects\ProjectSoundBank.cs" />
+    <Compile Include="MusX\Objects\Sample.cs" />
+    <Compile Include="MusX\Objects\SampleData.cs" />
+    <Compile Include="MusX\Objects\SampleInfo.cs" />
+    <Compile Include="MusX\Objects\SbiFile.cs" />
+    <Compile Include="MusX\Objects\SoundDetails.cs" />
+    <Compile Include="MusX\Objects\StreamSample.cs" />
+    <Compile Include="MusX\Readers\Details Files\MusicDetailsReader.cs" />
+    <Compile Include="MusX\Readers\Details Files\ProjectDetailsReader.cs" />
+    <Compile Include="MusX\Readers\Details Files\SoundDetailsReader.cs" />
+    <Compile Include="MusX\Readers\MusicBank\MusicBankReader.cs" />
+    <Compile Include="MusX\Readers\MusicBank\MusicBankReaderNew.cs" />
+    <Compile Include="MusX\Readers\MusicBank\MusicBankReaderOld.cs" />
+    <Compile Include="MusX\Readers\SBI\SbiBankReader.cs" />
+    <Compile Include="MusX\Readers\SfxFunctions.cs" />
+    <Compile Include="MusX\Readers\SoundBank\SoundBankReader.cs" />
+    <Compile Include="MusX\Readers\SoundBank\SoundBankReaderNew.cs" />
+    <Compile Include="MusX\Readers\SoundBank\SoundBankReaderOld.cs" />
+    <Compile Include="MusX\Readers\StreamBank\StreamBankReader.cs" />
+    <Compile Include="MusX\Readers\StreamBank\StreamBankReaderNew.cs" />
+    <Compile Include="MusX\Readers\StreamBank\StreamBankReaderOld.cs" />
+    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_MusicDetails.cs" />
+    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_MusicFile.cs" />
+    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_ProjectDetails.cs" />
+    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_Soundbank.cs" />
+    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_StreamFile.cs" />
+    <Compile Include="MusX\Writers\Older versions\MusXBuild_MusicFileOld.cs" />
+    <Compile Include="MusX\Writers\Older versions\MusXBuild_SoundbankOld.cs" />
+    <Compile Include="MusX\Writers\Older versions\MusXBuild_StreamFileOld.cs" />
     <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -345,16 +393,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\MusX\MusX.csproj">
-      <Project>{f176f5ac-1b44-436f-add6-bf12399e8c18}</Project>
-      <Name>MusX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AudioDecoders\AudioDecoders.csproj">
-      <Project>{C0509A84-DDF9-4B23-9BAF-6A505FA3C0AA}</Project>
-      <Name>AudioDecoders</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="cd_audio_cd_a.ico" />

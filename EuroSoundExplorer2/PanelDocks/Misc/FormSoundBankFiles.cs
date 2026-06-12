@@ -171,7 +171,8 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void BtnReloadHashCodes_Click(object sender, EventArgs e)
         {
-            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).hashTable.LoadHashTable();
+            FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+            parentForm.hashTable.LoadHashTable(parentForm.configuration.SoundhFile);
         }
 
         //-------------------------------------------------------------------------------------------

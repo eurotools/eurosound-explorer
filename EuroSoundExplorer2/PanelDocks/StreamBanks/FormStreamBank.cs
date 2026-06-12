@@ -150,13 +150,14 @@ namespace sb_explorer
                 //Ask user for an output file
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
-                    List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+                    FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+                    uint sampleRate = parentForm.configuration.StreamsFrequency;
+                    List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.streamSamples;
 
                     //Output samples
                     foreach (ListViewItem selectedItem in lvwStreamData.SelectedItems)
                     {
-                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem, streamedSamples, sampleRate);
+                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem, streamedSamples, sampleRate, parentForm.pnlSoundBankFiles.streamBankHeaderData, parentForm.configuration.PlatformSelected);
                         if (soundToPlay != null)
                         {
                             //Create Wav File
@@ -173,14 +174,15 @@ namespace sb_explorer
         {
             if (lvwStreamData.SelectedItems.Count == 1)
             {
-                uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
-                List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+                FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+                uint sampleRate = parentForm.configuration.StreamsFrequency;
+                List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.streamSamples;
 
                 //Get Sound data and play
-                SoundFile soundToPlay = GetSoundFileFromListViewItem(lvwStreamData.SelectedItems[0], streamedSamples, sampleRate);
+                SoundFile soundToPlay = GetSoundFileFromListViewItem(lvwStreamData.SelectedItems[0], streamedSamples, sampleRate, parentForm.pnlSoundBankFiles.streamBankHeaderData, parentForm.configuration.PlatformSelected);
                 if (soundToPlay != null)
                 {
-                    ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
+                    parentForm.pnlMediaPlayer.LoadSoundData(soundToPlay);
                 }
             }
         }
@@ -270,13 +272,13 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         //  FUNCTIONS
         //------------------------------------------------------------------------------------------
-        private SoundFile GetSoundFileFromListViewItem(ListViewItem selectedItem, List<StreamSample> streamedSamples, uint sampleRate)
+        private SoundFile GetSoundFileFromListViewItem(ListViewItem selectedItem, List<StreamSample> streamedSamples, uint sampleRate, StreambankHeader headerData, Enumerations.Platform selectedPlatform)
         {
             StreamSample selectedSample = streamedSamples[(int)selectedItem.Tag];
             SoundFile soundToPlay = null;
 
             //Create object music
-            byte[] decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions);
+            byte[] decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, headerData, selectedPlatform);
             if (decodedData != null)
             {
                 soundToPlay = new SoundFile();

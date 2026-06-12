@@ -1,7 +1,7 @@
 ﻿using sb_explorer.Classes.PropertyGridHelpers;
+using System;
 using System.ComponentModel;
 using System.Drawing.Design;
-using System.Windows.Forms;
 using static sb_explorer.Enumerations;
 
 namespace sb_explorer
@@ -17,6 +17,9 @@ namespace sb_explorer
         private string _SoundhFile, _ProjectFolder;
         private uint _StreamsFrequency = 22050;
         private int _FileVersion = 201;
+
+        public event Action SoundhFileChanged;
+        public event Action ProjectFolderChanged;
 
         //-------------------------------------------------------------------------------------------------------------------------------
         [DisplayName("Streams Freq.")]
@@ -44,7 +47,11 @@ namespace sb_explorer
         public string SoundhFile
         {
             get { return _SoundhFile; }
-            set { _SoundhFile = value; ((FrmMain)Application.OpenForms[nameof(FrmMain)]).hashTable.LoadHashTable(); }
+            set
+            {
+                _SoundhFile = value;
+                OnSoundhFileChanged();
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +132,27 @@ namespace sb_explorer
         public string ProjectFolder
         {
             get { return _ProjectFolder; }
-            set { _ProjectFolder = value; ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.LoadData(); }
+            set
+            {
+                _ProjectFolder = value;
+                OnProjectFolderChanged();
+            }
+        }
+
+        private void OnSoundhFileChanged()
+        {
+            if (SoundhFileChanged != null)
+            {
+                SoundhFileChanged();
+            }
+        }
+
+        private void OnProjectFolderChanged()
+        {
+            if (ProjectFolderChanged != null)
+            {
+                ProjectFolderChanged();
+            }
         }
     }
 

@@ -136,7 +136,8 @@ namespace sb_explorer
                 //Ask user for an output path
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
+                    FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+                    List<SampleData> wavesList = parentForm.pnlSoundBankFiles.sfxStoredData;
 
                     //Start output
                     foreach (ListViewItem selectedItem in listView1.SelectedItems)
@@ -144,7 +145,7 @@ namespace sb_explorer
                         SampleData selectedSample = wavesList[(short)selectedItem.Tag];
 
                         //Create object music
-                        byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions);
+                        byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.soundBankHeaderData, parentForm.configuration.PlatformSelected);
                         if (decodedData != null)
                         {
                             SoundFile soundToPlay = new SoundFile();
@@ -176,11 +177,12 @@ namespace sb_explorer
         {
             if (listView1.SelectedItems.Count == 1)
             {
-                List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
+                FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+                List<SampleData> wavesList = parentForm.pnlSoundBankFiles.sfxStoredData;
                 SampleData selectedSample = wavesList[(short)listView1.SelectedItems[0].Tag];
 
                 //Create object music
-                byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions);
+                byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.soundBankHeaderData, parentForm.configuration.PlatformSelected);
                 if (decodedData != null)
                 {
                     SoundFile soundToPlay = new SoundFile();

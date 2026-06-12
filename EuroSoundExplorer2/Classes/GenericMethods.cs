@@ -36,14 +36,11 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal static byte[] DecodeSfxSample(SampleData selectedSample, AudioFunctions audioFunctions)
+        internal static byte[] DecodeSfxSample(SampleData selectedSample, AudioFunctions audioFunctions, SoundbankHeader headerData, Platform selectedPlatform)
         {
-            SoundbankHeader headerData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.soundBankHeaderData;
-
             byte[] decodedData = null;
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
             {
-                Platform selectedPlatform = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected;
                 switch (selectedPlatform)
                 {
                     case Platform.PC:
@@ -88,15 +85,11 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal static byte[] DecodeStreamSample(StreamSample selectedSample, AudioFunctions audioFunctions)
+        internal static byte[] DecodeStreamSample(StreamSample selectedSample, AudioFunctions audioFunctions, StreambankHeader headerData, Platform selectedPlatform)
         {
-            StreambankHeader headerData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
-
             byte[] decodedData = null;
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
             {
-                Platform selectedPlatform = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected;
-
                 if (selectedPlatform == Platform.PC || selectedPlatform == Platform.GameCube)
                 {
                     ImaAdpcm imaFile = new ImaAdpcm();

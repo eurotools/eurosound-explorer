@@ -104,7 +104,7 @@ namespace sb_explorer
                         MusicDetailsReader msDetailsReader = new MusicDetailsReader();
                         var headerData = msDetailsReader.ReadCommonHeader(filesToInspect[i], userSettings.SfxPlatform.ToString());
                         MusicDetails musicFileData = msDetailsReader.ReadMusicDetailsFile(filesToInspect[i], headerData);
-                        musicHashCodesPrefix = 0xFFF00000 & musicFileData.MinHashCode;
+                        musicHashCodesPrefix = 0xFFF00000U & musicFileData.MinHashCode;
                         break;
                     }
                 }
@@ -300,8 +300,8 @@ namespace sb_explorer
                         }
 
                         //Get hashcode
-                        uint hashPrefix = (0xFFF00000 & prefix) >> 20;
-                        long hashCode = ((hashPrefix & 0xFFF) << 20) | (((short)index & 0xFF) << 12) | ((musicHashCode & 0xFF) << 0);
+                        uint hashPrefix = (0xFFF00000U & prefix) >> 20;
+                        uint hashCode = ((hashPrefix & 0xFFFU) << 20) | (((uint)index & 0xFFU) << 12) | (musicHashCode & 0xFFU);
 
                         //Get marker type string
                         switch (currentMarker.Type)

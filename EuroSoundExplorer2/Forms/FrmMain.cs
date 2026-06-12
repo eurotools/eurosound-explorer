@@ -15,8 +15,9 @@ namespace sb_explorer
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FrmMain : Form
     {
-        public AppConfig configuration = new AppConfig();
-        public HashcodeParser hashTable = new HashcodeParser();
+        public readonly AppState AppState = new AppState();
+        public AppConfig configuration { get { return AppState.Configuration; } }
+        public HashcodeParser hashTable { get { return AppState.HashTable; } }
         private bool ResetSettingsOnExit;
 
         //Collections
@@ -48,6 +49,20 @@ namespace sb_explorer
         public FrmMain()
         {
             InitializeComponent();
+            configuration.SoundhFileChanged += Configuration_SoundhFileChanged;
+            configuration.ProjectFolderChanged += Configuration_ProjectFolderChanged;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void Configuration_SoundhFileChanged()
+        {
+            hashTable.LoadHashTable(configuration.SoundhFile);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void Configuration_ProjectFolderChanged()
+        {
+            pnlSoundBankFiles.LoadData();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

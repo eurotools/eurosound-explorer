@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace sb_explorer.Classes
 {
@@ -14,9 +13,8 @@ namespace sb_explorer.Classes
         private readonly Dictionary<int, string> HashCodes = new Dictionary<int, string>();
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        public void LoadHashTable()
+        public void LoadHashTable(string filePath)
         {
-            string filePath = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile;
             if (File.Exists(filePath))
             {
                 //Clear dictionary before adding a new hashtable
