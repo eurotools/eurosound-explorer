@@ -19,7 +19,7 @@ namespace sb_explorer
         public void ShowData()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            ProjectDetails dictToShow = parentForm.pnlSoundBankFiles.projDetailsData;
+            ProjectDetails dictToShow = parentForm.pnlSoundBankFiles.ProjDetailsData;
 
             //Update textbox count
             textboxCount.Text = dictToShow.soundBanksData.Count.ToString();

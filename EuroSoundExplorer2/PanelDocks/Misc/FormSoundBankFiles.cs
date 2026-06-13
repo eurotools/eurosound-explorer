@@ -2,8 +2,10 @@
 using MusX.Objects;
 using MusX.Readers;
 using sb_explorer.Classes;
+using sb_explorer.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -30,34 +32,34 @@ namespace sb_explorer
         public LoadedProjectData LoadedData { get; set; }
 
         //SoundBanks
-        public SoundbankHeader soundBankHeaderData { get { return LoadedData.SoundBankHeaderData; } set { LoadedData.SoundBankHeaderData = value; } }
-        public SortedDictionary<uint, Sample> sfxSamples { get { return LoadedData.SfxSamples; } }
-        public List<SampleData> sfxStoredData { get { return LoadedData.SfxStoredData; } }
-        public List<uint> duplicatedHashCodes { get { return LoadedData.DuplicatedHashCodes; } }
+        public SoundbankHeader SoundBankHeaderData { get { return LoadedData.SoundBankHeaderData; } set { LoadedData.SoundBankHeaderData = value; } }
+        public SortedDictionary<uint, Sample> SfxSamples { get { return LoadedData.SfxSamples; } }
+        public List<SampleData> SfxStoredData { get { return LoadedData.SfxStoredData; } }
+        public List<uint> DuplicatedHashCodes { get { return LoadedData.DuplicatedHashCodes; } }
 
         //Streams
-        public StreambankHeader streamBankHeaderData { get { return LoadedData.StreamBankHeaderData; } set { LoadedData.StreamBankHeaderData = value; } }
-        public List<StreamSample> streamSamples { get { return LoadedData.StreamSamples; } }
+        public StreambankHeader StreamBankHeaderData { get { return LoadedData.StreamBankHeaderData; } set { LoadedData.StreamBankHeaderData = value; } }
+        public List<StreamSample> StreamSamples { get { return LoadedData.StreamSamples; } }
 
         //Musics
-        public StreambankHeader musicBankHeaderData { get { return LoadedData.MusicBankHeaderData; } set { LoadedData.MusicBankHeaderData = value; } }
-        public MusicSample musicData { get { return LoadedData.MusicData; } set { LoadedData.MusicData = value; } }
+        public StreambankHeader MusicBankHeaderData { get { return LoadedData.MusicBankHeaderData; } set { LoadedData.MusicBankHeaderData = value; } }
+        public MusicSample MusicData { get { return LoadedData.MusicData; } set { LoadedData.MusicData = value; } }
 
         //SBI
-        public SoundbankInfoHeader sbiBankHeaderData { get { return LoadedData.SbiBankHeaderData; } set { LoadedData.SbiBankHeaderData = value; } }
-        public SbiFile sbiFileData { get { return LoadedData.SbiFileData; } set { LoadedData.SbiFileData = value; } }
+        public SoundbankInfoHeader SbiBankHeaderData { get { return LoadedData.SbiBankHeaderData; } set { LoadedData.SbiBankHeaderData = value; } }
+        public SbiFile SbiFileData { get { return LoadedData.SbiFileData; } set { LoadedData.SbiFileData = value; } }
 
         //Project Details
-        public ProjectDetailsHeader projDetailsHeaderData { get { return LoadedData.ProjectDetailsHeaderData; } set { LoadedData.ProjectDetailsHeaderData = value; } }
-        public ProjectDetails projDetailsData { get { return LoadedData.ProjectDetailsData; } set { LoadedData.ProjectDetailsData = value; } }
+        public ProjectDetailsHeader ProjDetailsHeaderData { get { return LoadedData.ProjectDetailsHeaderData; } set { LoadedData.ProjectDetailsHeaderData = value; } }
+        public ProjectDetails ProjDetailsData { get { return LoadedData.ProjectDetailsData; } set { LoadedData.ProjectDetailsData = value; } }
 
         //Sound Details
-        public SfxCommonHeader soundDetailsHeaderData { get { return LoadedData.SoundDetailsHeaderData; } set { LoadedData.SoundDetailsHeaderData = value; } }
-        public SoundDetails soundDetails { get { return LoadedData.SoundDetails; } set { LoadedData.SoundDetails = value; } }
+        public SfxCommonHeader SoundDetailsHeaderData { get { return LoadedData.SoundDetailsHeaderData; } set { LoadedData.SoundDetailsHeaderData = value; } }
+        public SoundDetails SoundDetails { get { return LoadedData.SoundDetails; } set { LoadedData.SoundDetails = value; } }
 
         //Music Details
-        public SfxCommonHeader musicDetailsHeaderData { get { return LoadedData.MusicDetailsHeaderData; } set { LoadedData.MusicDetailsHeaderData = value; } }
-        public MusicDetails musicDetails { get { return LoadedData.MusicDetails; } set { LoadedData.MusicDetails = value; } }
+        public SfxCommonHeader MusicDetailsHeaderData { get { return LoadedData.MusicDetailsHeaderData; } set { LoadedData.MusicDetailsHeaderData = value; } }
+        public MusicDetails MusicDetails { get { return LoadedData.MusicDetails; } set { LoadedData.MusicDetails = value; } }
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -68,14 +70,39 @@ namespace sb_explorer
             InitializeComponent();
         }
 
+        private sealed class ProjectSfxExportOptions
+        {
+            public string ProjectFolder { get; set; }
+            public string OutputFolder { get; set; }
+            public string Platform { get; set; }
+            public Title SelectedTitle { get; set; }
+            public HashcodeParser Hashcodes { get; set; }
+            public List<EuroSoundSfxTextSection> Sections { get; set; }
+        }
+
+        private sealed class ProjectSfxExportResult
+        {
+            public EuroSoundSfxTextExportResult ExportResult { get; set; }
+            public int SoundbankCount { get; set; }
+            public int FailedCount { get; set; }
+            public bool Cancelled { get; set; }
+            public List<string> FailedFiles { get; set; }
+
+            public ProjectSfxExportResult()
+            {
+                ExportResult = new EuroSoundSfxTextExportResult();
+                FailedFiles = new List<string>();
+            }
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadData()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            HashcodeParser hashTable = parentForm.hashTable;
-            Platform selectedPlatform = parentForm.configuration.PlatformSelected;
-            Title selectedTitle = parentForm.configuration.TitleSelected;
-            string folder = parentForm.configuration.ProjectFolder;
+            HashcodeParser hashTable = parentForm.HashTable;
+            Platform selectedPlatform = parentForm.Configuration.PlatformSelected;
+            Title selectedTitle = parentForm.Configuration.TitleSelected;
+            string folder = parentForm.Configuration.ProjectFolder;
 
             if (Directory.Exists(folder))
             {
@@ -175,7 +202,7 @@ namespace sb_explorer
         private void BtnReloadHashCodes_Click(object sender, EventArgs e)
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            parentForm.hashTable.LoadHashTable(parentForm.configuration.SoundhFile);
+            parentForm.HashTable.LoadHashTable(parentForm.Configuration.SoundhFile);
         }
 
         //-------------------------------------------------------------------------------------------
@@ -214,7 +241,7 @@ namespace sb_explorer
             if (treeView1.SelectedNode != null && treeView1.SelectedNode.Tag != null)
             {
                 //Get folder path
-                string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
+                string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.ProjectFolder;
                 string filePath = Path.Combine(parentFolder, treeView1.SelectedNode.Name);
 
                 //Get type of file
@@ -281,7 +308,7 @@ namespace sb_explorer
             if (btnListView.Checked && lvwFiles.SelectedItems.Count == 1)
             {
                 //Get folder path
-                string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
+                string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.ProjectFolder;
                 string filePath = Path.Combine(parentFolder, lvwFiles.SelectedItems[0].SubItems[2].Text.TrimStart('\\'));
 
                 //This can crash if the user has not correctly selected the platform & title
@@ -364,7 +391,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_DataViewer_Click(object sender, EventArgs e)
         {
-            string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder;
+            string parentFolder = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.ProjectFolder;
 
             //Get the selected file path
             string filePath = string.Empty;
@@ -387,6 +414,291 @@ namespace sb_explorer
             }
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_ExportSfxToEuroSoundFile_Click(object sender, EventArgs e)
+        {
+            ExportSfxSamplesToEuroSoundFile(SfxSamples.Values);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_ExportProjectSfxToEuroSoundFiles_Click(object sender, EventArgs e)
+        {
+            ExportProjectSfxSamplesToEuroSoundFiles();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public void ExportSfxSamplesToEuroSoundFile(IEnumerable<Sample> samples)
+        {
+            List<Sample> samplesToExport = new List<Sample>(samples);
+            if (samplesToExport.Count == 0)
+            {
+                MessageBox.Show("Load a soundbank or select at least one SFX first.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!TrySelectEuroSoundSections(out List<EuroSoundSfxTextSection> sections))
+            {
+                return;
+            }
+
+            if (!TrySelectEuroSoundOutputFolder(out string outputFolder))
+            {
+                return;
+            }
+
+            try
+            {
+                FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+                int fileVersion = SoundBankHeaderData.FileVersion != 0 ? SoundBankHeaderData.FileVersion : parentForm.Configuration.FileVersion;
+                Dictionary<uint, EuroSoundSfxRadiusData> radii = BuildSoundDetailsRadiusLookup(SoundDetails);
+                EuroSoundSfxTextExportResult result = EuroSoundSfxTextExporter.Export(samplesToExport, fileVersion, parentForm.HashTable, outputFolder, sections, radii);
+
+                ShowEuroSoundExportResult(result, 1, 0, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ExportProjectSfxSamplesToEuroSoundFiles()
+        {
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            string projectFolder = parentForm.Configuration.ProjectFolder;
+            if (!Directory.Exists(projectFolder))
+            {
+                MessageBox.Show("Select a valid project folder first.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!TrySelectEuroSoundSections(out List<EuroSoundSfxTextSection> sections))
+            {
+                return;
+            }
+
+            if (!TrySelectEuroSoundOutputFolder(out string outputFolder))
+            {
+                return;
+            }
+
+            ProjectSfxExportOptions options = new ProjectSfxExportOptions
+            {
+                ProjectFolder = projectFolder,
+                OutputFolder = outputFolder,
+                Platform = parentForm.Configuration.PlatformSelected.ToString(),
+                SelectedTitle = parentForm.Configuration.TitleSelected,
+                Hashcodes = parentForm.HashTable,
+                Sections = sections
+            };
+
+            using (FrmProgress progressForm = new FrmProgress(
+                "Export Project SFXs to EuroSound Files",
+                "Preparing project export...",
+                worker => ExportProjectSfxSamplesWorker(options, worker)))
+            {
+                progressForm.ShowDialog(this);
+
+                if (progressForm.Error != null)
+                {
+                    MessageBox.Show(progressForm.Error.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                ProjectSfxExportResult result = (ProjectSfxExportResult)progressForm.Result;
+                if (result == null)
+                {
+                    return;
+                }
+
+                if (result.Cancelled)
+                {
+                    MessageBox.Show("Project export was cancelled.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (result.SoundbankCount == 0 && result.FailedCount == 0)
+                {
+                    MessageBox.Show("No SoundBank files were found in the project folder.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                ShowEuroSoundExportResult(result.ExportResult, result.SoundbankCount, result.FailedCount, result.FailedFiles);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private ProjectSfxExportResult ExportProjectSfxSamplesWorker(ProjectSfxExportOptions options, BackgroundWorker worker)
+        {
+            ProjectSfxExportResult totalResult = new ProjectSfxExportResult();
+            SoundBankReader soundBankReader = new SoundBankReader();
+            SoundDetailsReader detailsReader = new SoundDetailsReader();
+            string[] files = Directory.GetFiles(options.ProjectFolder, "*.sfx", SearchOption.AllDirectories);
+            Dictionary<uint, EuroSoundSfxRadiusData> radii = BuildProjectSoundDetailsRadiusLookup(files, options, soundBankReader, detailsReader);
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (worker.CancellationPending)
+                {
+                    totalResult.Cancelled = true;
+                    return totalResult;
+                }
+
+                string filePath = files[i];
+                int progress = files.Length == 0 ? 100 : (int)(((i + 1) * 100.0) / files.Length);
+                worker.ReportProgress(progress, "Inspecting " + Path.GetFileName(filePath));
+
+                try
+                {
+                    SfxCommonHeader commonHeader = soundBankReader.ReadCommonHeader(filePath, options.Platform);
+                    FileType fileType = GenericMethods.GetFileType((int)commonHeader.FileHashCode, commonHeader.FileVersion, filePath, options.SelectedTitle);
+                    if (fileType != FileType.SoundbankFile)
+                    {
+                        continue;
+                    }
+
+                    worker.ReportProgress(progress, "Exporting " + Path.GetFileName(filePath));
+
+                    SoundbankHeader header = soundBankReader.ReadSfxHeader(filePath, options.Platform);
+                    SortedDictionary<uint, Sample> samples = new SortedDictionary<uint, Sample>();
+                    List<SampleData> storedData = new List<SampleData>();
+                    List<uint> duplicates = new List<uint>();
+
+                    soundBankReader.ReadSoundBank(filePath, header, samples, storedData, duplicates);
+                    EuroSoundSfxTextExportResult fileResult = EuroSoundSfxTextExporter.Export(samples.Values, header.FileVersion, options.Hashcodes, options.OutputFolder, options.Sections, radii);
+
+                    totalResult.ExportResult.ExportedCount += fileResult.ExportedCount;
+                    totalResult.ExportResult.CreatedCount += fileResult.CreatedCount;
+                    totalResult.ExportResult.UpdatedCount += fileResult.UpdatedCount;
+                    totalResult.SoundbankCount++;
+                }
+                catch (Exception ex)
+                {
+                    totalResult.FailedFiles.Add(Path.GetFileName(filePath) + ": " + ex.Message);
+                    totalResult.FailedCount++;
+                }
+            }
+
+            worker.ReportProgress(100, "Done");
+            return totalResult;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private Dictionary<uint, EuroSoundSfxRadiusData> BuildProjectSoundDetailsRadiusLookup(string[] files, ProjectSfxExportOptions options, SoundBankReader soundBankReader, SoundDetailsReader detailsReader)
+        {
+            Dictionary<uint, EuroSoundSfxRadiusData> radii = new Dictionary<uint, EuroSoundSfxRadiusData>();
+
+            foreach (string filePath in files)
+            {
+                try
+                {
+                    SfxCommonHeader commonHeader = soundBankReader.ReadCommonHeader(filePath, options.Platform);
+                    FileType fileType = GenericMethods.GetFileType((int)commonHeader.FileHashCode, commonHeader.FileVersion, filePath, options.SelectedTitle);
+                    if (fileType != FileType.SoundDetailsFile)
+                    {
+                        continue;
+                    }
+
+                    SoundDetails details = detailsReader.ReadSoundDetailsFile(filePath, commonHeader);
+                    AddSoundDetailsRadii(radii, details);
+                }
+                catch (Exception)
+                {
+                    // SoundDetails files are optional for export; unreadable files are ignored here and handled later if they are SoundBanks.
+                }
+            }
+
+            return radii;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private Dictionary<uint, EuroSoundSfxRadiusData> BuildSoundDetailsRadiusLookup(SoundDetails details)
+        {
+            Dictionary<uint, EuroSoundSfxRadiusData> radii = new Dictionary<uint, EuroSoundSfxRadiusData>();
+            AddSoundDetailsRadii(radii, details);
+            return radii;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void AddSoundDetailsRadii(Dictionary<uint, EuroSoundSfxRadiusData> radii, SoundDetails details)
+        {
+            if (details == null || details.sfxItems == null)
+            {
+                return;
+            }
+
+            foreach (SoundDetailsData item in details.sfxItems)
+            {
+                uint hashCode = unchecked((uint)item.HashCode);
+                EuroSoundSfxRadiusData radiusData = new EuroSoundSfxRadiusData
+                {
+                    InnerRadius = unchecked((short)item.InnerRadius),
+                    OuterRadius = unchecked((short)item.OuterRadius)
+                };
+
+                radii[hashCode] = radiusData;
+                radii[hashCode & 0x00FFFFFF] = radiusData;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private bool TrySelectEuroSoundSections(out List<EuroSoundSfxTextSection> sections)
+        {
+            sections = new List<EuroSoundSfxTextSection>();
+
+            using (FrmEuroSoundSfxExportSection form = new FrmEuroSoundSfxExportSection())
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                sections = form.SelectedSections;
+                return true;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private bool TrySelectEuroSoundOutputFolder(out string outputFolder)
+        {
+            outputFolder = string.Empty;
+
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            {
+                folderBrowserDialog.Description = "Select the folder where EuroSound TXT files will be created or updated.";
+                if (folderBrowserDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                outputFolder = folderBrowserDialog.SelectedPath;
+                return true;
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ShowEuroSoundExportResult(EuroSoundSfxTextExportResult result, int soundbankCount, int failedCount, List<string> failedFiles)
+        {
+            string message = string.Format(
+                "Exported {0} SFX files.\r\nCreated: {1}\r\nUpdated: {2}\r\nSoundBanks: {3}",
+                result.ExportedCount,
+                result.CreatedCount,
+                result.UpdatedCount,
+                soundbankCount);
+
+            if (failedCount > 0)
+            {
+                message += string.Format("\r\nFailed files: {0}", failedCount);
+                int maxFailuresToShow = Math.Min(failedFiles.Count, 5);
+                for (int i = 0; i < maxFailuresToShow; i++)
+                {
+                    message += "\r\n" + failedFiles[i];
+                }
+            }
+
+            MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, failedCount > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
+        }
+
         //-------------------------------------------------------------------------------------------
         //  FUNCTIONS
         //-------------------------------------------------------------------------------------------
@@ -395,8 +707,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.SoundbankFile);
 
             //Load data
-            soundBankHeaderData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            reader.ReadSoundBank(filePath, soundBankHeaderData, sfxSamples, sfxStoredData, duplicatedHashCodes);
+            SoundBankHeaderData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            reader.ReadSoundBank(filePath, SoundBankHeaderData, SfxSamples, SfxStoredData, DuplicatedHashCodes);
 
             //Display Data
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbHashCodes.SetHashCodesToListView();
@@ -409,8 +721,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.StreamFile);
 
             //Load data
-            streamBankHeaderData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            streamReader.ReadStreamBank(filePath, streamBankHeaderData, streamSamples);
+            StreamBankHeaderData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            streamReader.ReadStreamBank(filePath, StreamBankHeaderData, StreamSamples);
 
             //Display Data
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStreamData.ShowStreamData();
@@ -422,8 +734,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.MusicFile);
 
             //Load data
-            musicBankHeaderData = musicReader.ReadMusicHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            musicData = musicReader.ReadMusicBank(filePath, musicBankHeaderData);
+            MusicBankHeaderData = musicReader.ReadMusicHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            MusicData = musicReader.ReadMusicBank(filePath, MusicBankHeaderData);
 
             //Display Data
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicData.ShowMusicData();
@@ -435,8 +747,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.SBI);
 
             //Load data
-            sbiBankHeaderData = sbiReader.ReadSoundbankInfoHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            sbiFileData = sbiReader.ReadSoundbankInfoFile(filePath, sbiBankHeaderData);
+            SbiBankHeaderData = sbiReader.ReadSoundbankInfoHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            SbiFileData = sbiReader.ReadSoundbankInfoFile(filePath, SbiBankHeaderData);
 
             //Display Data
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSbiSoundbanks.DisplayHashCodes();
@@ -449,8 +761,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.ProjectDetails);
 
             //Load data
-            projDetailsHeaderData = projDetailsReader.ReadProjectFileHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            projDetailsData = projDetailsReader.ReadProjectFile(filePath, projDetailsHeaderData);
+            ProjDetailsHeaderData = projDetailsReader.ReadProjectFileHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            ProjDetailsData = projDetailsReader.ReadProjectFile(filePath, ProjDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlProjDetailsMemSlots.ShowData();
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlProjDetailsSoundBanks.ShowData();
@@ -463,8 +775,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.SoundDetailsFile);
 
             //Load data
-            soundDetailsHeaderData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            soundDetails = soundDetailsReader.ReadSoundDetailsFile(filePath, projDetailsHeaderData);
+            SoundDetailsHeaderData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            SoundDetails = soundDetailsReader.ReadSoundDetailsFile(filePath, ProjDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundDetailsData.ShowData();
         }
@@ -475,8 +787,8 @@ namespace sb_explorer
             ClearLoadedData(FileType.MusicDetails);
 
             //Load data
-            musicDetailsHeaderData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
-            musicDetails = musicDetailsReader.ReadMusicDetailsFile(filePath, projDetailsHeaderData);
+            MusicDetailsHeaderData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            MusicDetails = musicDetailsReader.ReadMusicDetailsFile(filePath, ProjDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicDetailsData.ShowData();
         }
@@ -490,10 +802,10 @@ namespace sb_explorer
             switch (fileType)
             {
                 case FileType.SoundbankFile:
-                    soundBankHeaderData = new SoundbankHeader();
-                    sfxSamples.Clear();
-                    sfxStoredData.Clear();
-                    duplicatedHashCodes.Clear();
+                    SoundBankHeaderData = new SoundbankHeader();
+                    SfxSamples.Clear();
+                    SfxStoredData.Clear();
+                    DuplicatedHashCodes.Clear();
 
                     //Clear UI
                     mainForm.pnlSbHashCodes.listView1.Items.Clear();
@@ -501,8 +813,8 @@ namespace sb_explorer
                     mainForm.pnlSbSamplePool.listView1.Items.Clear();
                     break;
                 case FileType.StreamFile:
-                    streamBankHeaderData = new StreambankHeader();
-                    streamSamples.Clear();
+                    StreamBankHeaderData = new StreambankHeader();
+                    StreamSamples.Clear();
 
                     //Clear UI
                     mainForm.pnlMarkers.lvwMarkers.Items.Clear();
@@ -510,15 +822,15 @@ namespace sb_explorer
                     mainForm.pnlStreamData.lvwStreamData.Items.Clear();
                     break;
                 case FileType.MusicFile:
-                    musicBankHeaderData = new StreambankHeader();
-                    musicData = new MusicSample();
+                    MusicBankHeaderData = new StreambankHeader();
+                    MusicData = new MusicSample();
 
                     //Clear UI
                     mainForm.pnlMusicData.propertyGrid1.SelectedObject = null;
                     break;
                 case FileType.SBI:
-                    sbiBankHeaderData = new SoundbankInfoHeader();
-                    sbiFileData = new SbiFile();
+                    SbiBankHeaderData = new SoundbankInfoHeader();
+                    SbiFileData = new SbiFile();
 
                     //Clear UI
                     mainForm.pnlSbiMusicbanks.textBoxSoundBanksCount.Text = "0";
@@ -527,8 +839,8 @@ namespace sb_explorer
                     mainForm.pnlSbiSoundbanks.listView_ColumnSortingClick1.Items.Clear();
                     break;
                 case FileType.ProjectDetails:
-                    projDetailsHeaderData = new ProjectDetailsHeader();
-                    projDetailsData = new ProjectDetails();
+                    ProjDetailsHeaderData = new ProjectDetailsHeader();
+                    ProjDetailsData = new ProjectDetails();
 
                     //Clear UI
                     mainForm.pnlProjDetailsSoundBanks.textboxCount.Text = "0";
@@ -538,15 +850,15 @@ namespace sb_explorer
                     mainForm.pnlProjDetailsData.ClearData();
                     break;
                 case FileType.SoundDetailsFile:
-                    soundDetailsHeaderData = new SoundbankHeader();
-                    soundDetails = new SoundDetails();
+                    SoundDetailsHeaderData = new SoundbankHeader();
+                    SoundDetails = new SoundDetails();
 
                     //Clear UI
                     mainForm.pnlSoundDetailsData.ClearData();
                     break;
                 case FileType.MusicDetails:
-                    musicDetailsHeaderData = new StreambankHeader();
-                    musicDetails = new MusicDetails();
+                    MusicDetailsHeaderData = new StreambankHeader();
+                    MusicDetails = new MusicDetails();
 
                     //Clear UI
                     mainForm.pnlMusicDetailsData.ClearData();
@@ -572,11 +884,11 @@ namespace sb_explorer
             switch (fileType)
             {
                 case FileType.SoundbankFile:
-                    SoundbankHeader sbData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+                    SoundbankHeader sbData = reader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
                     total = reader.GetNumberOfSFXs(filePath, sbData);
                     break;
                 case FileType.StreamFile:
-                    StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+                    StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
                     total = (int)(strData.FileLength1 / 4);
                     break;
                 case FileType.MusicFile:

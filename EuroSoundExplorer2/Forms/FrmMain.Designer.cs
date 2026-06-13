@@ -36,10 +36,12 @@ namespace sb_explorer
             this.MenuItem_File_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_DecodeAudio = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_DataViewer = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_File_GenerateSoundh = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_File_ResetSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_Menu1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_SfxFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_MediaPlayer = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,8 +70,6 @@ namespace sb_explorer
             this.MenuItem_SBI_StoredMusicBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Help = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_OnlineHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.MenuItem_File_GenerateSoundh = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,47 +130,59 @@ namespace sb_explorer
             // MenuItem_File_Settings
             // 
             this.MenuItem_File_Settings.Name = "MenuItem_File_Settings";
-            this.MenuItem_File_Settings.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_Settings.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_File_Settings.Text = "Settings";
             this.MenuItem_File_Settings.Click += new System.EventHandler(this.MenuItem_File_Settings_Click);
             // 
             // MenuItem_File_DecodeAudio
             // 
             this.MenuItem_File_DecodeAudio.Name = "MenuItem_File_DecodeAudio";
-            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_File_DecodeAudio.Text = "Decode Audio File";
             this.MenuItem_File_DecodeAudio.Click += new System.EventHandler(this.MenuItem_File_DecodeAudio_Click);
             // 
             // MenuItem_File_DataViewer
             // 
             this.MenuItem_File_DataViewer.Name = "MenuItem_File_DataViewer";
-            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_DataViewer.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_File_DataViewer.Text = "Data Viewer";
             this.MenuItem_File_DataViewer.Click += new System.EventHandler(this.MenuItem_File_DataViewer_Click);
+            // 
+            // MenuItem_File_GenerateSoundh
+            // 
+            this.MenuItem_File_GenerateSoundh.Name = "MenuItem_File_GenerateSoundh";
+            this.MenuItem_File_GenerateSoundh.Size = new System.Drawing.Size(173, 22);
+            this.MenuItem_File_GenerateSoundh.Text = "Sound.h Generator";
+            this.MenuItem_File_GenerateSoundh.Click += new System.EventHandler(this.MenuItem_File_GenerateSoundh_Click);
             // 
             // MenuItem_File_Separator1
             // 
             this.MenuItem_File_Separator1.Name = "MenuItem_File_Separator1";
-            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_File_Separator1.Size = new System.Drawing.Size(170, 6);
             // 
             // MenuItem_File_ResetSettings
             // 
             this.MenuItem_File_ResetSettings.Name = "MenuItem_File_ResetSettings";
-            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_ResetSettings.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_File_ResetSettings.Text = "Reset Settings";
             this.MenuItem_File_ResetSettings.Click += new System.EventHandler(this.MenuItem_File_ResetSettings_Click);
             // 
             // MenuItem_File_Separator2
             // 
             this.MenuItem_File_Separator2.Name = "MenuItem_File_Separator2";
-            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_File_Separator2.Size = new System.Drawing.Size(170, 6);
             // 
             // MenuItem_File_Exit
             // 
             this.MenuItem_File_Exit.Name = "MenuItem_File_Exit";
-            this.MenuItem_File_Exit.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_File_Exit.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_File_Exit.Text = "Exit";
             this.MenuItem_File_Exit.Click += new System.EventHandler(this.MenuItem_File_Exit_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
             // 
             // MenuItem_Menu1
             // 
@@ -416,18 +428,6 @@ namespace sb_explorer
             this.MenuItem_OnlineHelp.Text = "Online Help";
             this.MenuItem_OnlineHelp.Click += new System.EventHandler(this.MenuItem_OnlineHelp_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // MenuItem_File_GenerateSoundh
-            // 
-            this.MenuItem_File_GenerateSoundh.Name = "MenuItem_File_GenerateSoundh";
-            this.MenuItem_File_GenerateSoundh.Size = new System.Drawing.Size(180, 22);
-            this.MenuItem_File_GenerateSoundh.Text = "Sound.h Generator";
-            this.MenuItem_File_GenerateSoundh.Click += new System.EventHandler(this.MenuItem_File_GenerateSoundh_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -437,6 +437,7 @@ namespace sb_explorer
             this.Controls.Add(this.MainMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EuroSound Explorer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);

@@ -31,7 +31,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ShowStreamData()
         {
-            List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+            List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.StreamSamples;
             if (streamedSamples.Count > 0)
             {
                 //Print Samples Info
@@ -91,7 +91,7 @@ namespace sb_explorer
                 lvwStreamData.EndUpdate();
 
                 //Enable or disable button
-                StreambankHeader streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamBankHeaderData;
+                StreambankHeader streamHeader = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.StreamBankHeaderData;
                 if (streamHeader.FileVersion == 201 || streamHeader.FileVersion == 1)
                 {
                     ButtonValidateAllStreams.Enabled = false;
@@ -131,7 +131,7 @@ namespace sb_explorer
                     foreach (ListViewItem selectedItem in lvwStreamData.SelectedItems)
                     {
                         //Get Sample data 
-                        List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+                        List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.StreamSamples;
                         StreamSample selectedSample = streamedSamples[(int)selectedItem.Tag];
 
                         //Write RAW file
@@ -151,13 +151,13 @@ namespace sb_explorer
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
                     FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-                    uint sampleRate = parentForm.configuration.StreamsFrequency;
-                    List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.streamSamples;
+                    uint sampleRate = parentForm.Configuration.StreamsFrequency;
+                    List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.StreamSamples;
 
                     //Output samples
                     foreach (ListViewItem selectedItem in lvwStreamData.SelectedItems)
                     {
-                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem, streamedSamples, sampleRate, parentForm.pnlSoundBankFiles.streamBankHeaderData, parentForm.configuration.PlatformSelected);
+                        SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem, streamedSamples, sampleRate, parentForm.pnlSoundBankFiles.StreamBankHeaderData, parentForm.Configuration.PlatformSelected);
                         if (soundToPlay != null)
                         {
                             //Create Wav File
@@ -175,11 +175,11 @@ namespace sb_explorer
             if (lvwStreamData.SelectedItems.Count == 1)
             {
                 FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-                uint sampleRate = parentForm.configuration.StreamsFrequency;
-                List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.streamSamples;
+                uint sampleRate = parentForm.Configuration.StreamsFrequency;
+                List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.StreamSamples;
 
                 //Get Sound data and play
-                SoundFile soundToPlay = GetSoundFileFromListViewItem(lvwStreamData.SelectedItems[0], streamedSamples, sampleRate, parentForm.pnlSoundBankFiles.streamBankHeaderData, parentForm.configuration.PlatformSelected);
+                SoundFile soundToPlay = GetSoundFileFromListViewItem(lvwStreamData.SelectedItems[0], streamedSamples, sampleRate, parentForm.pnlSoundBankFiles.StreamBankHeaderData, parentForm.Configuration.PlatformSelected);
                 if (soundToPlay != null)
                 {
                     parentForm.pnlMediaPlayer.LoadSoundData(soundToPlay);
@@ -198,14 +198,14 @@ namespace sb_explorer
                 if (lvwStreamData.SelectedItems.Count == 1)
                 {
                     //Get sample
-                    List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+                    List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.StreamSamples;
                     int selectedItemIndex = (int)lvwStreamData.SelectedItems[0].Tag;
 
                     //Display Data
                     if (selectedItemIndex <= streamedSamples.Count)
                     {
                         StreamSample sampleToDisplay = streamedSamples[selectedItemIndex];
-                        uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.StreamsFrequency;
+                        uint sampleRate = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.StreamsFrequency;
                         ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(sampleToDisplay);
                         ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(sampleToDisplay);
                     }
@@ -218,7 +218,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         private void ButtonValidateAllStreams_Click(object sender, EventArgs e)
         {
-            List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.streamSamples;
+            List<StreamSample> streamedSamples = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.StreamSamples;
             if (streamedSamples.Count > 0)
             {
                 for (int i = 0; i < lvwStreamData.Items.Count; i++)

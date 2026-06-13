@@ -132,11 +132,29 @@
     <Compile Include="Forms\FrmDuplicatedHashCodes.Designer.cs">
       <DependentUpon>FrmDuplicatedHashCodes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmEuroSoundSfxExportSection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmEuroSoundSfxExportSection.Designer.cs">
+      <DependentUpon>FrmEuroSoundSfxExportSection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmFileRefUsage.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmFileRefUsage.Designer.cs">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmProgress.Designer.cs">
+      <DependentUpon>FrmProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSplash.Designer.cs">
+      <DependentUpon>FrmSplash.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SoundhGenerator.cs">
       <SubType>Form</SubType>
@@ -217,6 +235,7 @@
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\HashcodeParser.cs" />
+    <Compile Include="Services\EuroSoundSfxTextExporter.cs" />
     <Compile Include="PanelDocks\Misc\FormSoundBankFiles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -314,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmFileRefUsage.resx">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSplash.resx">
+      <DependentUpon>FrmSplash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SoundhGenerator.resx">
       <DependentUpon>SoundhGenerator.cs</DependentUpon>

@@ -65,7 +65,7 @@ namespace sb_explorer
                         short fileRef = (short)selectedItem.Tag;
 
                         //Get Sample data 
-                        List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
+                        List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SfxStoredData;
                         SampleData selectedSample = wavesList[fileRef];
 
                         //Write RAW file
@@ -107,7 +107,7 @@ namespace sb_explorer
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                SortedDictionary<uint, Sample> samplesDisct = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxSamples;
+                SortedDictionary<uint, Sample> samplesDisct = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SfxSamples;
                 using (FrmFileRefUsage formUsage = new FrmFileRefUsage((short)listView1.SelectedItems[0].Tag, soundSampleData, samplesDisct))
                 {
                     formUsage.ShowDialog();
@@ -120,9 +120,9 @@ namespace sb_explorer
         {
             soundSampleData = sampleData;
 
-            SoundbankHeader MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.soundBankHeaderData;
-            List<SampleData> wavHeaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxStoredData;
-            HashcodeParser Hashcodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).hashTable;
+            SoundbankHeader MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SoundBankHeaderData;
+            List<SampleData> wavHeaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SfxStoredData;
+            HashcodeParser Hashcodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).HashTable;
 
             listView1.BeginUpdate();
             listView1.Items.Clear();
@@ -248,11 +248,11 @@ namespace sb_explorer
             //SoundBanks
             if (fileRef >= 0 && ((soundSampleData.Flags >> 10) & 1) == 0)
             {
-                List<SampleData> wavesList = parentForm.pnlSoundBankFiles.sfxStoredData;
+                List<SampleData> wavesList = parentForm.pnlSoundBankFiles.SfxStoredData;
                 SampleData selectedSample = wavesList[fileRef];
 
                 //Decode Data
-                decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.soundBankHeaderData, parentForm.configuration.PlatformSelected);
+                decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData, parentForm.Configuration.PlatformSelected);
                 if (decodedData != null)
                 {
                     //Set settings
@@ -276,19 +276,19 @@ namespace sb_explorer
             else if (fileRef < 0 && ((soundSampleData.Flags >> 10) & 1) == 0) //Streambanks
             {
                 fileRef = (short)(Math.Abs(fileRef) - 1);
-                List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.streamSamples;
+                List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.StreamSamples;
 
                 if ((fileRef >= 0) && (fileRef < streamedSamples.Count))
                 {
                     StreamSample selectedSample = streamedSamples[fileRef];
 
                     //Decode Data
-                    decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.streamBankHeaderData, parentForm.configuration.PlatformSelected);
+                    decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.StreamBankHeaderData, parentForm.Configuration.PlatformSelected);
                     if (decodedData != null)
                     {
                         soundToPlay = new SoundFile();
                         soundToPlay.PcmData[0] = decodedData;
-                        soundToPlay.sampleRate = (uint)parentForm.configuration.StreamsFrequency;
+                        soundToPlay.sampleRate = (uint)parentForm.Configuration.StreamsFrequency;
                         if (ButtonApplyEffects.Checked)
                         {
                             soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;

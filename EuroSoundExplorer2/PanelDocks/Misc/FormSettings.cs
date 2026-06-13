@@ -22,7 +22,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void FormSettings_Load(object sender, EventArgs e)
         {
-            PropGridSettings.SelectedObject = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration;
+            PropGridSettings.SelectedObject = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration;
             LoadSettings();
         }
 
@@ -35,10 +35,10 @@ namespace sb_explorer
 
             using (StreamWriter sw = new StreamWriter(File.Open(SettingsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
-                sw.WriteLine("SoundhFile={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.SoundhFile);
-                sw.WriteLine("FilesFolder={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.ProjectFolder);
-                sw.WriteLine("Platform={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected);
-                sw.WriteLine("Title={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.TitleSelected);
+                sw.WriteLine("SoundhFile={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.SoundhFile);
+                sw.WriteLine("FilesFolder={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.ProjectFolder);
+                sw.WriteLine("Platform={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected);
+                sw.WriteLine("Title={0}", ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.TitleSelected);
             }
         }
 
@@ -60,21 +60,21 @@ namespace sb_explorer
                             switch (lineData[0])
                             {
                                 case "FilesFolder":
-                                    parentForm.configuration.ProjectFolder = lineData[1];
+                                    parentForm.Configuration.ProjectFolder = lineData[1];
                                     break;
                                 case "Platform":
                                     if (Enum.TryParse(lineData[1], out Platform selectedPlatform))
                                     {
-                                        parentForm.configuration.PlatformSelected = selectedPlatform;
+                                        parentForm.Configuration.PlatformSelected = selectedPlatform;
                                     }
                                     break;
                                 case "SoundhFile":
-                                    parentForm.configuration.SoundhFile = lineData[1];
+                                    parentForm.Configuration.SoundhFile = lineData[1];
                                     break;
                                 case "Title":
                                     if (Enum.TryParse(lineData[1], out Title selectedTitle))
                                     {
-                                        parentForm.configuration.TitleSelected = selectedTitle;
+                                        parentForm.Configuration.TitleSelected = selectedTitle;
                                     }
                                     break;
                             }

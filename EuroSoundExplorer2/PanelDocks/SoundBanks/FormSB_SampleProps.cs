@@ -21,7 +21,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ShowSampleData(Sample sampleData)
         {
-            AppConfig MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration;
+            AppConfig MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration;
 
             //Clone Values
             SampleForPropGrid gridObj = new SampleForPropGrid

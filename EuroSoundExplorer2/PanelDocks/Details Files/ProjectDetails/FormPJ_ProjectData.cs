@@ -19,7 +19,7 @@ namespace sb_explorer
         public void ShowData()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            ProjectDetails projDataObj = parentForm.pnlSoundBankFiles.projDetailsData;
+            ProjectDetails projDataObj = parentForm.pnlSoundBankFiles.ProjDetailsData;
 
             propGrid_ProjData.SelectedObject = projDataObj;
 

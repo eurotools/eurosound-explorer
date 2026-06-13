@@ -13,19 +13,20 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void ShowSoundBank(string filePath)
         {
+            FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
             SortedDictionary<uint, Sample> SfxSamples = new SortedDictionary<uint, Sample>();
             List<SampleData> waveData = new List<SampleData>();
             List<uint> duplicatedHashCodes = new List<uint>();
 
             //Read File Data 
-            SoundbankHeader headerData = sbReader.ReadSfxHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SoundbankHeader headerData = sbReader.ReadSfxHeader(filePath, parentForm.Configuration.PlatformSelected.ToString());
             sbReader.ReadSoundBank(filePath, headerData, SfxSamples, waveData, duplicatedHashCodes);
 
             //Add data
             TreeNode soundbankInfo = ShowHeaderData(headerData, "SoundbankInfo");
 
-            TreeAdd(soundbankInfo, "SFXParametersStart", headerData.SFXStart);
-            TreeAdd(soundbankInfo, "SFXParametersLength", headerData.SFXLenght);
+            TreeAdd(soundbankInfo, "SFXStart", headerData.SFXStart);
+            TreeAdd(soundbankInfo, "SFXLength", headerData.SFXLenght);
 
             TreeAdd(soundbankInfo, nameof(headerData.SampleInfoStart), headerData.SampleInfoStart);
             TreeAdd(soundbankInfo, nameof(headerData.SampleInfoLenght), headerData.SampleInfoLenght);
@@ -36,6 +37,17 @@ namespace sb_explorer
             TreeAdd(soundbankInfo, nameof(headerData.SampleDataStart), headerData.SampleDataStart);
             TreeAdd(soundbankInfo, nameof(headerData.SampleDataLength), headerData.SampleDataLength);
 
+            if (duplicatedHashCodes.Count > 0)
+            {
+                TreeNode duplicatedNode = new TreeNode("DuplicatedHashCodes " + duplicatedHashCodes.Count);
+                soundbankInfo.Nodes.Add(duplicatedNode);
+                foreach (uint duplicatedHashCode in duplicatedHashCodes)
+                {
+                    TreeAdd(duplicatedNode, "HashCode", duplicatedHashCode);
+                    AddViewerError(string.Format("Duplicated SFX hashcode 0x{0:X8}", duplicatedHashCode));
+                }
+            }
+
             //Print SFX Parameters List
             TreeNode sfxParameters = new TreeNode("SFXParameters " + SfxSamples.Count);
             treeView1.Nodes.Add(sfxParameters);
@@ -44,6 +56,12 @@ namespace sb_explorer
             {
                 TreeNode hashCode = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", "HashCode", item.Key));
                 sfxParameters.Nodes.Add(hashCode);
+                string hashCodeLabel = parentForm.HashTable.GetHashCodeLabel(item.Key);
+                TreeAdd(hashCode, "HashCodeLabel", hashCodeLabel);
+                if (hashCodeLabel.StartsWith("**"))
+                {
+                    AddViewerError(string.Format("SFX hashcode 0x{0:X8} is not listed in Sound.h", item.Key));
+                }
                 TreeAdd(hashCode, nameof(item.Value.DuckerLenght), item.Value.DuckerLenght);
                 TreeAdd(hashCode, nameof(item.Value.MinDelay), item.Value.MinDelay);
                 TreeAdd(hashCode, nameof(item.Value.MaxDelay), item.Value.MaxDelay);
@@ -64,8 +82,15 @@ namespace sb_explorer
                     TreeAdd(hashCode, nameof(item.Value.GroupMaxChannels), item.Value.GroupMaxChannels);
                 }
                 TreeAdd(hashCode, nameof(item.Value.Flags), item.Value.Flags);
+                AddDecodedSfxFlags(hashCode, headerData.FileVersion, item.Value.Flags);
+                if (headerData.FileVersion > 4 && headerData.FileVersion < 10)
+                {
+                    TreeAdd(hashCode, nameof(item.Value.UserFlags), item.Value.UserFlags);
+                }
                 if (headerData.FileVersion > 5 && headerData.FileVersion < 10)
                 {
+                    TreeAdd(hashCode, nameof(item.Value.DopplerValue), item.Value.DopplerValue);
+                    TreeAdd(hashCode, nameof(item.Value.UserValue), item.Value.UserValue);
                     TreeAdd(hashCode, nameof(item.Value.SFXDucker), item.Value.SFXDucker);
                     TreeAdd(hashCode, nameof(item.Value.Spare), item.Value.Spare);
                 }
@@ -76,12 +101,16 @@ namespace sb_explorer
                 {
                     TreeNode fileRef = new TreeNode(string.Format("s16 {0} = {1} (0x{1:X4})", nameof(sampleToPrint.FileRef), sampleToPrint.FileRef));
                     sfxPoolElements.Nodes.Add(fileRef);
-                    TreeAdd(fileRef, nameof(sampleToPrint.Pitch), (short)sampleToPrint.Pitch);
-                    TreeAdd(fileRef, nameof(sampleToPrint.PitchOffset), (short)sampleToPrint.PitchOffset);
-                    TreeAdd(fileRef, nameof(sampleToPrint.Volume), (sbyte)sampleToPrint.Volume);
-                    TreeAdd(fileRef, nameof(sampleToPrint.VolumeOffset), (sbyte)sampleToPrint.VolumeOffset);
-                    TreeAdd(fileRef, nameof(sampleToPrint.Pan), (sbyte)sampleToPrint.Pan);
-                    TreeAdd(fileRef, nameof(sampleToPrint.PanOffset), (sbyte)sampleToPrint.PanOffset);
+                    if (!FlagIsSet(item.Value.Flags, 10) && sampleToPrint.FileRef >= waveData.Count)
+                    {
+                        AddViewerError(string.Format("SFX 0x{0:X8} references missing sample FileRef {1}", item.Key, sampleToPrint.FileRef));
+                    }
+                    TreeAdd(fileRef, nameof(sampleToPrint.Pitch), sampleToPrint.Pitch);
+                    TreeAdd(fileRef, nameof(sampleToPrint.PitchOffset), sampleToPrint.PitchOffset);
+                    TreeAdd(fileRef, nameof(sampleToPrint.Volume), sampleToPrint.Volume);
+                    TreeAdd(fileRef, nameof(sampleToPrint.VolumeOffset), sampleToPrint.VolumeOffset);
+                    TreeAdd(fileRef, nameof(sampleToPrint.Pan), sampleToPrint.Pan);
+                    TreeAdd(fileRef, nameof(sampleToPrint.PanOffset), sampleToPrint.PanOffset);
                 }
             }
 
@@ -117,7 +146,7 @@ namespace sb_explorer
             List<StreamSample> waveData = new List<StreamSample>();
 
             //Read File Data 
-            StreambankHeader headerData = strReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            StreambankHeader headerData = strReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
             strReader.ReadStreamBank(filePath, headerData, waveData);
 
             //Add data
@@ -164,7 +193,7 @@ namespace sb_explorer
             List<StreamSample> waveData = new List<StreamSample>();
 
             //Read File Data 
-            StreambankHeader headerData = musReader.ReadMusicHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            StreambankHeader headerData = musReader.ReadMusicHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
             MusicSample fileData = musReader.ReadMusicBank(filePath, headerData);
 
             //Add data
@@ -195,7 +224,7 @@ namespace sb_explorer
         private void ShowSbiBank(string filePath)
         {
             //Read File Data 
-            SoundbankInfoHeader headerData = sbiReader.ReadSoundbankInfoHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SoundbankInfoHeader headerData = sbiReader.ReadSoundbankInfoHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
             SbiFile fileData = sbiReader.ReadSoundbankInfoFile(filePath, headerData);
 
             //Add data
@@ -216,11 +245,11 @@ namespace sb_explorer
             }
 
             //Print MusicBanks
-            TreeNode musicBanksNdoe = new TreeNode("SoundBanks " + fileData.projectMusicBanks.Length);
-            soundbankInfo.Nodes.Add(musicBanksNdoe);
+            TreeNode musicBanksNode = new TreeNode("MusicBanks " + fileData.projectMusicBanks.Length);
+            soundbankInfo.Nodes.Add(musicBanksNode);
             for (int i = 0; i < fileData.projectMusicBanks.Length; i++)
             {
-                TreeAdd(musicBanksNdoe, "HashCode", fileData.projectMusicBanks[i]);
+                TreeAdd(musicBanksNode, "HashCode", fileData.projectMusicBanks[i]);
             }
         }
 
@@ -228,7 +257,7 @@ namespace sb_explorer
         private void ShowProjectDetails(string filePath)
         {
             //Read File Data 
-            ProjectDetailsHeader headerData = projDetReader.ReadProjectFileHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            ProjectDetailsHeader headerData = projDetReader.ReadProjectFileHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
             ProjectDetails fileData = projDetReader.ReadProjectFile(filePath, headerData);
 
             //Add data
@@ -284,7 +313,7 @@ namespace sb_explorer
         private void ShowSoundDetails(string filePath)
         {
             //Read File Data 
-            SfxCommonHeader headerData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SfxCommonHeader headerData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
             SoundDetails fileData = soundDetailsReader.ReadSoundDetailsFile(filePath, headerData);
 
             //Add data
@@ -316,7 +345,7 @@ namespace sb_explorer
         private void ShowMusicDetails(string filePath)
         {
             //Read File Data 
-            SfxCommonHeader headerData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).configuration.PlatformSelected.ToString());
+            SfxCommonHeader headerData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
             MusicDetails fileData = musicDetailsReader.ReadMusicDetailsFile(filePath, headerData);
 
             //Add data
@@ -346,7 +375,7 @@ namespace sb_explorer
             //Update Toolbar
             labelPlatformValue.Text = string.Format("{0}", headerData.Platform);
             labelMemoryValue.Text = string.Format("{0} kb", headerData.FileSize / 1024);
-            labelErrorsValue.Text = string.Format("{0}", m_ErrorCount);
+            RefreshErrorsLabel();
 
             //Add data
             TreeNode soundbankInfo = new TreeNode(nodeName);
@@ -365,6 +394,33 @@ namespace sb_explorer
             }
 
             return soundbankInfo;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void AddDecodedSfxFlags(TreeNode parentNode, int fileVersion, ushort flags)
+        {
+            string[] flagNames;
+            if (fileVersion == 201 || fileVersion == 1)
+            {
+                flagNames = new string[] { "MaxReject", "Doppler", "IgnoreAge", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInNis", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "UserFlags14", "UserFlags15", "UserFlags16" };
+            }
+            else
+            {
+                flagNames = new string[] { "MaxReject", "UnPausable", "IgnoreMasterVolume", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInstant", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "KillMeOwnGroup", "GroupStealReject", "OneInstancePerFrame" };
+            }
+
+            TreeNode decodedFlags = new TreeNode("FlagsDecoded");
+            parentNode.Nodes.Add(decodedFlags);
+            for (int i = 0; i < flagNames.Length; i++)
+            {
+                TreeAdd(decodedFlags, flagNames[i], FlagIsSet(flags, i));
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private bool FlagIsSet(ushort flags, int index)
+        {
+            return ((flags >> index) & 1) == 1;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

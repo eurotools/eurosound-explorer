@@ -37,7 +37,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void SetHashCodesToListView()
         {
-            SortedDictionary<uint, Sample> dictToShow = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.sfxSamples;
+            SortedDictionary<uint, Sample> dictToShow = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SfxSamples;
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
 
             //Print Data
@@ -53,7 +53,7 @@ namespace sb_explorer
                     {
                         string.Format("0x{0:X8}", itemToShow.Key),
                         "OK",
-                        parentForm.hashTable.GetHashCodeLabel(itemToShow.Key),
+                        parentForm.HashTable.GetHashCodeLabel(itemToShow.Key),
                     })
                     { UseItemStyleForSubItems = false, Tag = itemToShow.Key, ImageIndex = 0 };
 
@@ -76,7 +76,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void ButtonCheckDuplicated_Click(object sender, System.EventArgs e)
         {
-            List<uint> duplicatedHashCodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.duplicatedHashCodes;
+            List<uint> duplicatedHashCodes = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.DuplicatedHashCodes;
             if (duplicatedHashCodes.Count > 0)
             {
                 using (FrmDuplicatedHashCodes duplHashCodes = new FrmDuplicatedHashCodes(duplicatedHashCodes))
@@ -113,7 +113,7 @@ namespace sb_explorer
             if (ButtonListProperties.Checked || ButtonSendToSamplePool.Checked)
             {
                 FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
-                SortedDictionary<uint, Sample> dictToShow = parentForm.pnlSoundBankFiles.sfxSamples;
+                SortedDictionary<uint, Sample> dictToShow = parentForm.pnlSoundBankFiles.SfxSamples;
 
                 //Ensure that we have one item selected in the listview
                 if (listView1.SelectedItems.Count == 1)
@@ -157,6 +157,31 @@ namespace sb_explorer
             {
                 Clipboard.SetText(listView1.SelectedItems[0].SubItems[2].Text);
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_ExportSfxToEuroSoundFile_Click(object sender, System.EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Select at least one SFX first.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            SortedDictionary<uint, Sample> samplesDictionary = parentForm.pnlSoundBankFiles.SfxSamples;
+            List<Sample> samplesToExport = new List<Sample>();
+
+            foreach (ListViewItem selectedItem in listView1.SelectedItems)
+            {
+                uint hashCode = (uint)selectedItem.Tag;
+                if (samplesDictionary.ContainsKey(hashCode))
+                {
+                    samplesToExport.Add(samplesDictionary[hashCode]);
+                }
+            }
+
+            parentForm.pnlSoundBankFiles.ExportSfxSamplesToEuroSoundFile(samplesToExport);
         }
     }
 

@@ -42,9 +42,9 @@ namespace sb_explorer
                             {
                                 if (sampleInfo.FileRef == fileRef)
                                 {
-                                    if (parentForm.hashTable.HashcodeIsListed(sampleData.Key))
+                                    if (parentForm.HashTable.HashcodeIsListed(sampleData.Key))
                                     {
-                                        listViewItemUsage.Items.Add(new ListViewItem(new string[] { fileRef.ToString(), parentForm.hashTable.GetHashCodeLabel(sampleData.Key) }) { ImageIndex = 0 });
+                                        listViewItemUsage.Items.Add(new ListViewItem(new string[] { fileRef.ToString(), parentForm.HashTable.GetHashCodeLabel(sampleData.Key) }) { ImageIndex = 0 });
                                     }
                                     else
                                     {
@@ -67,9 +67,9 @@ namespace sb_explorer
                         {
                             if (sampleInfo.FileRef == fileRef)
                             {
-                                if (parentForm.hashTable.HashcodeIsListed(sampleData.Key))
+                                if (parentForm.HashTable.HashcodeIsListed(sampleData.Key))
                                 {
-                                    listViewItemUsage.Items.Add(new ListViewItem(new string[] { fileRef.ToString(), parentForm.hashTable.GetHashCodeLabel(sampleData.Key) }) { ImageIndex = 0 });
+                                    listViewItemUsage.Items.Add(new ListViewItem(new string[] { fileRef.ToString(), parentForm.HashTable.GetHashCodeLabel(sampleData.Key) }) { ImageIndex = 0 });
                                 }
                                 else
                                 {

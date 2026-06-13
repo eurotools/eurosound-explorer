@@ -40,17 +40,19 @@ namespace sb_explorer
             this.contextMenuListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_CopyHashCode = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_CopyLabel = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_ExportSfxToEuroSoundFile = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSendToSamplePool = new System.Windows.Forms.ToolStripButton();
             this.ButtonListProperties = new System.Windows.Forms.ToolStripButton();
             this.ButtonCheckDuplicated = new System.Windows.Forms.ToolStripButton();
+            this.ButtonSaveList = new System.Windows.Forms.ToolStripButton();
             this.ButtonApplyFilter = new System.Windows.Forms.ToolStripButton();
             this.txtBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             this.lblTotalHashCodes = new System.Windows.Forms.ToolStripLabel();
             this.txtSfxCount = new System.Windows.Forms.ToolStripTextBox();
-            this.ButtonSaveList = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuListView.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -97,17 +99,19 @@ namespace sb_explorer
             // 
             this.contextMenuListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem_CopyHashCode,
-            this.MenuItem_CopyLabel});
+            this.MenuItem_CopyLabel,
+            this.toolStripSeparator1,
+            this.MenuItem_ExportSfxToEuroSoundFile});
             this.contextMenuListView.Name = "contextMenuStrip1";
             this.contextMenuListView.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuListView.Size = new System.Drawing.Size(161, 48);
+            this.contextMenuListView.Size = new System.Drawing.Size(226, 98);
             // 
             // MenuItem_CopyHashCode
             // 
             this.MenuItem_CopyHashCode.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyHashCode.Image")));
             this.MenuItem_CopyHashCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_CopyHashCode.Name = "MenuItem_CopyHashCode";
-            this.MenuItem_CopyHashCode.Size = new System.Drawing.Size(160, 22);
+            this.MenuItem_CopyHashCode.Size = new System.Drawing.Size(225, 22);
             this.MenuItem_CopyHashCode.Text = "Copy HashCode";
             this.MenuItem_CopyHashCode.Click += new System.EventHandler(this.MenuItem_CopyHashCode_Click);
             // 
@@ -116,9 +120,18 @@ namespace sb_explorer
             this.MenuItem_CopyLabel.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyLabel.Image")));
             this.MenuItem_CopyLabel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_CopyLabel.Name = "MenuItem_CopyLabel";
-            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(160, 22);
+            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(225, 22);
             this.MenuItem_CopyLabel.Text = "Copy Label";
             this.MenuItem_CopyLabel.Click += new System.EventHandler(this.MenuItem_CopyLabel_Click);
+            // 
+            // MenuItem_ExportSfxToEuroSoundFile
+            // 
+            this.MenuItem_ExportSfxToEuroSoundFile.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_ExportSfxToEuroSoundFile.Image")));
+            this.MenuItem_ExportSfxToEuroSoundFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuItem_ExportSfxToEuroSoundFile.Name = "MenuItem_ExportSfxToEuroSoundFile";
+            this.MenuItem_ExportSfxToEuroSoundFile.Size = new System.Drawing.Size(225, 22);
+            this.MenuItem_ExportSfxToEuroSoundFile.Text = "Export SFX to EuroSound File";
+            this.MenuItem_ExportSfxToEuroSoundFile.Click += new System.EventHandler(this.MenuItem_ExportSfxToEuroSoundFile_Click);
             // 
             // imageList1
             // 
@@ -185,6 +198,17 @@ namespace sb_explorer
             this.ButtonCheckDuplicated.ToolTipText = "Check for duplicated";
             this.ButtonCheckDuplicated.Click += new System.EventHandler(this.ButtonCheckDuplicated_Click);
             // 
+            // ButtonSaveList
+            // 
+            this.ButtonSaveList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonSaveList.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSaveList.Image")));
+            this.ButtonSaveList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.ButtonSaveList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSaveList.Name = "ButtonSaveList";
+            this.ButtonSaveList.Size = new System.Drawing.Size(26, 32);
+            this.ButtonSaveList.Text = "Save HashCodes List";
+            this.ButtonSaveList.Click += new System.EventHandler(this.ButtonSaveList_Click);
+            // 
             // ButtonApplyFilter
             // 
             this.ButtonApplyFilter.CheckOnClick = true;
@@ -218,20 +242,14 @@ namespace sb_explorer
             this.txtSfxCount.Size = new System.Drawing.Size(50, 35);
             this.txtSfxCount.Text = "0";
             // 
-            // ButtonSaveList
-            // 
-            this.ButtonSaveList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonSaveList.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSaveList.Image")));
-            this.ButtonSaveList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.ButtonSaveList.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonSaveList.Name = "ButtonSaveList";
-            this.ButtonSaveList.Size = new System.Drawing.Size(26, 32);
-            this.ButtonSaveList.Text = "Save HashCodes List";
-            this.ButtonSaveList.Click += new System.EventHandler(this.ButtonSaveList_Click);
-            // 
             // saveFileDialog
             // 
             this.saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
             // 
             // FormSB_HashCodes
             // 
@@ -267,10 +285,12 @@ namespace sb_explorer
         private System.Windows.Forms.ContextMenuStrip contextMenuListView;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyHashCode;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyLabel;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_ExportSfxToEuroSoundFile;
         private System.Windows.Forms.ToolStripLabel lblTotalHashCodes;
         private System.Windows.Forms.ToolStripTextBox txtSfxCount;
         private System.Windows.Forms.ToolStripButton ButtonCheckDuplicated;
         private System.Windows.Forms.ToolStripButton ButtonSaveList;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

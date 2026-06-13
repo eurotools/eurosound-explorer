@@ -20,7 +20,7 @@ namespace sb_explorer
         public void ShowData()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            SoundDetails fileData = parentForm.pnlSoundBankFiles.soundDetails;
+            SoundDetails fileData = parentForm.pnlSoundBankFiles.SoundDetails;
 
             int m_ErrorCount = 0;
             lstvSfxItems.BeginUpdate();
@@ -43,7 +43,7 @@ namespace sb_explorer
                 //Check that is not an empty block
                 if ((itemToadd.InnerRadius != 0 && itemToadd.OuterRadius != 0) || itemToadd.Duration != 0)
                 {
-                    itemToAdd.SubItems[1].Text = parentForm.hashTable.GetHashCodeLabel((uint)itemToadd.HashCode);
+                    itemToAdd.SubItems[1].Text = parentForm.HashTable.GetHashCodeLabel((uint)itemToadd.HashCode);
 
                     //Check for errors
                     if (itemToadd.InnerRadius < 0.0 || itemToadd.InnerRadius > 30000.0)

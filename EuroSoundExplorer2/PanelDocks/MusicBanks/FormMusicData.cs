@@ -25,8 +25,8 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ShowMusicData()
         {
-            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
-            MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
+            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.MusicBankHeaderData;
+            MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.MusicData;
             propertyGrid1.SelectedObject = musicData;
 
             //ADPCM Validate
@@ -74,8 +74,8 @@ namespace sb_explorer
             byte[] decodedDataR = null;
             uint frequency = 32000;
 
-            MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
-            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicBankHeaderData;
+            MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.MusicData;
+            StreambankHeader headerFileData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.MusicBankHeaderData;
             if (headerFileData.FileVersion == 201 || headerFileData.FileVersion == 1)
             {
                 if (headerFileData.Platform.Equals("PC") || headerFileData.Platform.Contains("GC") || headerFileData.Platform.Contains("GameCube"))
@@ -145,7 +145,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void ButtonDisplayMusicMarkers_Click(object sender, EventArgs e)
         {
-            MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.musicData;
+            MusicSample musicData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.MusicData;
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMarkers.ShowMarkers(musicData);
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStartMarkers.ShowMarkers(musicData);
         }

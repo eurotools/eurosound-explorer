@@ -33,7 +33,7 @@ namespace sb_explorer
                 {
                         string.Format("0x{0:X8}", itemToShow),
                         "OK",
-                        parentForm.hashTable.GetHashCodeLabel(itemToShow),
+                        parentForm.HashTable.GetHashCodeLabel(itemToShow),
                 })
                 { UseItemStyleForSubItems = false, Tag = itemToShow, ImageIndex = 0 };
 

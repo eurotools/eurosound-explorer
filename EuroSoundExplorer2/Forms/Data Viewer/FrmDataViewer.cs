@@ -1,5 +1,6 @@
 ﻿using MusX.Readers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using static MusX.Readers.SfxFunctions;
@@ -19,7 +20,7 @@ namespace sb_explorer
         private readonly ProjectDetailsReader projDetReader = new ProjectDetailsReader();
         private readonly SoundDetailsReader soundDetailsReader = new SoundDetailsReader();
         private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
-        private readonly int m_ErrorCount = 0;
+        private readonly List<string> viewerErrors = new List<string>();
         private string sfxFilePath = string.Empty;
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -33,11 +34,13 @@ namespace sb_explorer
         private void FrmDataViewer_Load(object sender, EventArgs e)
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
+            viewerErrors.Clear();
+            RefreshErrorsLabel();
 
             //If the file path has not been passed as an argument ask user 
             if (string.IsNullOrEmpty(sfxFilePath))
             {
-                openFileDialog1.InitialDirectory = parentForm.configuration.ProjectFolder;
+                openFileDialog1.InitialDirectory = parentForm.Configuration.ProjectFolder;
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     sfxFilePath = openFileDialog1.FileName;
@@ -55,7 +58,7 @@ namespace sb_explorer
                 Text = string.Format("Data Viewer - {0}", Path.GetFileName(sfxFilePath));
 
                 //Get selected info from the mainform
-                Title selectedTitle = parentForm.configuration.TitleSelected;
+                Title selectedTitle = parentForm.Configuration.TitleSelected;
 
                 //Get version of MusX Files
                 int hashCode = sbReader.GetFileHashCode(sfxFilePath);
@@ -97,6 +100,8 @@ namespace sb_explorer
                     {
                         treeView1.Nodes[0].Expand();
                     }
+                    AddErrorsNode();
+                    RefreshErrorsLabel();
                 }
                 catch (Exception ex)
                 {
@@ -228,6 +233,35 @@ namespace sb_explorer
         {
             TreeNode node = new TreeNode(string.Format("string {0} = {1}", name, value));
             parent.Nodes.Add(node);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void AddViewerError(string message)
+        {
+            viewerErrors.Add(message);
+            RefreshErrorsLabel();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void RefreshErrorsLabel()
+        {
+            labelErrorsValue.Text = viewerErrors.Count.ToString();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void AddErrorsNode()
+        {
+            if (viewerErrors.Count == 0)
+            {
+                return;
+            }
+
+            TreeNode errorsNode = new TreeNode("Errors " + viewerErrors.Count);
+            for (int i = 0; i < viewerErrors.Count; i++)
+            {
+                TreeAdd(errorsNode, i.ToString(), viewerErrors[i]);
+            }
+            treeView1.Nodes.Add(errorsNode);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

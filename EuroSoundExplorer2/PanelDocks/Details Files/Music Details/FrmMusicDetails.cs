@@ -19,7 +19,7 @@ namespace sb_explorer
         public void ShowData()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            MusicDetails fileData = parentForm.pnlSoundBankFiles.musicDetails;
+            MusicDetails fileData = parentForm.pnlSoundBankFiles.MusicDetails;
 
             int m_ErrorCount = 0;
             lstvMfxItems.BeginUpdate();
@@ -29,7 +29,7 @@ namespace sb_explorer
                 ListViewItem itemToAdd = new ListViewItem(new string[]
                 {
                     string.Format("0x{0:X8}", itemToadd.HashCode),
-                    parentForm.hashTable.GetHashCodeLabel((uint)itemToadd.HashCode),
+                    parentForm.HashTable.GetHashCodeLabel((uint)itemToadd.HashCode),
                     itemToadd.Duration.ToString(),
                     itemToadd.MusicLooping.ToString(),
                     itemToadd.UserValue.ToString()

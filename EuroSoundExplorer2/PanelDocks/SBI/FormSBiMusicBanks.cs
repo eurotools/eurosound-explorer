@@ -21,11 +21,11 @@ namespace sb_explorer
         public void DisplayHashCodes()
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            SbiFile dictToShow = parentForm.pnlSoundBankFiles.sbiFileData;
+            SbiFile dictToShow = parentForm.pnlSoundBankFiles.SbiFileData;
 
             //Get Game and Version
-            int selectedVersion = parentForm.configuration.FileVersion;
-            Title selectedTitle = parentForm.configuration.TitleSelected;
+            int selectedVersion = parentForm.Configuration.FileVersion;
+            Title selectedTitle = parentForm.Configuration.TitleSelected;
 
             //Print Data
             for (int i = 0; i < dictToShow.projectMusicBanks.Length; i++)
@@ -37,7 +37,7 @@ namespace sb_explorer
                 ListViewItem itemToAdd = new ListViewItem(new string[]
                 {
                     string.Format("0x{0:X8}", dictToShow.projectMusicBanks[i]),
-                    parentForm.hashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(FileType.MusicFile, dictToShow.projectMusicBanks[i], selectedVersion, selectedTitle))
+                    parentForm.HashTable.GetHashCodeLabel((uint)GenericMethods.GetHashCodeWithSection(FileType.MusicFile, dictToShow.projectMusicBanks[i], selectedVersion, selectedTitle))
                 })
                 {
                     UseItemStyleForSubItems = false

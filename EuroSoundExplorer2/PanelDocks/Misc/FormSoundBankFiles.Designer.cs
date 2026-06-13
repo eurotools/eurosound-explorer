@@ -42,6 +42,8 @@ namespace sb_explorer
             this.MenuItem_Unload = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_DataViewer = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_ExportSfxToEuroSoundFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnListView = new System.Windows.Forms.ToolStripButton();
             this.btnTreeView = new System.Windows.Forms.ToolStripButton();
@@ -61,6 +63,7 @@ namespace sb_explorer
             this.Col_FileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_SFXsCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -75,17 +78,20 @@ namespace sb_explorer
             this.MenuItem_Reload,
             this.MenuItem_Unload,
             this.MenuItem_Separator2,
-            this.MenuItem_DataViewer});
+            this.MenuItem_DataViewer,
+            this.toolStripSeparator1,
+            this.MenuItem_ExportSfxToEuroSoundFile,
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 170);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(276, 220);
             // 
             // MenuItem_CopyHashcode
             // 
             this.MenuItem_CopyHashcode.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyHashcode.Image")));
             this.MenuItem_CopyHashcode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_CopyHashcode.Name = "MenuItem_CopyHashcode";
-            this.MenuItem_CopyHashcode.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_CopyHashcode.Size = new System.Drawing.Size(275, 22);
             this.MenuItem_CopyHashcode.Text = "Copy HashCode";
             this.MenuItem_CopyHashcode.Click += new System.EventHandler(this.MenuItem_CopyHashcode_Click);
             // 
@@ -94,21 +100,21 @@ namespace sb_explorer
             this.MenuItem_CopyLabel.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_CopyLabel.Image")));
             this.MenuItem_CopyLabel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_CopyLabel.Name = "MenuItem_CopyLabel";
-            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_CopyLabel.Size = new System.Drawing.Size(275, 22);
             this.MenuItem_CopyLabel.Text = "Copy Label";
             this.MenuItem_CopyLabel.Click += new System.EventHandler(this.MenuItem_CopyLabel_Click);
             // 
             // MenuItem_Separator1
             // 
             this.MenuItem_Separator1.Name = "MenuItem_Separator1";
-            this.MenuItem_Separator1.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_Separator1.Size = new System.Drawing.Size(272, 6);
             // 
             // MenuItem_Load
             // 
             this.MenuItem_Load.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Load.Image")));
             this.MenuItem_Load.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Load.Name = "MenuItem_Load";
-            this.MenuItem_Load.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Load.Size = new System.Drawing.Size(275, 22);
             this.MenuItem_Load.Text = "Load";
             this.MenuItem_Load.Click += new System.EventHandler(this.MenuItem_Load_Click);
             // 
@@ -117,7 +123,7 @@ namespace sb_explorer
             this.MenuItem_Reload.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Reload.Image")));
             this.MenuItem_Reload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Reload.Name = "MenuItem_Reload";
-            this.MenuItem_Reload.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Reload.Size = new System.Drawing.Size(275, 22);
             this.MenuItem_Reload.Text = "Reload";
             this.MenuItem_Reload.Click += new System.EventHandler(this.MenuItem_Reload_Click);
             // 
@@ -126,23 +132,41 @@ namespace sb_explorer
             this.MenuItem_Unload.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Unload.Image")));
             this.MenuItem_Unload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Unload.Name = "MenuItem_Unload";
-            this.MenuItem_Unload.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Unload.Size = new System.Drawing.Size(275, 22);
             this.MenuItem_Unload.Text = "Unload";
             this.MenuItem_Unload.Click += new System.EventHandler(this.MenuItem_Unload_Click);
             // 
             // MenuItem_Separator2
             // 
             this.MenuItem_Separator2.Name = "MenuItem_Separator2";
-            this.MenuItem_Separator2.Size = new System.Drawing.Size(177, 6);
+            this.MenuItem_Separator2.Size = new System.Drawing.Size(272, 6);
             // 
             // MenuItem_DataViewer
             // 
             this.MenuItem_DataViewer.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_DataViewer.Image")));
             this.MenuItem_DataViewer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_DataViewer.Name = "MenuItem_DataViewer";
-            this.MenuItem_DataViewer.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_DataViewer.Size = new System.Drawing.Size(275, 22);
             this.MenuItem_DataViewer.Text = "Data Viewer";
             this.MenuItem_DataViewer.Click += new System.EventHandler(this.MenuItem_DataViewer_Click);
+            // 
+            // MenuItem_ExportSfxToEuroSoundFile
+            // 
+            this.MenuItem_ExportSfxToEuroSoundFile.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_ExportSfxToEuroSoundFile.Image")));
+            this.MenuItem_ExportSfxToEuroSoundFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuItem_ExportSfxToEuroSoundFile.Name = "MenuItem_ExportSfxToEuroSoundFile";
+            this.MenuItem_ExportSfxToEuroSoundFile.Size = new System.Drawing.Size(275, 22);
+            this.MenuItem_ExportSfxToEuroSoundFile.Text = "Export SFX to EuroSound File";
+            this.MenuItem_ExportSfxToEuroSoundFile.Click += new System.EventHandler(this.MenuItem_ExportSfxToEuroSoundFile_Click);
+            // 
+            // MenuItem_ExportProjectSfxToEuroSoundFiles
+            // 
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_ExportProjectSfxToEuroSoundFiles.Image")));
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles.Name = "MenuItem_ExportProjectSfxToEuroSoundFiles";
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles.Size = new System.Drawing.Size(275, 22);
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles.Text = "Export Project SFXs to EuroSound Files";
+            this.MenuItem_ExportProjectSfxToEuroSoundFiles.Click += new System.EventHandler(this.MenuItem_ExportProjectSfxToEuroSoundFiles_Click);
             // 
             // toolStrip1
             // 
@@ -332,6 +356,11 @@ namespace sb_explorer
             // 
             this.Col_Type.Text = "Type";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(272, 6);
+            // 
             // FormSoundBankFiles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -383,5 +412,8 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyHashcode;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_CopyLabel;
         private System.Windows.Forms.ToolStripSeparator MenuItem_Separator1;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_ExportSfxToEuroSoundFile;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_ExportProjectSfxToEuroSoundFiles;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
