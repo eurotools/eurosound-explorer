@@ -69,7 +69,7 @@ namespace sb_explorer
             this.MenuItem_SBI_StoredSoundBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI_StoredMusicBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Help = new System.Windows.Forms.ToolStripDropDownButton();
-            this.MenuItem_OnlineHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -414,19 +414,19 @@ namespace sb_explorer
             // 
             this.MenuItem_Help.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.MenuItem_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem_OnlineHelp});
+            this.MenuItem_About});
             this.MenuItem_Help.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Help.Image")));
             this.MenuItem_Help.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Help.Name = "MenuItem_Help";
             this.MenuItem_Help.Size = new System.Drawing.Size(45, 22);
             this.MenuItem_Help.Text = "Help";
             // 
-            // MenuItem_OnlineHelp
+            // MenuItem_About
             // 
-            this.MenuItem_OnlineHelp.Name = "MenuItem_OnlineHelp";
-            this.MenuItem_OnlineHelp.Size = new System.Drawing.Size(137, 22);
-            this.MenuItem_OnlineHelp.Text = "Online Help";
-            this.MenuItem_OnlineHelp.Click += new System.EventHandler(this.MenuItem_OnlineHelp_Click);
+            this.MenuItem_About.Name = "MenuItem_About";
+            this.MenuItem_About.Size = new System.Drawing.Size(107, 22);
+            this.MenuItem_About.Text = "About";
+            this.MenuItem_About.Click += new System.EventHandler(this.MenuItem_About_Click);
             // 
             // FrmMain
             // 
@@ -487,7 +487,7 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SoundDetails;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_MusicDetails;
         private System.Windows.Forms.ToolStripDropDownButton MenuItem_Help;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem_OnlineHelp;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_About;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_GenerateSoundh;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }

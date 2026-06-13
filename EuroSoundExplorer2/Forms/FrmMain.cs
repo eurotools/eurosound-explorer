@@ -2,7 +2,6 @@
 using sb_explorer.CustomControls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.Layout;
@@ -424,9 +423,12 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------
         //  Help Menu
         //-------------------------------------------------------------------------------------------
-        private void MenuItem_OnlineHelp_Click(object sender, EventArgs e)
+        private void MenuItem_About_Click(object sender, EventArgs e)
         {
-            Process.Start(@"https://eurotools.github.io/eurosound-explorer");
+            using (FrmAbout about = new FrmAbout())
+            {
+                about.ShowDialog(this);
+            }
         }
 
         //-------------------------------------------------------------------------------------------
