@@ -72,6 +72,10 @@ namespace sb_explorer
                 }
                 TreeAdd(hashCode, nameof(item.Value.ReverbSend), item.Value.ReverbSend);
                 TreeAdd(hashCode, nameof(item.Value.TrackingType), item.Value.TrackingType);
+                if (headerData.FileVersion >= 5 && headerData.FileVersion <= 6)
+                {
+                    TreeAdd(hashCode, "TrackingTypeDescription", GetTrackingTypeDescription(item.Value.TrackingType));
+                }
                 TreeAdd(hashCode, nameof(item.Value.MaxVoices), item.Value.MaxVoices);
                 TreeAdd(hashCode, nameof(item.Value.Priority), item.Value.Priority);
                 TreeAdd(hashCode, nameof(item.Value.Ducker), item.Value.Ducker);
@@ -415,6 +419,31 @@ namespace sb_explorer
             {
                 TreeAdd(decodedFlags, flagNames[i], FlagIsSet(flags, i));
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string GetTrackingTypeDescription(byte trackingType)
+        {
+            List<string> parts = new List<string>();
+
+            parts.Add((trackingType & 0x01) != 0 ? "3D" : "2D");
+
+            if ((trackingType & 0x02) != 0)
+            {
+                parts.Add("AMB");
+            }
+
+            if ((trackingType & 0x04) != 0)
+            {
+                parts.Add("RND");
+            }
+
+            if ((trackingType & 0x08) != 0)
+            {
+                parts.Add("NT");
+            }
+
+            return string.Join(" ", parts);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

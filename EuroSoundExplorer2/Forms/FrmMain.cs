@@ -15,6 +15,7 @@ namespace sb_explorer
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FrmMain : Form
     {
+        private readonly FrmSplash _splash;
         public readonly AppState AppState = new AppState();
         public AppConfig Configuration { get { return AppState.Configuration; } }
         public HashcodeParser HashTable { get { return AppState.HashTable; } }
@@ -55,6 +56,13 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        internal FrmMain(FrmSplash splash)
+            : this()
+        {
+            _splash = splash;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private void Configuration_SoundhFileChanged()
         {
             HashTable.LoadHashTable(Configuration.SoundhFile);
@@ -69,6 +77,8 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            SetSplashStatus("Loading panels...");
+
             m_DockForms.Add(pnlSbHashCodes);
             m_DockForms.Add(pnlSbSamplePool);
             m_DockForms.Add(pnlSbSampleProps);
@@ -89,9 +99,11 @@ namespace sb_explorer
             m_DockForms.Add(pnlMusicDetailsData);
 
             //Load previous settings
+            SetSplashStatus("Loading settings...");
             pnlSettings.LoadSettings();
 
             //Load Panels State
+            SetSplashStatus("Loading layout...");
             string dockSettings = GetDockSettingsFileToLoad();
             string defaultDockSettings = Path.Combine(Application.StartupPath, "ESEx", "Default Dock Settings.xml");
             if (!File.Exists(dockSettings))
@@ -104,10 +116,24 @@ namespace sb_explorer
             mainDockPanel.LoadFromXml(dockSettings, new DeserializeDockContent(GetContentFromPersistString));
 
             //Load last state listview
+            SetSplashStatus("Loading list views...");
             foreach (Form dockForm in m_DockForms)
             {
                 LoadListViewConfig(dockForm);
             }
+
+            SetSplashStatus("Opening editor...");
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void SetSplashStatus(string status)
+        {
+            if (_splash == null || _splash.IsDisposed)
+            {
+                return;
+            }
+
+            _splash.SetStatus(status);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

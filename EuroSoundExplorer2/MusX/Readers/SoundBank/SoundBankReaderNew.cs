@@ -47,7 +47,7 @@ namespace MusX.Readers
                         MinDelay = BytesFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
                         MaxDelay = BytesFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
                         ReverbSend = BReader.ReadSByte(),
-                        TrackingType = BReader.ReadSByte(),
+                        TrackingType = BReader.ReadByte(),
                         MaxVoices = BReader.ReadSByte(),
                         Priority = BReader.ReadSByte(),
                         Ducker = BReader.ReadSByte(),

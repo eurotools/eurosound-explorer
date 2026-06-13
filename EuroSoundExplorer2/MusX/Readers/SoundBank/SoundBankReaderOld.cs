@@ -38,7 +38,7 @@ namespace MusX.Readers
                         InnerRadius = BytesFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
                         OuterRadius = BytesFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian),
                         ReverbSend = BReader.ReadSByte(),
-                        TrackingType = BReader.ReadSByte(),
+                        TrackingType = BReader.ReadByte(),
                         MaxVoices = BReader.ReadSByte(),
                         Priority = BReader.ReadSByte(),
                         Ducker = BReader.ReadSByte(),

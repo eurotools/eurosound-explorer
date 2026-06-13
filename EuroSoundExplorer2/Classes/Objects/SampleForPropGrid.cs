@@ -50,11 +50,11 @@ namespace sb_explorer.Classes
         public sbyte GroupMaxChannels { get; set; }
 
         [DisplayName("Doppler Value")]
-        [Category("From v6 and above")]
+        [Category("From v5 and above")]
         public sbyte DopplerValue { get; set; }
 
         [DisplayName("User Value")]
-        [Category("From v6 and above")]
+        [Category("From v5 and above")]
         public sbyte UserValue { get; set; }
 
         [DisplayName("SFX Ducker")]
@@ -66,11 +66,11 @@ namespace sb_explorer.Classes
         public sbyte Spare { get; set; }
 
         [DisplayName("Inner Radius")]
-        [Category("v201 and v1 ONLY")]
+        [Category("All Versions")]
         public short InnerRadius { get; set; }
 
         [DisplayName("Outer Radius")]
-        [Category("v201 and v1 ONLY")]
+        [Category("All Versions")]
         public short OuterRadius { get; set; }
 
         [DisplayName("Flags")]

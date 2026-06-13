@@ -1,7 +1,8 @@
 ﻿using MusX.Objects;
 using sb_explorer.Classes;
+using sb_explorer.Services;
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -21,7 +22,9 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ShowSampleData(Sample sampleData)
         {
-            AppConfig MusXheaderData = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration;
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            AppConfig MusXheaderData = parentForm.Configuration;
+            int fileVersion = parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion != 0 ? parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion : MusXheaderData.FileVersion;
 
             //Clone Values
             SampleForPropGrid gridObj = new SampleForPropGrid
@@ -44,7 +47,20 @@ namespace sb_explorer
                 OuterRadius = sampleData.OuterRadius,
                 Flags = sampleData.Flags
             };
-            if (MusXheaderData.FileVersion == 201 || MusXheaderData.FileVersion < 5)
+            if (fileVersion >= 4 && fileVersion <= 6)
+            {
+                if (parentForm.pnlSoundBankFiles.TryGetSoundDetailsRadius(sampleData.HashCodeNumber, out EuroSoundSfxRadiusData radiusData))
+                {
+                    gridObj.InnerRadius = radiusData.InnerRadius;
+                    gridObj.OuterRadius = radiusData.OuterRadius;
+                }
+            }
+
+            if (fileVersion >= 5 && fileVersion <= 6)
+            {
+                gridObj.TrackingType = GetTrackingTypeDescription(sampleData.TrackingType);
+            }
+            else
             {
                 switch (sampleData.TrackingType)
                 {
@@ -63,49 +79,17 @@ namespace sb_explorer
                     case 4:
                         gridObj.TrackingType = "2D PL2";
                         break;
+                    default:
+                        gridObj.TrackingType = sampleData.TrackingType.ToString();
+                        break;
                 }
-            }
-            else
-            {
-                //00 = 2D
-                //01 = 3D
-                //02 = 2D AMB
-                //03 = 3D AMB
-                //04 = 2D RND
-                //05 = 3D RND
-                //06 = 2D AMB RND
-                //07 = 3D AMB RND
-                //08 = 2D NT
-                //09 = 3D NT
-                StringBuilder stringBuilder1 = new StringBuilder();
-                if ((sbyte)(sampleData.TrackingType & 1) != 0)
-                {
-                    stringBuilder1.Append("3D ");
-                }
-                else
-                {
-                    stringBuilder1.Append("2D ");
-                }
-                if ((sbyte)(sampleData.TrackingType & 2) != 0)
-                {
-                    stringBuilder1.Append("AMB ");
-                }
-                if ((sbyte)(sampleData.TrackingType & 4) != 0)
-                {
-                    stringBuilder1.Append("RND ");
-                }
-                if ((sbyte)(sampleData.TrackingType & 8) != 0)
-                {
-                    stringBuilder1.Append("NT ");
-                }
-                gridObj.TrackingType = stringBuilder1.ToString().Trim();
             }
 
             //Display
             propertyGrid1.propsGrid.SelectedObject = gridObj;
 
             //Update Flags
-            if (MusXheaderData.FileVersion == 201 || MusXheaderData.FileVersion == 1)
+            if (fileVersion == 201 || fileVersion == 1)
             {
                 checkedListBox1.Items.Clear();
                 checkedListBox1.Items.AddRange(new string[] { "MaxReject", "Doppler", "IgnoreAge", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInNis", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "UserFlags14", "UserFlags15", "UserFlags16" });
@@ -124,6 +108,32 @@ namespace sb_explorer
             {
                 checkedListBox2.SetItemChecked(i, Convert.ToBoolean((sampleData.UserFlags >> i) & 1));
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static string GetTrackingTypeDescription(byte trackingType)
+        {
+            List<string> parts = new List<string>
+            {
+                (trackingType & 0x01) != 0 ? "3D" : "2D"
+            };
+
+            if ((trackingType & 0x02) != 0)
+            {
+                parts.Add("AMB");
+            }
+
+            if ((trackingType & 0x04) != 0)
+            {
+                parts.Add("RND");
+            }
+
+            if ((trackingType & 0x08) != 0)
+            {
+                parts.Add("NT");
+            }
+
+            return string.Join(" ", parts);
         }
     }
 

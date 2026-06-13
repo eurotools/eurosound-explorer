@@ -13,7 +13,7 @@ namespace MusX.Objects
         public short MinDelay;
         public short MaxDelay;
         public sbyte ReverbSend;
-        public sbyte TrackingType;
+        public byte TrackingType;
         public sbyte MaxVoices;
         public sbyte Priority;
         public sbyte Ducker;

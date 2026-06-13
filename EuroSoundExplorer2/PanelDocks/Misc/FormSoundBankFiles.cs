@@ -28,6 +28,8 @@ namespace sb_explorer
         private readonly ProjectDetailsReader projDetailsReader = new ProjectDetailsReader();
         private readonly SoundDetailsReader soundDetailsReader = new SoundDetailsReader();
         private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
+        private Dictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadiusLookupCache;
+        private string soundDetailsRadiusLookupCacheKey = string.Empty;
 
         public LoadedProjectData LoadedData { get; set; }
 
@@ -639,6 +641,54 @@ namespace sb_explorer
                 radii[hashCode] = radiusData;
                 radii[hashCode & 0x00FFFFFF] = radiusData;
             }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public bool TryGetSoundDetailsRadius(uint hashCode, out EuroSoundSfxRadiusData radiusData)
+        {
+            radiusData = null;
+
+            Dictionary<uint, EuroSoundSfxRadiusData> loadedRadii = BuildSoundDetailsRadiusLookup(SoundDetails);
+            if (TryGetSoundDetailsRadius(loadedRadii, hashCode, out radiusData))
+            {
+                return true;
+            }
+
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            string projectFolder = parentForm.Configuration.ProjectFolder;
+            if (!Directory.Exists(projectFolder))
+            {
+                return false;
+            }
+
+            string cacheKey = projectFolder + "|" + parentForm.Configuration.PlatformSelected + "|" + parentForm.Configuration.TitleSelected;
+            if (soundDetailsRadiusLookupCache == null || soundDetailsRadiusLookupCacheKey != cacheKey)
+            {
+                ProjectSfxExportOptions options = new ProjectSfxExportOptions
+                {
+                    ProjectFolder = projectFolder,
+                    Platform = parentForm.Configuration.PlatformSelected.ToString(),
+                    SelectedTitle = parentForm.Configuration.TitleSelected
+                };
+
+                string[] files = Directory.GetFiles(projectFolder, "*.sfx", SearchOption.AllDirectories);
+                soundDetailsRadiusLookupCache = BuildProjectSoundDetailsRadiusLookup(files, options, reader, soundDetailsReader);
+                soundDetailsRadiusLookupCacheKey = cacheKey;
+            }
+
+            return TryGetSoundDetailsRadius(soundDetailsRadiusLookupCache, hashCode, out radiusData);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private bool TryGetSoundDetailsRadius(Dictionary<uint, EuroSoundSfxRadiusData> radii, uint hashCode, out EuroSoundSfxRadiusData radiusData)
+        {
+            radiusData = null;
+            if (radii == null)
+            {
+                return false;
+            }
+
+            return radii.TryGetValue(hashCode, out radiusData) || radii.TryGetValue(hashCode & 0x00FFFFFF, out radiusData);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
