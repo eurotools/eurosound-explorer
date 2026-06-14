@@ -43,6 +43,9 @@ namespace sb_explorer
         //Streams
         public StreambankHeader StreamBankHeaderData { get { return LoadedData.StreamBankHeaderData; } set { LoadedData.StreamBankHeaderData = value; } }
         public List<StreamSample> StreamSamples { get { return LoadedData.StreamSamples; } }
+        public StreambankHeader CommonStreamBankHeaderData { get { return LoadedData.CommonStreamBankHeaderData; } set { LoadedData.CommonStreamBankHeaderData = value; } }
+        public List<StreamSample> CommonStreamSamples { get { return LoadedData.CommonStreamSamples; } }
+        public bool ActiveStreamBankIsCommon { get { return LoadedData.ActiveStreamBankIsCommon; } set { LoadedData.ActiveStreamBankIsCommon = value; } }
 
         //Musics
         public StreambankHeader MusicBankHeaderData { get { return LoadedData.MusicBankHeaderData; } set { LoadedData.MusicBankHeaderData = value; } }
@@ -334,7 +337,6 @@ namespace sb_explorer
                             break;
                         case FileType.StreamFile:
                             LoadSelectedStream(filePath);
-                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                             break;
                         case FileType.MusicFile:
                             LoadSelectedMusic(filePath);
@@ -780,14 +782,99 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void LoadSelectedStream(string filePath)
         {
-            ClearLoadedData(FileType.StreamFile);
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            StreambankHeader headerData = streamReader.ReadStreamBankHeader(filePath, parentForm.Configuration.PlatformSelected.ToString());
 
-            //Load data
-            StreamBankHeaderData = streamReader.ReadStreamBankHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
-            streamReader.ReadStreamBank(filePath, StreamBankHeaderData, StreamSamples);
+            ActiveStreamBankIsCommon = IsCommonVersion6Stream(headerData);
+            LoadStreamBank(filePath, headerData);
+            UpdateListViewLoadedState(filePath, "Loaded");
+            TryLoadVersion6StreamCompanion(filePath, headerData);
 
             //Display Data
-            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlStreamData.ShowStreamData();
+            parentForm.pnlStreamData.ShowStreamData();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void LoadStreamBank(string filePath, StreambankHeader headerData)
+        {
+            if (IsCommonVersion6Stream(headerData))
+            {
+                CommonStreamBankHeaderData = headerData;
+                CommonStreamSamples.Clear();
+                streamReader.ReadStreamBank(filePath, CommonStreamBankHeaderData, CommonStreamSamples);
+                return;
+            }
+
+            StreamBankHeaderData = headerData;
+            StreamSamples.Clear();
+            streamReader.ReadStreamBank(filePath, StreamBankHeaderData, StreamSamples);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void TryLoadVersion6StreamCompanion(string filePath, StreambankHeader headerData)
+        {
+            if (headerData.FileVersion != 6 ||
+                (headerData.FileHashCode != 0x2D400000 && headerData.FileHashCode != 0x2D400001))
+            {
+                return;
+            }
+
+            uint companionHashCode = headerData.FileHashCode == 0x2D400001 ? 0x2D400000u : 0x2D400001u;
+            if ((companionHashCode == 0x2D400000 && StreamSamples.Count > 0) ||
+                (companionHashCode == 0x2D400001 && CommonStreamSamples.Count > 0))
+            {
+                return;
+            }
+
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            string projectFolder = parentForm.Configuration.ProjectFolder;
+            if (!Directory.Exists(projectFolder))
+            {
+                return;
+            }
+
+            foreach (string candidatePath in Directory.GetFiles(projectFolder, "*.sfx", SearchOption.AllDirectories))
+            {
+                if (string.Equals(candidatePath, filePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                SfxCommonHeader commonHeader = reader.ReadCommonHeader(candidatePath, parentForm.Configuration.PlatformSelected.ToString());
+                if (commonHeader.FileVersion == 6 && commonHeader.FileHashCode == companionHashCode)
+                {
+                    StreambankHeader companionHeader = streamReader.ReadStreamBankHeader(candidatePath, parentForm.Configuration.PlatformSelected.ToString());
+                    LoadStreamBank(candidatePath, companionHeader);
+                    UpdateListViewLoadedState(candidatePath, "Loaded");
+                    return;
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void UpdateListViewLoadedState(string filePath, string state)
+        {
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+            string projectFolder = parentForm.Configuration.ProjectFolder;
+            string normalizedFilePath = Path.GetFullPath(filePath);
+
+            lvwFiles.BeginUpdate();
+            foreach (ListViewItem item in lvwFiles.Items)
+            {
+                string itemPath = Path.GetFullPath(Path.Combine(projectFolder, item.SubItems[2].Text.TrimStart('\\')));
+                if (string.Equals(itemPath, normalizedFilePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    item.SubItems[3].Text = state;
+                    break;
+                }
+            }
+            lvwFiles.EndUpdate();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private bool IsCommonVersion6Stream(StreambankHeader headerData)
+        {
+            return headerData.FileVersion == 6 && headerData.FileHashCode == 0x2D400001;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -889,6 +976,9 @@ namespace sb_explorer
                 case FileType.StreamFile:
                     StreamBankHeaderData = new StreambankHeader();
                     StreamSamples.Clear();
+                    CommonStreamBankHeaderData = new StreambankHeader();
+                    CommonStreamSamples.Clear();
+                    ActiveStreamBankIsCommon = false;
 
                     //Clear UI
                     mainForm.pnlMarkers.lvwMarkers.Items.Clear();

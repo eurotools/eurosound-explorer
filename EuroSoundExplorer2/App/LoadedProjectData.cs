@@ -13,6 +13,9 @@ namespace sb_explorer
 
         public StreambankHeader StreamBankHeaderData = new StreambankHeader();
         public readonly List<StreamSample> StreamSamples = new List<StreamSample>();
+        public StreambankHeader CommonStreamBankHeaderData = new StreambankHeader();
+        public readonly List<StreamSample> CommonStreamSamples = new List<StreamSample>();
+        public bool ActiveStreamBankIsCommon;
 
         public StreambankHeader MusicBankHeaderData = new StreambankHeader();
         public MusicSample MusicData = new MusicSample();

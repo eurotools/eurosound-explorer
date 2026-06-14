@@ -20,6 +20,50 @@ namespace sb_explorer
         private Sample soundSampleData;
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
 
+        private sealed class SamplePoolFileRef
+        {
+            public short RawFileRef { get; private set; }
+            public short DisplayFileRef { get; private set; }
+            public bool IsStream { get; private set; }
+            public bool IsCommonStream { get; private set; }
+            public bool IsMemorySample { get { return !IsStream && DisplayFileRef >= 0; } }
+            public int StreamSampleIndex { get; private set; }
+
+            public static SamplePoolFileRef FromSampleInfo(SampleInfo samplePoolItem, SoundbankHeader headerData, bool isSubSfx)
+            {
+                SamplePoolFileRef fileRef = new SamplePoolFileRef
+                {
+                    RawFileRef = samplePoolItem.FileRef,
+                    DisplayFileRef = samplePoolItem.FileRef,
+                    StreamSampleIndex = -1
+                };
+
+                if (headerData.FileVersion == 6)
+                {
+                    ushort rawFileRef = (ushort)samplePoolItem.FileRef;
+                    bool stream = (rawFileRef & 0x8000) != 0;
+                    bool commonStream = (rawFileRef & 0x4000) == 0;
+
+                    if (!isSubSfx && stream)
+                    {
+                        int streamIndex = rawFileRef & 0x3FFF;
+                        fileRef.IsStream = true;
+                        fileRef.IsCommonStream = commonStream;
+                        fileRef.StreamSampleIndex = streamIndex;
+                        fileRef.DisplayFileRef = (short)(streamIndex + 1);
+                    }
+                }
+                else if (!isSubSfx && samplePoolItem.FileRef < 0)
+                {
+                    fileRef.IsStream = true;
+                    fileRef.StreamSampleIndex = Math.Abs(samplePoolItem.FileRef) - 1;
+                    fileRef.DisplayFileRef = (short)Math.Abs(samplePoolItem.FileRef);
+                }
+
+                return fileRef;
+            }
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------
         public FormSB_SamplePool()
         {
@@ -62,14 +106,13 @@ namespace sb_explorer
                 {
                     foreach (ListViewItem selectedItem in listView1.SelectedItems)
                     {
-                        short fileRef = (short)selectedItem.Tag;
+                        SamplePoolFileRef fileRef = (SamplePoolFileRef)selectedItem.Tag;
+                        byte[] encodedData = GetEncodedDataFromFileRef(fileRef);
 
-                        //Get Sample data 
-                        List<SampleData> wavesList = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SfxStoredData;
-                        SampleData selectedSample = wavesList[fileRef];
-
-                        //Write RAW file
-                        File.WriteAllBytes(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, fileRef + ".raw")), selectedSample.EncodedData);
+                        if (encodedData != null)
+                        {
+                            File.WriteAllBytes(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, GetOutputFileName(fileRef, ".raw"))), encodedData);
+                        }
                     }
                 }
             }
@@ -84,12 +127,12 @@ namespace sb_explorer
                 {
                     foreach (ListViewItem selectedItem in listView1.SelectedItems)
                     {
-                        short fileRef = (short)selectedItem.Tag;
+                        SamplePoolFileRef fileRef = (SamplePoolFileRef)selectedItem.Tag;
                         SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem);
                         if (soundToPlay != null)
                         {
                             IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
-                            WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, fileRef + ".wav")), wavFile.ToSampleProvider());
+                            WaveFileWriter.CreateWaveFile16(GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, GetOutputFileName(fileRef, ".wav"))), wavFile.ToSampleProvider());
                         }
                     }
                 }
@@ -108,7 +151,8 @@ namespace sb_explorer
             if (listView1.SelectedItems.Count > 0)
             {
                 SortedDictionary<uint, Sample> samplesDisct = ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundBankFiles.SfxSamples;
-                using (FrmFileRefUsage formUsage = new FrmFileRefUsage((short)listView1.SelectedItems[0].Tag, soundSampleData, samplesDisct))
+                SamplePoolFileRef fileRef = (SamplePoolFileRef)listView1.SelectedItems[0].Tag;
+                using (FrmFileRefUsage formUsage = new FrmFileRefUsage(fileRef.RawFileRef, soundSampleData, samplesDisct))
                 {
                     formUsage.ShowDialog();
                 }
@@ -126,24 +170,21 @@ namespace sb_explorer
 
             listView1.BeginUpdate();
             listView1.Items.Clear();
+            bool isSubSfx = Convert.ToBoolean((sampleData.Flags >> 10) & 1);
             foreach (SampleInfo samplePoolItem in sampleData.samplesList)
             {
                 ListViewItem listViewItem = new ListViewItem(new string[] { "", "", "", "", "", "", "" })
                 {
                     ImageIndex = 0
                 };
-                short finalFileRef = samplePoolItem.FileRef;
+                SamplePoolFileRef fileRef = SamplePoolFileRef.FromSampleInfo(samplePoolItem, MusXheaderData, isSubSfx);
+                short finalFileRef = fileRef.DisplayFileRef;
 
                 //Check for SubSFX
-                if (Convert.ToBoolean((sampleData.Flags >> 10) & 1))
+                if (isSubSfx)
                 {
                     if (finalFileRef < 0)
                     {
-                        //Apply 0x3FFF and turn it into negative to be detected by the tool as a stream file.
-                        if (MusXheaderData.FileVersion > 5 && MusXheaderData.FileVersion < 15)
-                        {
-                            finalFileRef = (short)((samplePoolItem.FileRef & 0x3FFF) * -1);
-                        }
                         listViewItem.Text = "Stream: " + finalFileRef;
                     }
                     else if (Hashcodes == null)
@@ -181,14 +222,9 @@ namespace sb_explorer
                         }
                     }
                 }
-                else if (finalFileRef < 0)
+                else if (fileRef.IsStream)
                 {
-                    //Apply 0x3FFF and turn it into negative to be detected by the tool as a stream file.
-                    if (MusXheaderData.FileVersion > 5 && MusXheaderData.FileVersion < 15)
-                    {
-                        finalFileRef = (short)((samplePoolItem.FileRef & 0x3FFF) * -1);
-                    }
-                    listViewItem.Text = "Stream: " + finalFileRef;
+                    listViewItem.Text = (fileRef.IsCommonStream ? "Common Stream: " : "Stream: ") + finalFileRef;
                 }
                 else
                 {
@@ -205,7 +241,7 @@ namespace sb_explorer
                 listViewItem.SubItems[4].Text = samplePoolItem.PitchOffset.ToString();
                 listViewItem.SubItems[5].Text = samplePoolItem.Pan.ToString();
                 listViewItem.SubItems[6].Text = samplePoolItem.PanOffset.ToString();
-                listViewItem.Tag = finalFileRef;
+                listViewItem.Tag = fileRef;
 
                 //Add item to listview
                 listView1.Items.Add(listViewItem);
@@ -238,18 +274,62 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private byte[] GetEncodedDataFromFileRef(SamplePoolFileRef fileRef)
+        {
+            FrmMain parentForm = (FrmMain)Application.OpenForms[nameof(FrmMain)];
+
+            if (fileRef.IsMemorySample)
+            {
+                List<SampleData> wavesList = parentForm.pnlSoundBankFiles.SfxStoredData;
+                if (fileRef.DisplayFileRef >= 0 && fileRef.DisplayFileRef < wavesList.Count)
+                {
+                    return wavesList[fileRef.DisplayFileRef].EncodedData;
+                }
+            }
+            else if (fileRef.IsStream)
+            {
+                List<StreamSample> streamedSamples = fileRef.IsCommonStream
+                    ? parentForm.pnlSoundBankFiles.CommonStreamSamples
+                    : parentForm.pnlSoundBankFiles.StreamSamples;
+
+                if (fileRef.StreamSampleIndex >= 0 && fileRef.StreamSampleIndex < streamedSamples.Count)
+                {
+                    return streamedSamples[fileRef.StreamSampleIndex].EncodedData;
+                }
+            }
+
+            return null;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private string GetOutputFileName(SamplePoolFileRef fileRef, string extension)
+        {
+            if (fileRef.IsStream)
+            {
+                return (fileRef.IsCommonStream ? "common_stream_" : "stream_") + fileRef.DisplayFileRef + extension;
+            }
+
+            return fileRef.DisplayFileRef + extension;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private SoundFile GetSoundFileFromListViewItem(ListViewItem selectedItem)
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
-            short fileRef = (short)selectedItem.Tag;
+            SamplePoolFileRef fileRef = (SamplePoolFileRef)selectedItem.Tag;
             byte[] decodedData = null;
             SoundFile soundToPlay = null;
 
             //SoundBanks
-            if (fileRef >= 0 && ((soundSampleData.Flags >> 10) & 1) == 0)
+            if (fileRef.IsMemorySample && ((soundSampleData.Flags >> 10) & 1) == 0)
             {
                 List<SampleData> wavesList = parentForm.pnlSoundBankFiles.SfxStoredData;
-                SampleData selectedSample = wavesList[fileRef];
+                if (fileRef.DisplayFileRef < 0 || fileRef.DisplayFileRef >= wavesList.Count)
+                {
+                    return null;
+                }
+
+                SampleData selectedSample = wavesList[fileRef.DisplayFileRef];
 
                 //Decode Data
                 decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData, parentForm.Configuration.PlatformSelected);
@@ -273,17 +353,21 @@ namespace sb_explorer
                     soundToPlay.isLooped = selectedSample.Flags == 1;
                 }
             }
-            else if (fileRef < 0 && ((soundSampleData.Flags >> 10) & 1) == 0) //Streambanks
+            else if (fileRef.IsStream && ((soundSampleData.Flags >> 10) & 1) == 0) //Streambanks
             {
-                fileRef = (short)(Math.Abs(fileRef) - 1);
-                List<StreamSample> streamedSamples = parentForm.pnlSoundBankFiles.StreamSamples;
+                List<StreamSample> streamedSamples = fileRef.IsCommonStream
+                    ? parentForm.pnlSoundBankFiles.CommonStreamSamples
+                    : parentForm.pnlSoundBankFiles.StreamSamples;
+                StreambankHeader headerData = fileRef.IsCommonStream
+                    ? parentForm.pnlSoundBankFiles.CommonStreamBankHeaderData
+                    : parentForm.pnlSoundBankFiles.StreamBankHeaderData;
 
-                if ((fileRef >= 0) && (fileRef < streamedSamples.Count))
+                if ((fileRef.StreamSampleIndex >= 0) && (fileRef.StreamSampleIndex < streamedSamples.Count))
                 {
-                    StreamSample selectedSample = streamedSamples[fileRef];
+                    StreamSample selectedSample = streamedSamples[fileRef.StreamSampleIndex];
 
                     //Decode Data
-                    decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.StreamBankHeaderData, parentForm.Configuration.PlatformSelected);
+                    decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, headerData, parentForm.Configuration.PlatformSelected);
                     if (decodedData != null)
                     {
                         soundToPlay = new SoundFile();

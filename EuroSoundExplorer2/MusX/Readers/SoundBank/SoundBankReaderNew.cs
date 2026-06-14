@@ -1,4 +1,5 @@
 ﻿using MusX.Objects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,6 +11,7 @@ namespace MusX.Readers
     internal class SoundBankReaderNew : SoundBankReader
     {
         //-------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------
         internal void ReadSoundbank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList, List<uint> duplicatedHashCodes)
         {
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
@@ -17,6 +19,7 @@ namespace MusX.Readers
                 //Read SFX Start
                 BReader.BaseStream.Seek(headerData.SFXStart, SeekOrigin.Begin);
                 uint sfxCount = BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+
                 for (int i = 0; i < sfxCount; i++)
                 {
                     uint hashcode;
@@ -25,9 +28,11 @@ namespace MusX.Readers
                         case 201:
                             hashcode = 0x1A000000 | BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                             break;
+
                         case 6:
                             hashcode = 0x2D700000 | BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                             break;
+
                         default:
                             hashcode = 0x1AF00000 | BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
                             break;
@@ -39,7 +44,7 @@ namespace MusX.Readers
                     //Goto SFX Data
                     BReader.BaseStream.Seek(headerData.SFXStart + curSfxPos, SeekOrigin.Begin);
 
-                    //Save position
+                    //Read SFX data
                     Sample sample = new Sample
                     {
                         HashCodeNumber = hashcode,
@@ -55,9 +60,12 @@ namespace MusX.Readers
                     };
 
                     //Read flags and sample pool
-                    if (headerData.Platform.Contains("PS2") || (headerData.Platform.Contains("XB") && headerData.FileVersion < 5) || (headerData.Platform.Contains("GC") && headerData.FileVersion < 5))
+                    if (headerData.Platform.Contains("PS2") ||
+                        (headerData.Platform.Contains("XB") && headerData.FileVersion < 5) ||
+                        (headerData.Platform.Contains("GC") && headerData.FileVersion < 5))
                     {
                         short groupHashCode = (short)BReader.ReadUInt16();
+
                         sample.GroupHashCode = (short)((groupHashCode & 0xFFF0) >> 4);
                         sample.GroupMaxChannels = (sbyte)(groupHashCode & 0xF);
 
@@ -78,27 +86,30 @@ namespace MusX.Readers
                         sample.GroupMaxChannels = BReader.ReadSByte();
                         BReader.ReadSByte();
 
-                        //Flags
+                        //Read Flags
                         for (int j = 0; j < 16; j++)
                         {
                             sbyte flagState = BReader.ReadSByte();
+
                             if (flagState == 1)
                             {
                                 sample.Flags = (ushort)(sample.Flags | (flagState << j));
                             }
                         }
 
-                        //User Flags
+                        //Read User Flags
                         if (headerData.FileVersion > 4)
                         {
                             for (int j = 0; j < 16; j++)
                             {
                                 sbyte flagState = BReader.ReadSByte();
+
                                 if (flagState == 1)
                                 {
                                     sample.UserFlags = (ushort)(sample.UserFlags | (flagState << j));
                                 }
                             }
+
                             sample.DopplerValue = BReader.ReadSByte();
                             sample.UserValue = BReader.ReadSByte();
                         }
@@ -110,8 +121,9 @@ namespace MusX.Readers
                         sample.Spare = BReader.ReadSByte();
                     }
 
-                    //Read Sample Pool 
+                    //Read Sample Pool
                     ushort samplesCount = BytesFunctions.FlipData(BReader.ReadUInt16(), headerData.IsBigEndian);
+
                     for (int j = 0; j < samplesCount; j++)
                     {
                         SampleInfo samplePoolItem = new SampleInfo
@@ -124,6 +136,7 @@ namespace MusX.Readers
                             Pan = BReader.ReadSByte(),
                             PanOffset = BReader.ReadSByte()
                         };
+
                         sample.samplesList.Add(samplePoolItem);
                     }
 
@@ -140,13 +153,14 @@ namespace MusX.Readers
                     //Read data to show in the Hex viewer
                     BReader.BaseStream.Seek(curSfxPos + headerData.SFXStart, SeekOrigin.Begin);
 
-                    //return 
+                    //Return to previous position
                     BReader.BaseStream.Seek(prevPos, SeekOrigin.Begin);
                 }
 
                 //Read Sample info
                 BReader.BaseStream.Seek(headerData.SampleInfoStart, SeekOrigin.Begin);
                 uint waveCount = BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian);
+
                 for (int i = 0; i < waveCount; i++)
                 {
                     SampleData wavHeaderData = new SampleData
@@ -160,10 +174,12 @@ namespace MusX.Readers
                         LoopStartOffset = BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian),
                         Duration = BytesFunctions.FlipData(BReader.ReadUInt32(), headerData.IsBigEndian)
                     };
+
                     wavHeaderData.OriginalLoopOffset = wavHeaderData.LoopStartOffset;
 
                     //Parse Xbox Offset
-                    if (headerData.Platform.IndexOf("PC", System.StringComparison.OrdinalIgnoreCase) >= 0 || headerData.Platform.IndexOf("XB", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (headerData.Platform.IndexOf("PC", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        headerData.Platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         wavHeaderData.TotalSamples = CalculusLoopOffsets.EurocomImaToSamples((uint)wavHeaderData.SampleSize, 1);
                         wavHeaderData.LoopStartOffset = CalculusLoopOffsets.EurocomImaToSamples((uint)wavHeaderData.LoopStartOffset, 1);
@@ -177,19 +193,25 @@ namespace MusX.Readers
                     //Store current position
                     long prevPos = BReader.BaseStream.Position;
 
-                    //Read audio pcm data
+                    //Read audio PCM data
                     BReader.BaseStream.Seek(headerData.SampleDataStart + wavHeaderData.Address, SeekOrigin.Begin);
                     wavHeaderData.EncodedData = BReader.ReadBytes((int)wavHeaderData.SampleSize);
 
-                    //Read coeffs
+                    //Read coefficients
                     if (headerData.SpecialSampleInfoLength > 0)
                     {
-                        BReader.BaseStream.Seek(headerData.SpecialSampleInfoStart + wavHeaderData.PsiSampleHeader, SeekOrigin.Begin);
+                        BReader.BaseStream.Seek(
+                            headerData.SpecialSampleInfoStart + wavHeaderData.PsiSampleHeader,
+                            SeekOrigin.Begin);
+
                         BReader.BaseStream.Seek(28, SeekOrigin.Current);
+
                         wavHeaderData.DspCoeffs = new short[16];
+
                         for (int j = 0; j < wavHeaderData.DspCoeffs.Length; j++)
                         {
-                            wavHeaderData.DspCoeffs[j] = BytesFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian);
+                            wavHeaderData.DspCoeffs[j] =
+                                BytesFunctions.FlipData(BReader.ReadInt16(), headerData.IsBigEndian);
                         }
                     }
 

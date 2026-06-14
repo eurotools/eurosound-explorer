@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace sb_explorer
