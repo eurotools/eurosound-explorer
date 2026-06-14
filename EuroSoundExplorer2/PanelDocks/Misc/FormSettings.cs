@@ -87,7 +87,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private string SettingsDirectory
         {
-            get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName); }
+            get { return Path.Combine(Application.StartupPath, "ESEx"); }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -97,20 +97,9 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private string LegacySettingsFilePath
-        {
-            get { return Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"); }
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
         private string GetSettingsFileToLoad()
         {
-            if (File.Exists(SettingsFilePath))
-            {
-                return SettingsFilePath;
-            }
-
-            return LegacySettingsFilePath;
+            return SettingsFilePath;
         }
     }
 

@@ -19,7 +19,8 @@ namespace MusX.Readers
             MusicDetails = 6,
             SBI = 7,
             TestSFX = 8,
-            Unknown = 9
+            MusicMarkers = 9,
+            Unknown = 10
         }
 
         //-------------------------------------------------------------------------------------------

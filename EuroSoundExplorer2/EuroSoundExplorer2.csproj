@@ -178,6 +178,7 @@
     <Compile Include="MusX\Objects\Markers\Marker.cs" />
     <Compile Include="MusX\Objects\Markers\StartMarker.cs" />
     <Compile Include="MusX\Objects\MusicDetails.cs" />
+    <Compile Include="MusX\Objects\MusicMarkers.cs" />
     <Compile Include="MusX\Objects\MusicSample.cs" />
     <Compile Include="MusX\Objects\ProjectDetails.cs" />
     <Compile Include="MusX\Objects\ProjectSlots.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="MusX\Objects\SoundDetails.cs" />
     <Compile Include="MusX\Objects\StreamSample.cs" />
     <Compile Include="MusX\Readers\Details Files\MusicDetailsReader.cs" />
+    <Compile Include="MusX\Readers\Details Files\MusicMarkersReader.cs" />
     <Compile Include="MusX\Readers\Details Files\ProjectDetailsReader.cs" />
     <Compile Include="MusX\Readers\Details Files\SoundDetailsReader.cs" />
     <Compile Include="MusX\Readers\MusicBank\MusicBankReader.cs" />
@@ -215,6 +217,12 @@
     </Compile>
     <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.Designer.cs">
       <DependentUpon>FrmMusicDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelDocks\Details Files\Music Markers\FormMM_MusicMarkers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PanelDocks\Details Files\Music Markers\FormMM_MusicMarkers.Designer.cs">
+      <DependentUpon>FormMM_MusicMarkers.cs</DependentUpon>
     </Compile>
     <Compile Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.cs">
       <SubType>Form</SubType>

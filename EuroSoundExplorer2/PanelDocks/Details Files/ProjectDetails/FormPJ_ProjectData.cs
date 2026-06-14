@@ -25,10 +25,22 @@ namespace sb_explorer
 
             //Add all items
             lvwFlags.BeginUpdate();
-            for (int i = 0; i < projDataObj.flagsValues.Length; i++)
+            lvwFlags.Items.Clear();
+            if (projDataObj.userValues.Count > 0)
             {
-                ListViewItem itemToAdd = new ListViewItem(new string[] { i.ToString(), projDataObj.flagsValues[i].ToString() });
-                lvwFlags.Items.Add(itemToAdd);
+                for (int i = 0; i < projDataObj.userValues.Count; i++)
+                {
+                    ListViewItem itemToAdd = new ListViewItem(new string[] { i.ToString(), projDataObj.userValues[i].ToString() });
+                    lvwFlags.Items.Add(itemToAdd);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < projDataObj.flagsValues.Length; i++)
+                {
+                    ListViewItem itemToAdd = new ListViewItem(new string[] { i.ToString(), projDataObj.flagsValues[i].ToString() });
+                    lvwFlags.Items.Add(itemToAdd);
+                }
             }
             lvwFlags.EndUpdate();
         }

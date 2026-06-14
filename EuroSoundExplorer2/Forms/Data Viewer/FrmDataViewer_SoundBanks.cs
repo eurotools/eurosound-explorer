@@ -278,6 +278,7 @@ namespace sb_explorer
             TreeAdd(fileSections, nameof(fileData.MemorySlotsOffset), fileData.MemorySlotsOffset);
             TreeAdd(fileSections, nameof(fileData.SoundBanksCount), fileData.SoundBanksCount);
             TreeAdd(fileSections, nameof(fileData.SoundBanksOffset), fileData.SoundBanksOffset);
+            TreeAdd(fileSections, nameof(fileData.MaximumMemoryMapSize), fileData.MaximumMemoryMapSize);
 
 
             //Print Flags
@@ -286,20 +287,45 @@ namespace sb_explorer
             TreeAdd(flagsSection, nameof(fileData.StereoStreamCount), fileData.StereoStreamCount);
             TreeAdd(flagsSection, nameof(fileData.MonoStreamCount), fileData.MonoStreamCount);
             TreeAdd(flagsSection, nameof(fileData.ProjectCode), fileData.ProjectCode);
-            for (int i = 0; i < fileData.flagsValues.Length; i++)
+            if (fileData.userValues.Count > 0)
             {
-                TreeAdd(flagsSection, i.ToString(), fileData.flagsValues[i]);
+                for (int i = 0; i < fileData.userValues.Count; i++)
+                {
+                    TreeAdd(flagsSection, i.ToString(), fileData.userValues[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < fileData.flagsValues.Length; i++)
+                {
+                    TreeAdd(flagsSection, i.ToString(), fileData.flagsValues[i]);
+                }
             }
 
             //Print Project Slots
             TreeNode memSlots = new TreeNode("Memory Slots " + fileData.memorySlotsData.Count);
             treeView1.Nodes.Add(memSlots);
-            foreach (ProjectSlots item in fileData.memorySlotsData)
+            if (fileData.memoryMapsData.Count > 0)
             {
-                TreeNode memSlot = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", nameof(item.SlotNumber), item.SlotNumber));
-                memSlots.Nodes.Add(memSlot);
-                TreeAdd(memSlot, nameof(item.MemorySize), item.MemorySize);
-                TreeAdd(memSlot, nameof(item.Quantity), item.Quantity);
+                foreach (ProjectMemoryMap memoryMap in fileData.memoryMapsData)
+                {
+                    TreeNode memoryMapNode = new TreeNode(memoryMap.Name);
+                    memSlots.Nodes.Add(memoryMapNode);
+                    for (int i = 0; i < memoryMap.SlotSizes.Count; i++)
+                    {
+                        TreeAdd(memoryMapNode, "Slot " + i, memoryMap.SlotSizes[i]);
+                    }
+                }
+            }
+            else
+            {
+                foreach (ProjectSlots item in fileData.memorySlotsData)
+                {
+                    TreeNode memSlot = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", nameof(item.SlotNumber), item.SlotNumber));
+                    memSlots.Nodes.Add(memSlot);
+                    TreeAdd(memSlot, nameof(item.MemorySize), item.MemorySize);
+                    TreeAdd(memSlot, nameof(item.Quantity), item.Quantity);
+                }
             }
 
             //Print SoundBanks Slots
@@ -370,6 +396,57 @@ namespace sb_explorer
                 TreeAdd(memSlot, nameof(item.Duration), item.Duration);
                 TreeAdd(memSlot, nameof(item.MusicLooping), item.MusicLooping);
                 TreeAdd(memSlot, nameof(item.UserValue), item.UserValue);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void ShowMusicMarkers(string filePath)
+        {
+            //Read File Data 
+            SfxCommonHeader headerData = musicMarkersReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            MusicMarkers fileData = musicMarkersReader.ReadMusicMarkersFile(filePath, headerData);
+
+            //Add data
+            TreeNode musicMarkersInfo = ShowHeaderData(headerData, "MusicMarkers Info");
+
+            TreeNode arrayInfo = new TreeNode("Array Info");
+            musicMarkersInfo.Nodes.Add(arrayInfo);
+            TreeAdd(arrayInfo, nameof(fileData.MusicHeadersCount), fileData.MusicHeadersCount);
+            TreeAdd(arrayInfo, nameof(fileData.MusicHeadersPadding), fileData.MusicHeadersPadding);
+            TreeAdd(arrayInfo, nameof(fileData.MusicMarkerCountsCount), fileData.MusicMarkerCountsCount);
+            TreeAdd(arrayInfo, nameof(fileData.MusicMarkerCountsPadding), fileData.MusicMarkerCountsPadding);
+            TreeAdd(arrayInfo, nameof(fileData.MusicMarkerListsCount), fileData.MusicMarkerListsCount);
+            TreeAdd(arrayInfo, nameof(fileData.MusicMarkerListsPadding), fileData.MusicMarkerListsPadding);
+
+            TreeNode musicHeaders = new TreeNode("Music Headers " + fileData.MusicHeaders.Count);
+            musicMarkersInfo.Nodes.Add(musicHeaders);
+            foreach (MusicMarkerHeader item in fileData.MusicHeaders)
+            {
+                TreeNode musicHeader = new TreeNode(string.Format("u32 {0} = {1} (0x{1:X8})", nameof(item.MusicHashCode), item.MusicHashCode));
+                musicHeaders.Nodes.Add(musicHeader);
+                TreeAdd(musicHeader, nameof(item.StreamDataOffset), item.StreamDataOffset);
+                TreeAdd(musicHeader, nameof(item.BaseVolume), item.BaseVolume);
+                TreeAdd(musicHeader, nameof(item.Padding), item.Padding);
+            }
+
+            TreeNode markerCounts = new TreeNode("Marker Counts " + fileData.MusicMarkerCounts.Count);
+            musicMarkersInfo.Nodes.Add(markerCounts);
+            foreach (MusicMarkerCounts item in fileData.MusicMarkerCounts)
+            {
+                TreeNode markerCount = new TreeNode(string.Format("StartMarkers={0} Markers={1}", item.StartMarkerCount, item.MarkerCount));
+                markerCounts.Nodes.Add(markerCount);
+                TreeAdd(markerCount, nameof(item.Padding0), item.Padding0);
+                TreeAdd(markerCount, nameof(item.Padding1), item.Padding1);
+            }
+
+            TreeNode markerLists = new TreeNode("Marker Lists " + fileData.MusicMarkerLists.Count);
+            musicMarkersInfo.Nodes.Add(markerLists);
+            foreach (MusicMarkerListEntry item in fileData.MusicMarkerLists)
+            {
+                TreeNode markerList = new TreeNode(string.Format("Position={0} LoopStart={1}", item.Position, item.LoopStart));
+                markerLists.Nodes.Add(markerList);
+                TreeAdd(markerList, nameof(item.Padding0), item.Padding0);
+                TreeAdd(markerList, nameof(item.Padding1), item.Padding1);
             }
         }
 

@@ -28,5 +28,8 @@ namespace sb_explorer
 
         public SfxCommonHeader MusicDetailsHeaderData = new SfxCommonHeader();
         public MusicDetails MusicDetails = new MusicDetails();
+
+        public SfxCommonHeader MusicMarkersHeaderData = new SfxCommonHeader();
+        public MusicMarkers MusicMarkers = new MusicMarkers();
     }
 }

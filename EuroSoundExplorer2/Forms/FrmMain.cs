@@ -42,6 +42,7 @@ namespace sb_explorer
         internal FormPJ_ProjectData pnlProjDetailsData = new FormPJ_ProjectData();
         internal FormSD_SoundDetails pnlSoundDetailsData = new FormSD_SoundDetails();
         internal FrmMusicDetails pnlMusicDetailsData = new FrmMusicDetails();
+        internal FormMM_MusicMarkers pnlMusicMarkersData = new FormMM_MusicMarkers();
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -96,6 +97,7 @@ namespace sb_explorer
             m_DockForms.Add(pnlProjDetailsData);
             m_DockForms.Add(pnlSoundDetailsData);
             m_DockForms.Add(pnlMusicDetailsData);
+            m_DockForms.Add(pnlMusicMarkersData);
 
             //Load previous settings
             SetSplashStatus("Loading settings...");
@@ -171,14 +173,11 @@ namespace sb_explorer
             //Check if user wants to restore the default values
             if (ResetSettingsOnExit)
             {
-                File.Delete(Path.Combine(Application.StartupPath, "ESEx", "General Settings.ini"));
-                File.Delete(Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml"));
                 File.Delete(Path.Combine(SettingsDirectory, "General Settings.ini"));
                 File.Delete(DockSettingsFilePath);
                 foreach (Form dockForm in m_DockForms)
                 {
                     File.Delete(GetConfigFile(dockForm));
-                    File.Delete(GetLegacyConfigFile(dockForm));
                 }
             }
         }
@@ -420,6 +419,13 @@ namespace sb_explorer
             UpdateWindowMenuChecks();
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private void MenuItem_MusicMarkers_Click(object sender, EventArgs e)
+        {
+            pnlMusicMarkersData.Show(mainDockPanel, DockState.Float);
+            UpdateWindowMenuChecks();
+        }
+
         //-------------------------------------------------------------------------------------------
         //  Help Menu
         //-------------------------------------------------------------------------------------------
@@ -465,6 +471,7 @@ namespace sb_explorer
             MenuItem_Project_ProjectData.Checked = pnlProjDetailsData.DockState != DockState.Hidden;
             MenuItem_SoundDetails.Checked = pnlSoundDetailsData.DockState != DockState.Hidden;
             MenuItem_MusicDetails.Checked = pnlMusicDetailsData.DockState != DockState.Hidden;
+            MenuItem_MusicMarkers.Checked = pnlMusicMarkersData.DockState != DockState.Hidden;
 
             //Menu 1
             MenuItem_SfxFiles.Checked = pnlSoundBankFiles.DockState != DockState.Hidden;
@@ -472,30 +479,19 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private string SettingsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);
+        private string SettingsDirectory => Path.Combine(Application.StartupPath, "ESEx");
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private string DockSettingsFilePath => Path.Combine(SettingsDirectory, "Dock Settings.xml");
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private string LegacyDockSettingsFilePath => Path.Combine(Application.StartupPath, "ESEx", "Dock Settings.xml");
-
-        //-------------------------------------------------------------------------------------------------------------------------------
         private string GetDockSettingsFileToLoad()
         {
-            if (File.Exists(DockSettingsFilePath))
-            {
-                return DockSettingsFilePath;
-            }
-
-            return LegacyDockSettingsFilePath;
+            return DockSettingsFilePath;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private string GetConfigFile(Form f) => Path.Combine(SettingsDirectory, f.Name + ".ini");
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        private string GetLegacyConfigFile(Form f) => Path.Combine(Application.StartupPath, "ESEx", f.Name + ".ini");
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private void SaveListViewConfig(Form f)
@@ -520,7 +516,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void LoadListViewConfig(Form frm)
         {
-            string filePath = File.Exists(GetConfigFile(frm)) ? GetConfigFile(frm) : GetLegacyConfigFile(frm);
+            string filePath = GetConfigFile(frm);
             if (File.Exists(filePath))
             {
                 string[] fileContent = File.ReadAllLines(filePath);

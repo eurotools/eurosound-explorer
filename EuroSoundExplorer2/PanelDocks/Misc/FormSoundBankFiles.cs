@@ -28,6 +28,7 @@ namespace sb_explorer
         private readonly ProjectDetailsReader projDetailsReader = new ProjectDetailsReader();
         private readonly SoundDetailsReader soundDetailsReader = new SoundDetailsReader();
         private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
+        private readonly MusicMarkersReader musicMarkersReader = new MusicMarkersReader();
         private Dictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadiusLookupCache;
         private string soundDetailsRadiusLookupCacheKey = string.Empty;
 
@@ -62,6 +63,10 @@ namespace sb_explorer
         //Music Details
         public SfxCommonHeader MusicDetailsHeaderData { get { return LoadedData.MusicDetailsHeaderData; } set { LoadedData.MusicDetailsHeaderData = value; } }
         public MusicDetails MusicDetails { get { return LoadedData.MusicDetails; } set { LoadedData.MusicDetails = value; } }
+
+        //Music Markers
+        public SfxCommonHeader MusicMarkersHeaderData { get { return LoadedData.MusicMarkersHeaderData; } set { LoadedData.MusicMarkersHeaderData = value; } }
+        public MusicMarkers MusicMarkers { get { return LoadedData.MusicMarkers; } set { LoadedData.MusicMarkers = value; } }
 
         //-------------------------------------------------------------------------------------------
         //  MAIN FORM
@@ -271,6 +276,9 @@ namespace sb_explorer
                     case FileType.MusicDetails:
                         LoadSelectedMusicDetails(filePath);
                         break;
+                    case FileType.MusicMarkers:
+                        LoadSelectedMusicMarkers(filePath);
+                        break;
                 }
             }
         }
@@ -346,6 +354,10 @@ namespace sb_explorer
                             break;
                         case FileType.MusicDetails:
                             LoadSelectedMusicDetails(filePath);
+                            lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
+                            break;
+                        case FileType.MusicMarkers:
+                            LoadSelectedMusicMarkers(filePath);
                             lvwFiles.SelectedItems[0].SubItems[3].Text = "Loaded";
                             break;
                     }
@@ -826,7 +838,7 @@ namespace sb_explorer
 
             //Load data
             SoundDetailsHeaderData = soundDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
-            SoundDetails = soundDetailsReader.ReadSoundDetailsFile(filePath, ProjDetailsHeaderData);
+            SoundDetails = soundDetailsReader.ReadSoundDetailsFile(filePath, SoundDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlSoundDetailsData.ShowData();
         }
@@ -838,9 +850,21 @@ namespace sb_explorer
 
             //Load data
             MusicDetailsHeaderData = musicDetailsReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
-            MusicDetails = musicDetailsReader.ReadMusicDetailsFile(filePath, ProjDetailsHeaderData);
+            MusicDetails = musicDetailsReader.ReadMusicDetailsFile(filePath, MusicDetailsHeaderData);
 
             ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicDetailsData.ShowData();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public void LoadSelectedMusicMarkers(string filePath)
+        {
+            ClearLoadedData(FileType.MusicMarkers);
+
+            //Load data
+            MusicMarkersHeaderData = musicMarkersReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+            MusicMarkers = musicMarkersReader.ReadMusicMarkersFile(filePath, MusicMarkersHeaderData);
+
+            ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMusicMarkersData.ShowData();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -913,6 +937,13 @@ namespace sb_explorer
                     //Clear UI
                     mainForm.pnlMusicDetailsData.ClearData();
                     break;
+                case FileType.MusicMarkers:
+                    MusicMarkersHeaderData = new SfxCommonHeader();
+                    MusicMarkers = new MusicMarkers();
+
+                    //Clear UI
+                    mainForm.pnlMusicMarkersData.ClearData();
+                    break;
             }
 
             //Update ListView
@@ -943,6 +974,10 @@ namespace sb_explorer
                     break;
                 case FileType.MusicFile:
                     total = 1;
+                    break;
+                case FileType.MusicMarkers:
+                    SfxCommonHeader headerData = musicMarkersReader.ReadCommonHeader(filePath, ((FrmMain)Application.OpenForms[nameof(FrmMain)]).Configuration.PlatformSelected.ToString());
+                    total = (int)musicMarkersReader.ReadMusicMarkersFile(filePath, headerData).MusicHeadersCount;
                     break;
             }
             return total;

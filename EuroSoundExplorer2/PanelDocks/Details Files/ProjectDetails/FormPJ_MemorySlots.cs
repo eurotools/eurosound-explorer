@@ -26,10 +26,33 @@ namespace sb_explorer
 
             //Add all items
             listView_ColumnSortingClick1.BeginUpdate();
-            foreach (ProjectSlots memSlot in dictToShow.memorySlotsData)
+            listView_ColumnSortingClick1.Items.Clear();
+            if (dictToShow.memoryMapsData.Count > 0)
             {
-                ListViewItem itemToAdd = new ListViewItem(new string[] { memSlot.SlotNumber.ToString(), memSlot.MemorySize.ToString(), memSlot.Quantity.ToString() });
-                listView_ColumnSortingClick1.Items.Add(itemToAdd);
+                colMemSlotNo.Text = "Map";
+                colMemSize.Text = "Slot";
+                colMemQuant.Text = "Memory Size";
+
+                foreach (ProjectMemoryMap memoryMap in dictToShow.memoryMapsData)
+                {
+                    for (int i = 0; i < memoryMap.SlotSizes.Count; i++)
+                    {
+                        ListViewItem itemToAdd = new ListViewItem(new string[] { memoryMap.Name, i.ToString(), memoryMap.SlotSizes[i].ToString() });
+                        listView_ColumnSortingClick1.Items.Add(itemToAdd);
+                    }
+                }
+            }
+            else
+            {
+                colMemSlotNo.Text = "No";
+                colMemSize.Text = "Memory Size";
+                colMemQuant.Text = "Quantity";
+
+                foreach (ProjectSlots memSlot in dictToShow.memorySlotsData)
+                {
+                    ListViewItem itemToAdd = new ListViewItem(new string[] { memSlot.SlotNumber.ToString(), memSlot.MemorySize.ToString(), memSlot.Quantity.ToString() });
+                    listView_ColumnSortingClick1.Items.Add(itemToAdd);
+                }
             }
             listView_ColumnSortingClick1.EndUpdate();
         }

@@ -153,6 +153,11 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static FileType GetFileType(int hashCode, int selectedVersion, string filePath, Title selectedTitle)
         {
+            if (selectedVersion == 6 && Path.GetFileName(filePath).StartsWith("__musicmarkers", StringComparison.OrdinalIgnoreCase))
+            {
+                return FileType.MusicMarkers;
+            }
+
             if (selectedVersion == 201)
             {
                 int sectionHashCode = (hashCode & 0x00F00000) >> 20;

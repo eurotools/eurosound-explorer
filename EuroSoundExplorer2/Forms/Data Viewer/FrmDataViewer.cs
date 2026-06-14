@@ -20,6 +20,7 @@ namespace sb_explorer
         private readonly ProjectDetailsReader projDetReader = new ProjectDetailsReader();
         private readonly SoundDetailsReader soundDetailsReader = new SoundDetailsReader();
         private readonly MusicDetailsReader musicDetailsReader = new MusicDetailsReader();
+        private readonly MusicMarkersReader musicMarkersReader = new MusicMarkersReader();
         private readonly List<string> viewerErrors = new List<string>();
         private string sfxFilePath = string.Empty;
 
@@ -88,6 +89,9 @@ namespace sb_explorer
                             break;
                         case FileType.MusicDetails:
                             ShowMusicDetails(sfxFilePath);
+                            break;
+                        case FileType.MusicMarkers:
+                            ShowMusicMarkers(sfxFilePath);
                             break;
                         default:
                             MessageBox.Show("Could not load this file, probably is from an unsupported version or game.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

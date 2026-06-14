@@ -65,6 +65,7 @@ namespace sb_explorer
             this.MenuItem_Project_Soundbank = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SoundDetails = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_MusicDetails = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_MusicMarkers = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_SBI_StoredSoundBanks = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_SBI_StoredMusicBanks = new System.Windows.Forms.ToolStripMenuItem();
@@ -330,7 +331,8 @@ namespace sb_explorer
             this.MenuItem_Project.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem_ProjectDetails,
             this.MenuItem_SoundDetails,
-            this.MenuItem_MusicDetails});
+            this.MenuItem_MusicDetails,
+            this.MenuItem_MusicMarkers});
             this.MenuItem_Project.Image = ((System.Drawing.Image)(resources.GetObject("MenuItem_Project.Image")));
             this.MenuItem_Project.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MenuItem_Project.Name = "MenuItem_Project";
@@ -382,6 +384,13 @@ namespace sb_explorer
             this.MenuItem_MusicDetails.Size = new System.Drawing.Size(149, 22);
             this.MenuItem_MusicDetails.Text = "Music Details";
             this.MenuItem_MusicDetails.Click += new System.EventHandler(this.MenuItem_MusicDetails_Click);
+            // 
+            // MenuItem_MusicMarkers
+            // 
+            this.MenuItem_MusicMarkers.Name = "MenuItem_MusicMarkers";
+            this.MenuItem_MusicMarkers.Size = new System.Drawing.Size(149, 22);
+            this.MenuItem_MusicMarkers.Text = "Music Markers";
+            this.MenuItem_MusicMarkers.Click += new System.EventHandler(this.MenuItem_MusicMarkers_Click);
             // 
             // MenuItem_SBI
             // 
@@ -486,6 +495,7 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Project_Soundbank;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_SoundDetails;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_MusicDetails;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_MusicMarkers;
         private System.Windows.Forms.ToolStripDropDownButton MenuItem_Help;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_About;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_GenerateSoundh;
