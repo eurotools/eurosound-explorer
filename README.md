@@ -1,47 +1,52 @@
 # EuroSound Explorer
 
-The EuroSound Explorer is a tool that can be used to open and see the SFX files form the Eurocom games, you can see the parameters of each sound and also play them. Is compatible with:
+EuroSound Explorer is a Windows tool for inspecting and playing Eurocom `.sfx` audio files across multiple games, platforms, and MusX file versions.
+
+The tool can browse project folders, identify supported MusX files, display their internal data, resolve hashcodes through `Sound.h`, and inspect raw file structures through the Data Viewer.
+
+## Supported MusX Data
+
 - Soundbanks
 - Streambanks
-- Musicbanks
+- Music banks
+- Soundbank info files
+- Sound details files
+- Music details files
+- Project details files
+- Music markers files
 
-This version will have support for the following games:
-- [x] Buffy the Vampire Slayer: Chaos Bleeds
-- - [x] GameCube
-- - [x] PlayStation 2
-- - [x] Xbox
+Support varies by game, platform, and MusX version because Eurocom changed several file layouts between titles.
 
-- [x] Sphinx and the Cursed Mummy
-- - [x] GameCube
-- - [x] PlayStation 2
-- - [x] PC
-- - [x] Xbox
+## Supported Games
 
-- [x] Athens 2004
-- - [x] PlayStation 2
+| Game | MusX version | Platforms |
+| --- | --- | --- |
+| Buffy the Vampire Slayer: Chaos Bleeds | 201 | GameCube, PlayStation 2, Xbox |
+| Sphinx and the Cursed Mummy | 201 | GameCube, PlayStation 2, PC, Xbox |
+| Athens 2004 | 1 | PlayStation 2 |
+| Spyro: A Hero's Tail | 4 | GameCube, PlayStation 2, Xbox |
+| Robots | 5 | GameCube, PlayStation 2, PC, Xbox |
+| Predator: Concrete Jungle | 5 | PlayStation 2, Xbox |
+| Batman Begins | 6 | GameCube, PlayStation 2, Xbox |
+| Ice Age 2: The Meltdown | 6 | PlayStation 2, PC, Xbox, Wii |
 
-- [x] Spyro: A Hero's Tail
-- - [x] GameCube
-- - [x] PlayStation 2
-- - [x] Xbox
+## Basic Usage
 
-- [x] Robots 2005
-- - [x] GameCube
-- - [x] PlayStation 2
-- - [x] PC
-- - [x] Xbox
+1. Select the target game, platform, project folder, and `Sound.h` file in Settings.
+2. Use the Files panel to browse the `.sfx` files in the selected project folder.
+3. Load a supported file to inspect its decoded data in the matching panel.
+4. Use Data Viewer for a lower-level view of headers, sections, counts, markers, and details data.
 
-- [x] Predator: Concrete Jungle
-- - [x] PlayStation 2
-- - [x] Xbox
+## Settings
 
-- [x] Batman Begins
-- - [x] GameCube
-- - [x] PlayStation 2
-- - [x] Xbox
+EuroSound Explorer stores its settings beside the executable in the local `ESEx` folder:
 
-- [x] Ice Age 2: The Meltdown
-- - [x] PlayStation 2
-- - [x] PC
-- - [x] Xbox
-- - [x] WII
+- `General Settings.ini`
+- `Dock Settings.xml`
+- one `.ini` file per form for saved list-view layout
+
+## Notes
+
+- Hashcode labels are resolved from the configured `Sound.h` file.
+- Some MusX version 6 details files use layouts that differ from earlier versions.
+- Music details in MusX version 6 display hashcodes using the `Sound.h` music prefix so labels can be resolved correctly.
