@@ -22,5 +22,269 @@ namespace sb_explorer.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DecompilerCompiledFolder {
+            get {
+                return ((string)(this["DecompilerCompiledFolder"]));
+            }
+            set {
+                this["DecompilerCompiledFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DecompilerProjectFolder {
+            get {
+                return ((string)(this["DecompilerProjectFolder"]));
+            }
+            set {
+                this["DecompilerProjectFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DecompilerOutputFolder {
+            get {
+                return ((string)(this["DecompilerOutputFolder"]));
+            }
+            set {
+                this["DecompilerOutputFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DecompilerMode {
+            get {
+                return ((int)(this["DecompilerMode"]));
+            }
+            set {
+                this["DecompilerMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerExportSoundBanks {
+            get {
+                return ((bool)(this["DecompilerExportSoundBanks"]));
+            }
+            set {
+                this["DecompilerExportSoundBanks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerExportGroups {
+            get {
+                return ((bool)(this["DecompilerExportGroups"]));
+            }
+            set {
+                this["DecompilerExportGroups"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerExportDuckerGroups {
+            get {
+                return ((bool)(this["DecompilerExportDuckerGroups"]));
+            }
+            set {
+                this["DecompilerExportDuckerGroups"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerExportSfx {
+            get {
+                return ((bool)(this["DecompilerExportSfx"]));
+            }
+            set {
+                this["DecompilerExportSfx"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DecompilerExportPlatformSamplePools {
+            get {
+                return ((bool)(this["DecompilerExportPlatformSamplePools"]));
+            }
+            set {
+                this["DecompilerExportPlatformSamplePools"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceSfxParameters {
+            get {
+                return ((bool)(this["DecompilerReplaceSfxParameters"]));
+            }
+            set {
+                this["DecompilerReplaceSfxParameters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceSfxSamplePoolFiles {
+            get {
+                return ((bool)(this["DecompilerReplaceSfxSamplePoolFiles"]));
+            }
+            set {
+                this["DecompilerReplaceSfxSamplePoolFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceSfxSamplePoolModes {
+            get {
+                return ((bool)(this["DecompilerReplaceSfxSamplePoolModes"]));
+            }
+            set {
+                this["DecompilerReplaceSfxSamplePoolModes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceSfxSamplePoolControl {
+            get {
+                return ((bool)(this["DecompilerReplaceSfxSamplePoolControl"]));
+            }
+            set {
+                this["DecompilerReplaceSfxSamplePoolControl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceGroupDependencies {
+            get {
+                return ((bool)(this["DecompilerReplaceGroupDependencies"]));
+            }
+            set {
+                this["DecompilerReplaceGroupDependencies"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceGroupParameters {
+            get {
+                return ((bool)(this["DecompilerReplaceGroupParameters"]));
+            }
+            set {
+                this["DecompilerReplaceGroupParameters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceDuckerDependencies {
+            get {
+                return ((bool)(this["DecompilerReplaceDuckerDependencies"]));
+            }
+            set {
+                this["DecompilerReplaceDuckerDependencies"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceDuckerParameters {
+            get {
+                return ((bool)(this["DecompilerReplaceDuckerParameters"]));
+            }
+            set {
+                this["DecompilerReplaceDuckerParameters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DecompilerReplaceSoundBankDependencies {
+            get {
+                return ((bool)(this["DecompilerReplaceSoundBankDependencies"]));
+            }
+            set {
+                this["DecompilerReplaceSoundBankDependencies"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ExplorerOffsetsHex {
+            get {
+                return ((bool)(this["ExplorerOffsetsHex"]));
+            }
+            set {
+                this["ExplorerOffsetsHex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ExplorerSizesHumanReadable {
+            get {
+                return ((bool)(this["ExplorerSizesHumanReadable"]));
+            }
+            set {
+                this["ExplorerSizesHumanReadable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ExplorerSoundBankLoopsAsSamples {
+            get {
+                return ((bool)(this["ExplorerSoundBankLoopsAsSamples"]));
+            }
+            set {
+                this["ExplorerSoundBankLoopsAsSamples"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ExplorerMarkerOffsetsAsSamples {
+            get {
+                return ((bool)(this["ExplorerMarkerOffsetsAsSamples"]));
+            }
+            set {
+                this["ExplorerMarkerOffsetsAsSamples"] = value;
+            }
+        }
     }
 }

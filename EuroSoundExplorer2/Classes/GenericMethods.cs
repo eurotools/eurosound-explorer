@@ -2,6 +2,7 @@
 using MusX;
 using MusX.Objects;
 using sb_explorer.Classes;
+using sb_explorer.Services.Audio;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,91 +39,22 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static byte[] DecodeSfxSample(SampleData selectedSample, AudioFunctions audioFunctions, SoundbankHeader headerData, Platform selectedPlatform)
         {
-            byte[] decodedData = null;
-            if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
-            {
-                switch (selectedPlatform)
-                {
-                    case Platform.PC:
-                        decodedData = selectedSample.EncodedData;
-                        break;
-                    case Platform.GameCube:
-                        DspAdpcm gcDecoder = new DspAdpcm();
-                        decodedData = audioFunctions.ShortArrayToByteArray(gcDecoder.Decode(selectedSample.EncodedData, selectedSample.DspCoeffs));
-                        break;
-                    case Platform.PS2:
-                        SonyAdpcm vagDecoder = new SonyAdpcm();
-                        decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref selectedSample.LoopStartOffset);
-                        selectedSample.LoopStartOffset /= 2;
-                        break;
-                    case Platform.Xbox:
-                        XboxAdpcm xboxDecoder = new XboxAdpcm();
-                        decodedData = audioFunctions.ShortArrayToByteArray(xboxDecoder.Decode(selectedSample.EncodedData));
-                        break;
-                }
-            }
-            else
-            {
-                if (headerData.Platform.Equals("PC__") || headerData.Platform.Equals("XB__") || headerData.Platform.Equals("XB1_"))
-                {
-                    Eurocom_ImaAdpcm eurocomDAT = new Eurocom_ImaAdpcm();
-                    decodedData = audioFunctions.ShortArrayToByteArray(eurocomDAT.Decode(selectedSample.EncodedData));
-                }
-                else if (headerData.Platform.Equals("GC__"))
-                {
-                    DspAdpcm gameCubeDecoder = new DspAdpcm();
-                    decodedData = audioFunctions.ShortArrayToByteArray(gameCubeDecoder.Decode(selectedSample.EncodedData, selectedSample.DspCoeffs));
-                }
-                else if (headerData.Platform.Equals("PS2_"))
-                {
-                    SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref selectedSample.LoopStartOffset);
-                    selectedSample.LoopStartOffset /= 2;
-                }
-            }
-
-            return decodedData;
+            EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.SoundBank);
+            return EuroSoundAudioDecoder.Decode(codec, selectedSample.EncodedData, audioFunctions, selectedSample.DspCoeffs, selectedSample);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static byte[] DecodeStreamSample(StreamSample selectedSample, AudioFunctions audioFunctions, StreambankHeader headerData, Platform selectedPlatform)
         {
-            byte[] decodedData = null;
-            if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
-            {
-                if (selectedPlatform == Platform.PC || selectedPlatform == Platform.GameCube)
-                {
-                    ImaAdpcm imaFile = new ImaAdpcm();
-                    decodedData = audioFunctions.ShortArrayToByteArray(imaFile.Decode(selectedSample.EncodedData, selectedSample.EncodedData.Length * 2));
-                }
-                else if (selectedPlatform == Platform.PS2)
-                {
-                    uint test = 0;
-                    SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref test);
-                }
-                else if (selectedPlatform == Platform.Xbox)
-                {
-                    XboxAdpcm xboxDecoder = new XboxAdpcm();
-                    decodedData = audioFunctions.ShortArrayToByteArray(xboxDecoder.Decode(selectedSample.EncodedData));
-                }
-            }
-            else
-            {
-                if (headerData.Platform.Equals("PC__") || headerData.Platform.Equals("XB__") || headerData.Platform.Equals("GC__"))
-                {
-                    Eurocom_ImaAdpcm eurocomDAT = new Eurocom_ImaAdpcm();
-                    decodedData = audioFunctions.ShortArrayToByteArray(eurocomDAT.Decode(selectedSample.EncodedData));
-                }
-                else if (headerData.Platform.Equals("PS2_"))
-                {
-                    uint test = 0;
-                    SonyAdpcm vagDecoder = new SonyAdpcm();
-                    decodedData = vagDecoder.Decode(selectedSample.EncodedData, ref test);
-                }
-            }
+            EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.StreamBank);
+            return EuroSoundAudioDecoder.Decode(codec, selectedSample.EncodedData, audioFunctions, null, null);
+        }
 
-            return decodedData;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal static byte[] DecodeMusicChannel(byte[] encodedData, AudioFunctions audioFunctions, StreambankHeader headerData)
+        {
+            EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.MusicBank);
+            return EuroSoundAudioDecoder.Decode(codec, encodedData, audioFunctions, null, null);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

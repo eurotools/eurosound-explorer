@@ -33,7 +33,7 @@ namespace sb_explorer.Classes
             }
 
             provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
-            LoopStream loop = new LoopStream(provider, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
+            LoopStream loop = new LoopStream(provider, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
             PanningSampleProvider panProvider = new PanningSampleProvider(loop.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
 
@@ -55,14 +55,14 @@ namespace sb_explorer.Classes
         {
             if (_soundToPlay.loopEndPoint > 0)
             {
-                Array.Resize(ref _pcmData[0], Math.Min(_soundToPlay.loopEndPoint * 4, _pcmData[0].Length));
-                Array.Resize(ref _pcmData[1], Math.Min(_soundToPlay.loopEndPoint * 4, _pcmData[0].Length));
+                Array.Resize(ref _pcmData[0], Math.Min(_soundToPlay.loopEndPoint * 2, _pcmData[0].Length));
+                Array.Resize(ref _pcmData[1], Math.Min(_soundToPlay.loopEndPoint * 2, _pcmData[1].Length));
             }
 
             providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
-            LoopStream loopLeft = new LoopStream(providerLeft, (int)(_soundToPlay.loopStartPoint * 4)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
+            LoopStream loopLeft = new LoopStream(providerLeft, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
             providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
-            LoopStream loopRight = new LoopStream(providerRight, (int)(_soundToPlay.loopStartPoint * 4)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos };
+            LoopStream loopRight = new LoopStream(providerRight, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
             MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { loopLeft, loopRight }, 2);
             VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
 

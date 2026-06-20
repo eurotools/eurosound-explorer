@@ -80,6 +80,11 @@
     <Compile Include="App\LoadedProjectData.cs" />
     <Compile Include="Classes\Audio\AudioFunctions.cs" />
     <Compile Include="Classes\Enumerations.cs" />
+    <Compile Include="UI\Formatting\DisplayValueFormatter.cs" />
+    <Compile Include="Services\Audio\EuroSoundAudioDecoder.cs" />
+    <Compile Include="Services\Audio\EuroSoundMarkerLoopResolver.cs" />
+    <Compile Include="Services\Audio\EuroSoundWaveWriter.cs" />
+    <Compile Include="Services\Audio\WavLoopInfo.cs" />
     <Compile Include="Classes\GenericMethods.cs" />
     <Compile Include="Classes\Audio\LoopStream.cs" />
     <Compile Include="Classes\Objects\SampleForPropGrid.cs" />
@@ -87,331 +92,346 @@
     <Compile Include="Classes\PropertyGridHelpers\CustomFileBrowser.cs" />
     <Compile Include="Classes\PropertyGridHelpers\CustomFolderBrowser.cs" />
     <Compile Include="Classes\PropertyGridHelpers\FileVersions.cs" />
-    <Compile Include="Core\DspAdpcm.cs" />
-    <Compile Include="Core\Eurocom_ImaAdpcm.cs" />
-    <Compile Include="Core\ImaAdpcm.cs" />
-    <Compile Include="Core\SonyAdpcm.cs" />
-    <Compile Include="Core\XboxAdpcm.cs" />
-    <Compile Include="CustomControls\TitlePropertyGrid.cs">
+    <Compile Include="Infrastructure\Codecs\DspAdpcm.cs" />
+    <Compile Include="Infrastructure\Codecs\Eurocom_ImaAdpcm.cs" />
+    <Compile Include="Infrastructure\Codecs\ImaAdpcm.cs" />
+    <Compile Include="Infrastructure\Codecs\SonyAdpcm.cs" />
+    <Compile Include="Infrastructure\Codecs\XboxAdpcm.cs" />
+    <Compile Include="UI\Controls\TitlePropertyGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CustomControls\TitlePropertyGrid.Designer.cs">
+    <Compile Include="UI\Controls\TitlePropertyGrid.Designer.cs">
       <DependentUpon>TitlePropertyGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\UserControl_ListViewColumnSortingClick.cs">
+    <Compile Include="UI\Controls\UserControl_ListViewColumnSortingClick.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomControls\UserControl_ListViewColumnSortingClick.Designer.cs">
+    <Compile Include="UI\Controls\UserControl_ListViewColumnSortingClick.Designer.cs">
       <DependentUpon>UserControl_ListViewColumnSortingClick.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\UserControl_WaveViewer.cs">
+    <Compile Include="UI\Controls\UserControl_WaveViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CustomControls\UserControl_WaveViewer.Designer.cs">
+    <Compile Include="UI\Controls\UserControl_WaveViewer.Designer.cs">
       <DependentUpon>UserControl_WaveViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Domain\EuroSoundVersion.cs" />
-    <Compile Include="Forms\FrmAbout.cs">
+    <Compile Include="UI\Forms\FrmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmAbout.Designer.cs">
+    <Compile Include="UI\Forms\FrmAbout.Designer.cs">
       <DependentUpon>FrmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmAudioDecoder.cs">
+    <Compile Include="UI\Forms\FrmAudioDecoder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmAudioDecoder.Designer.cs">
+    <Compile Include="UI\Forms\FrmAudioDecoder.Designer.cs">
       <DependentUpon>FrmAudioDecoder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data Viewer\FrmDataViewer.cs">
+    <Compile Include="UI\Forms\Data Viewer\FrmDataViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Data Viewer\FrmDataViewer.Designer.cs">
+    <Compile Include="UI\Forms\Data Viewer\FrmDataViewer.Designer.cs">
       <DependentUpon>FrmDataViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Data Viewer\FrmDataViewer_SoundBanks.cs">
+    <Compile Include="UI\Forms\Data Viewer\FrmDataViewer_SoundBanks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmDuplicatedHashCodes.cs">
+    <Compile Include="UI\Forms\FrmDuplicatedHashCodes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmDuplicatedHashCodes.Designer.cs">
+    <Compile Include="UI\Forms\FrmDuplicatedHashCodes.Designer.cs">
       <DependentUpon>FrmDuplicatedHashCodes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmEuroSoundSfxExportSection.cs">
+    <Compile Include="UI\Forms\FrmEuroSoundSfxExportSection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmEuroSoundSfxExportSection.Designer.cs">
+    <Compile Include="UI\Forms\FrmEuroSoundSfxExportSection.Designer.cs">
       <DependentUpon>FrmEuroSoundSfxExportSection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmFileRefUsage.cs">
+    <Compile Include="UI\Forms\FrmEuroSoundProjectDecompiler.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmFileRefUsage.Designer.cs">
+    <Compile Include="UI\Forms\FrmEuroSoundProjectDecompiler.Designer.cs">
+      <DependentUpon>FrmEuroSoundProjectDecompiler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\FrmFileRefUsage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\FrmFileRefUsage.Designer.cs">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmProgress.cs">
+    <Compile Include="UI\Forms\FrmProgress.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmProgress.Designer.cs">
+    <Compile Include="UI\Forms\FrmProgress.Designer.cs">
       <DependentUpon>FrmProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmSplash.cs">
+    <Compile Include="UI\Forms\FrmSplash.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmSplash.Designer.cs">
+    <Compile Include="UI\Forms\FrmSplash.Designer.cs">
       <DependentUpon>FrmSplash.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SoundhGenerator.cs">
+    <Compile Include="UI\Forms\SoundhGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SoundhGenerator.Designer.cs">
+    <Compile Include="UI\Forms\SoundhGenerator.Designer.cs">
       <DependentUpon>SoundhGenerator.cs</DependentUpon>
     </Compile>
     <Compile Include="MusX\BytesFunctions.cs" />
     <Compile Include="MusX\CalculusLoopOffsets.cs" />
-    <Compile Include="MusX\Objects\Header\ProjectDetailsHeader.cs" />
-    <Compile Include="MusX\Objects\Header\SfxCommonHeader.cs" />
-    <Compile Include="MusX\Objects\Header\SoundbankHeader.cs" />
-    <Compile Include="MusX\Objects\Header\SoundbankInfoHeader.cs" />
-    <Compile Include="MusX\Objects\Header\StreambankHeader.cs" />
-    <Compile Include="MusX\Objects\Markers\Marker.cs" />
-    <Compile Include="MusX\Objects\Markers\StartMarker.cs" />
-    <Compile Include="MusX\Objects\MusicDetails.cs" />
-    <Compile Include="MusX\Objects\MusicMarkers.cs" />
-    <Compile Include="MusX\Objects\MusicSample.cs" />
-    <Compile Include="MusX\Objects\ProjectDetails.cs" />
-    <Compile Include="MusX\Objects\ProjectSlots.cs" />
-    <Compile Include="MusX\Objects\ProjectSoundBank.cs" />
-    <Compile Include="MusX\Objects\Sample.cs" />
-    <Compile Include="MusX\Objects\SampleData.cs" />
-    <Compile Include="MusX\Objects\SampleInfo.cs" />
-    <Compile Include="MusX\Objects\SbiFile.cs" />
-    <Compile Include="MusX\Objects\SoundDetails.cs" />
-    <Compile Include="MusX\Objects\StreamSample.cs" />
-    <Compile Include="MusX\Readers\Details Files\MusicDetailsReader.cs" />
-    <Compile Include="MusX\Readers\Details Files\MusicMarkersReader.cs" />
-    <Compile Include="MusX\Readers\Details Files\ProjectDetailsReader.cs" />
-    <Compile Include="MusX\Readers\Details Files\SoundDetailsReader.cs" />
-    <Compile Include="MusX\Readers\MusicBank\MusicBankReader.cs" />
-    <Compile Include="MusX\Readers\MusicBank\MusicBankReaderNew.cs" />
-    <Compile Include="MusX\Readers\MusicBank\MusicBankReaderOld.cs" />
-    <Compile Include="MusX\Readers\SBI\SbiBankReader.cs" />
-    <Compile Include="MusX\Readers\SfxFunctions.cs" />
-    <Compile Include="MusX\Readers\SoundBank\SoundBankReader.cs" />
-    <Compile Include="MusX\Readers\SoundBank\SoundBankReaderNew.cs" />
-    <Compile Include="MusX\Readers\SoundBank\SoundBankReaderOld.cs" />
-    <Compile Include="MusX\Readers\StreamBank\StreamBankReader.cs" />
-    <Compile Include="MusX\Readers\StreamBank\StreamBankReaderNew.cs" />
-    <Compile Include="MusX\Readers\StreamBank\StreamBankReaderOld.cs" />
-    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_MusicDetails.cs" />
-    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_MusicFile.cs" />
-    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_ProjectDetails.cs" />
-    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_Soundbank.cs" />
-    <Compile Include="MusX\Writers\Newer Versions\MusXBuild_StreamFile.cs" />
-    <Compile Include="MusX\Writers\Older versions\MusXBuild_MusicFileOld.cs" />
-    <Compile Include="MusX\Writers\Older versions\MusXBuild_SoundbankOld.cs" />
-    <Compile Include="MusX\Writers\Older versions\MusXBuild_StreamFileOld.cs" />
-    <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.cs">
+    <Compile Include="Infrastructure\FileSystem\EuroSoundAudioDataReader.cs" />
+    <Compile Include="Infrastructure\Binary\EuroSoundBinaryReader.cs" />
+    <Compile Include="MusX\EuroSoundCodecMatrix.cs" />
+    <Compile Include="Domain\Headers\ProjectDetailsHeader.cs" />
+    <Compile Include="Domain\Headers\SfxCommonHeader.cs" />
+    <Compile Include="Domain\Headers\SoundbankHeader.cs" />
+    <Compile Include="Domain\Headers\SoundbankInfoHeader.cs" />
+    <Compile Include="Domain\Headers\StreambankHeader.cs" />
+    <Compile Include="Domain\Markers\Marker.cs" />
+    <Compile Include="Domain\Markers\StartMarker.cs" />
+    <Compile Include="Domain\Banks\Music\MusicDetails.cs" />
+    <Compile Include="Domain\Banks\Music\MusicMarkers.cs" />
+    <Compile Include="Domain\Audio\AudioDataReference.cs" />
+    <Compile Include="Domain\Banks\Music\MusicSample.cs" />
+    <Compile Include="Domain\Project\ProjectDetails.cs" />
+    <Compile Include="Domain\Project\ProjectSlots.cs" />
+    <Compile Include="Domain\Project\ProjectSoundBank.cs" />
+    <Compile Include="Domain\Banks\Sound\Sample.cs" />
+    <Compile Include="Domain\Banks\Sound\SampleData.cs" />
+    <Compile Include="Domain\Banks\Sound\SampleInfo.cs" />
+    <Compile Include="Domain\Banks\Sbi\SbiFile.cs" />
+    <Compile Include="Domain\Details\SoundDetails.cs" />
+    <Compile Include="Domain\Banks\Stream\StreamSample.cs" />
+    <Compile Include="Readers\Details\MusicDetailsReader.cs" />
+    <Compile Include="Readers\Details\MusicMarkersReader.cs" />
+    <Compile Include="Readers\Details\ProjectDetailsReader.cs" />
+    <Compile Include="Readers\Details\SoundDetailsReader.cs" />
+    <Compile Include="Readers\MusicBanks\MusicBankReader.cs" />
+    <Compile Include="Readers\MusicBanks\MusicBankReaderNew.cs" />
+    <Compile Include="Readers\MusicBanks\MusicBankReaderOld.cs" />
+    <Compile Include="Readers\Common\EuroSoundMarkerReader.cs" />
+    <Compile Include="Readers\Sbi\SbiBankReader.cs" />
+    <Compile Include="Readers\Common\SfxFunctions.cs" />
+    <Compile Include="Readers\SoundBanks\SoundBankReader.cs" />
+    <Compile Include="Readers\SoundBanks\SoundBankReaderNew.cs" />
+    <Compile Include="Readers\SoundBanks\SoundBankReaderOld.cs" />
+    <Compile Include="Readers\StreamBanks\StreamBankReader.cs" />
+    <Compile Include="Readers\StreamBanks\StreamBankReaderNew.cs" />
+    <Compile Include="Readers\StreamBanks\StreamBankReaderOld.cs" />
+    <Compile Include="Writers\NewerVersions\MusXBuild_MusicDetails.cs" />
+    <Compile Include="Writers\NewerVersions\MusXBuild_MusicFile.cs" />
+    <Compile Include="Writers\NewerVersions\MusXBuild_ProjectDetails.cs" />
+    <Compile Include="Writers\NewerVersions\MusXBuild_Soundbank.cs" />
+    <Compile Include="Writers\NewerVersions\MusXBuild_StreamFile.cs" />
+    <Compile Include="Writers\OlderVersions\MusXBuild_MusicFileOld.cs" />
+    <Compile Include="Writers\OlderVersions\MusXBuild_SoundbankOld.cs" />
+    <Compile Include="Writers\OlderVersions\MusXBuild_StreamFileOld.cs" />
+    <Compile Include="UI\Panels\Details Files\Music Details\FrmMusicDetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.Designer.cs">
+    <Compile Include="UI\Panels\Details Files\Music Details\FrmMusicDetails.Designer.cs">
       <DependentUpon>FrmMusicDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\Music Markers\FormMM_MusicMarkers.cs">
+    <Compile Include="UI\Panels\Details Files\Music Markers\FormMM_MusicMarkers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\Music Markers\FormMM_MusicMarkers.Designer.cs">
+    <Compile Include="UI\Panels\Details Files\Music Markers\FormMM_MusicMarkers.Designer.cs">
       <DependentUpon>FormMM_MusicMarkers.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.cs">
+    <Compile Include="UI\Panels\Details Files\Sound Details\FormSD_SoundDetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.Designer.cs">
+    <Compile Include="UI\Panels\Details Files\Sound Details\FormSD_SoundDetails.Designer.cs">
       <DependentUpon>FormSD_SoundDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Misc\FormMediaPlayer.cs">
+    <Compile Include="UI\Panels\Misc\FormMediaPlayer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Misc\FormMediaPlayer.Designer.cs">
+    <Compile Include="UI\Panels\Misc\FormMediaPlayer.Designer.cs">
       <DependentUpon>FormMediaPlayer.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Misc\FormSettings.cs">
+    <Compile Include="UI\Panels\Misc\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Misc\FormSettings.Designer.cs">
+    <Compile Include="UI\Panels\Misc\FormSettings.Designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmMain.cs">
+    <Compile Include="UI\Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmMain.Designer.cs">
+    <Compile Include="UI\Forms\FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\HashcodeParser.cs" />
+    <Compile Include="Services\EuroSoundFileLoader.cs" />
     <Compile Include="Services\EuroSoundSfxTextExporter.cs" />
-    <Compile Include="PanelDocks\Misc\FormSoundBankFiles.cs">
+    <Compile Include="Services\EuroSoundGroupExporter.cs" />
+    <Compile Include="Services\EuroSoundProjectSoundBankLoader.cs" />
+    <Compile Include="Services\EuroSoundProjectDecompiler.cs" />
+    <Compile Include="UI\Panels\Misc\FormSoundBankFiles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Misc\FormSoundBankFiles.Designer.cs">
+    <Compile Include="UI\Panels\Misc\FormSoundBankFiles.Designer.cs">
       <DependentUpon>FormSoundBankFiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\MusicBanks\FormMusicData.cs">
+    <Compile Include="UI\Panels\MusicBanks\FormMusicData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\MusicBanks\FormMusicData.Designer.cs">
+    <Compile Include="UI\Panels\MusicBanks\FormMusicData.Designer.cs">
       <DependentUpon>FormMusicData.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_MemorySlots.cs">
+    <Compile Include="UI\Panels\Details Files\ProjectDetails\FormPJ_MemorySlots.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_MemorySlots.Designer.cs">
+    <Compile Include="UI\Panels\Details Files\ProjectDetails\FormPJ_MemorySlots.Designer.cs">
       <DependentUpon>FormPJ_MemorySlots.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_ProjectData.cs">
+    <Compile Include="UI\Panels\Details Files\ProjectDetails\FormPJ_ProjectData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_ProjectData.Designer.cs">
+    <Compile Include="UI\Panels\Details Files\ProjectDetails\FormPJ_ProjectData.Designer.cs">
       <DependentUpon>FormPJ_ProjectData.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_SoundBanks.cs">
+    <Compile Include="UI\Panels\Details Files\ProjectDetails\FormPJ_SoundBanks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\Details Files\ProjectDetails\FormPJ_SoundBanks.Designer.cs">
+    <Compile Include="UI\Panels\Details Files\ProjectDetails\FormPJ_SoundBanks.Designer.cs">
       <DependentUpon>FormPJ_SoundBanks.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\SBI\FormSBiMusicBanks.cs">
+    <Compile Include="UI\Panels\SBI\FormSBiMusicBanks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\SBI\FormSBiMusicBanks.Designer.cs">
+    <Compile Include="UI\Panels\SBI\FormSBiMusicBanks.Designer.cs">
       <DependentUpon>FormSBiMusicBanks.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\SBI\FormSBiSoundBanks.cs">
+    <Compile Include="UI\Panels\SBI\FormSBiSoundBanks.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\SBI\FormSBiSoundBanks.Designer.cs">
+    <Compile Include="UI\Panels\SBI\FormSBiSoundBanks.Designer.cs">
       <DependentUpon>FormSBiSoundBanks.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_HashCodes.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_HashCodes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_HashCodes.Designer.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_HashCodes.Designer.cs">
       <DependentUpon>FormSB_HashCodes.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_SamplePool.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_SamplePool.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_SamplePool.Designer.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_SamplePool.Designer.cs">
       <DependentUpon>FormSB_SamplePool.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_SampleProps.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_SampleProps.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_SampleProps.Designer.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_SampleProps.Designer.cs">
       <DependentUpon>FormSB_SampleProps.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_WavHeaderData.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_WavHeaderData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\SoundBanks\FormSB_WavHeaderData.Designer.cs">
+    <Compile Include="UI\Panels\SoundBanks\FormSB_WavHeaderData.Designer.cs">
       <DependentUpon>FormSB_WavHeaderData.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\StreamBanks\FormMarkers.cs">
+    <Compile Include="UI\Panels\StreamBanks\FormMarkers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\StreamBanks\FormMarkers.Designer.cs">
+    <Compile Include="UI\Panels\StreamBanks\FormMarkers.Designer.cs">
       <DependentUpon>FormMarkers.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\StreamBanks\FormStartMarkers.cs">
+    <Compile Include="UI\Panels\StreamBanks\FormStartMarkers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\StreamBanks\FormStartMarkers.Designer.cs">
+    <Compile Include="UI\Panels\StreamBanks\FormStartMarkers.Designer.cs">
       <DependentUpon>FormStartMarkers.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelDocks\StreamBanks\FormStreamBank.cs">
+    <Compile Include="UI\Panels\StreamBanks\FormStreamBank.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PanelDocks\StreamBanks\FormStreamBank.Designer.cs">
+    <Compile Include="UI\Panels\StreamBanks\FormStreamBank.Designer.cs">
       <DependentUpon>FormStreamBank.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\FrmAbout.resx">
+    <EmbeddedResource Include="UI\Forms\FrmAbout.resx">
       <DependentUpon>FrmAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmAudioDecoder.resx">
+    <EmbeddedResource Include="UI\Forms\FrmAudioDecoder.resx">
       <DependentUpon>FrmAudioDecoder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Data Viewer\FrmDataViewer.resx">
+    <EmbeddedResource Include="UI\Forms\Data Viewer\FrmDataViewer.resx">
       <DependentUpon>FrmDataViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmDuplicatedHashCodes.resx">
+    <EmbeddedResource Include="UI\Forms\FrmDuplicatedHashCodes.resx">
       <DependentUpon>FrmDuplicatedHashCodes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmFileRefUsage.resx">
+    <EmbeddedResource Include="UI\Forms\FrmFileRefUsage.resx">
       <DependentUpon>FrmFileRefUsage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmSplash.resx">
+    <EmbeddedResource Include="UI\Forms\FrmSplash.resx">
       <DependentUpon>FrmSplash.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SoundhGenerator.resx">
+    <EmbeddedResource Include="UI\Forms\SoundhGenerator.resx">
       <DependentUpon>SoundhGenerator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Details Files\Music Details\FrmMusicDetails.resx">
+    <EmbeddedResource Include="UI\Panels\Details Files\Music Details\FrmMusicDetails.resx">
       <DependentUpon>FrmMusicDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Details Files\Sound Details\FormSD_SoundDetails.resx">
+    <EmbeddedResource Include="UI\Panels\Details Files\Sound Details\FormSD_SoundDetails.resx">
       <DependentUpon>FormSD_SoundDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Misc\FormMediaPlayer.resx">
+    <EmbeddedResource Include="UI\Panels\Misc\FormMediaPlayer.resx">
       <DependentUpon>FormMediaPlayer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Misc\FormSettings.resx">
+    <EmbeddedResource Include="UI\Panels\Misc\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmMain.resx">
+    <EmbeddedResource Include="UI\Forms\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Misc\FormSoundBankFiles.resx">
+    <EmbeddedResource Include="UI\Panels\Misc\FormSoundBankFiles.resx">
       <DependentUpon>FormSoundBankFiles.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\MusicBanks\FormMusicData.resx">
+    <EmbeddedResource Include="UI\Panels\MusicBanks\FormMusicData.resx">
       <DependentUpon>FormMusicData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Details Files\ProjectDetails\FormPJ_MemorySlots.resx">
+    <EmbeddedResource Include="UI\Panels\Details Files\ProjectDetails\FormPJ_MemorySlots.resx">
       <DependentUpon>FormPJ_MemorySlots.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Details Files\ProjectDetails\FormPJ_ProjectData.resx">
+    <EmbeddedResource Include="UI\Panels\Details Files\ProjectDetails\FormPJ_ProjectData.resx">
       <DependentUpon>FormPJ_ProjectData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\Details Files\ProjectDetails\FormPJ_SoundBanks.resx">
+    <EmbeddedResource Include="UI\Panels\Details Files\ProjectDetails\FormPJ_SoundBanks.resx">
       <DependentUpon>FormPJ_SoundBanks.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\SBI\FormSBiMusicBanks.resx">
+    <EmbeddedResource Include="UI\Panels\SBI\FormSBiMusicBanks.resx">
       <DependentUpon>FormSBiMusicBanks.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\SBI\FormSBiSoundBanks.resx">
+    <EmbeddedResource Include="UI\Panels\SBI\FormSBiSoundBanks.resx">
       <DependentUpon>FormSBiSoundBanks.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_HashCodes.resx">
+    <EmbeddedResource Include="UI\Panels\SoundBanks\FormSB_HashCodes.resx">
       <DependentUpon>FormSB_HashCodes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_SamplePool.resx">
+    <EmbeddedResource Include="UI\Panels\SoundBanks\FormSB_SamplePool.resx">
       <DependentUpon>FormSB_SamplePool.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_SampleProps.resx">
+    <EmbeddedResource Include="UI\Panels\SoundBanks\FormSB_SampleProps.resx">
       <DependentUpon>FormSB_SampleProps.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\SoundBanks\FormSB_WavHeaderData.resx">
+    <EmbeddedResource Include="UI\Panels\SoundBanks\FormSB_WavHeaderData.resx">
       <DependentUpon>FormSB_WavHeaderData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\StreamBanks\FormMarkers.resx">
+    <EmbeddedResource Include="UI\Panels\StreamBanks\FormMarkers.resx">
       <DependentUpon>FormMarkers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\StreamBanks\FormStartMarkers.resx">
+    <EmbeddedResource Include="UI\Panels\StreamBanks\FormStartMarkers.resx">
       <DependentUpon>FormStartMarkers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PanelDocks\StreamBanks\FormStreamBank.resx">
+    <EmbeddedResource Include="UI\Panels\StreamBanks\FormStreamBank.resx">
       <DependentUpon>FormStreamBank.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -446,6 +466,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="ClearGeneratedTargetFrameworkAttributeAttributes" BeforeTargets="GenerateTargetFrameworkMonikerAttribute">
+    <Exec Command="attrib -H -R &quot;$(TargetFrameworkMonikerAssemblyAttributesPath)&quot;" Condition="Exists('$(TargetFrameworkMonikerAssemblyAttributesPath)')" IgnoreExitCode="true" />
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
