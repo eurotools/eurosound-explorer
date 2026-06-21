@@ -26,7 +26,7 @@ namespace MusX.Writers
             //Ensure that the output file path is not null
             if (!string.IsNullOrEmpty(OutputFilePath))
             {
-                bool isBigEndian = EuroSoundCodecMatrix.IsGameCubePlatform(platform);
+                bool isBigEndian = EuroSoundCodecMatrix.IsBigEndianPlatform(platform);
 
                 //Create a new binary writer
                 using (BinaryWriter binWriter = new BinaryWriter(File.Open(OutputFilePath, FileMode.Create, FileAccess.Write, FileShare.Read), Encoding.ASCII))

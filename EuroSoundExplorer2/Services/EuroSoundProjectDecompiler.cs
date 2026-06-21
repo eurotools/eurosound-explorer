@@ -1006,7 +1006,9 @@ namespace sb_explorer.Services
 
         private static int GetMusicSourceSampleRate(StreambankHeader header)
         {
-            return header != null && EuroSoundCodecMatrix.IsXboxPlatform(header.Platform) ? 44100 : 32000;
+            return header != null &&
+                (EuroSoundCodecMatrix.IsXboxPlatform(header.Platform) ||
+                EuroSoundCodecMatrix.IsXbox360Platform(header.Platform)) ? 44100 : 32000;
         }
 
         private static WavLoopInfo CreateMusicLoopInfo(Marker[] markers, int totalSamples)
@@ -1730,18 +1732,23 @@ namespace sb_explorer.Services
             {
                 return 0;
             }
-            if (platform.Equals("Xbox", StringComparison.OrdinalIgnoreCase))
+            if (platform.Equals("Xbox360", StringComparison.OrdinalIgnoreCase) ||
+                platform.Equals("Xbox 360", StringComparison.OrdinalIgnoreCase))
             {
                 return 1;
+            }
+            if (platform.Equals("Xbox", StringComparison.OrdinalIgnoreCase))
+            {
+                return 2;
             }
             if (platform.Equals("GameCube", StringComparison.OrdinalIgnoreCase) ||
                 platform.Equals("Wii", StringComparison.OrdinalIgnoreCase))
             {
-                return 2;
+                return 3;
             }
             if (platform.Equals("PC", StringComparison.OrdinalIgnoreCase))
             {
-                return 3;
+                return 4;
             }
 
             return 99;
@@ -1756,6 +1763,10 @@ namespace sb_explorer.Services
             if (platform.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return "PlayStation2";
+            }
+            if (EuroSoundCodecMatrix.IsXbox360Platform(platform))
+            {
+                return "Xbox360";
             }
             if (platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -2020,6 +2031,10 @@ namespace sb_explorer.Services
             {
                 return 1;
             }
+            if (EuroSoundCodecMatrix.IsXbox360Platform(platform))
+            {
+                return 2;
+            }
             if (platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return 2;
@@ -2253,6 +2268,10 @@ namespace sb_explorer.Services
             if (value.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return "PS2";
+            }
+            if (EuroSoundCodecMatrix.IsXbox360Platform(value))
+            {
+                return "XB2";
             }
             if (value.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -2925,6 +2944,10 @@ namespace sb_explorer.Services
                 if (value.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     return Platform.PS2;
+                }
+                if (EuroSoundCodecMatrix.IsXbox360Platform(value))
+                {
+                    return Platform.Xbox360;
                 }
                 if (value.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
                 {

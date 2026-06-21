@@ -68,6 +68,15 @@ namespace MusX
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        public static uint XmaBytesToSamples(uint bytes, int channels)
+        {
+            uint xmaBytesPerPacket = 2048;
+            uint xmaSamplesPerFrame = 512;
+
+            return BlockBytesToSamples(bytes, channels, xmaBytesPerPacket, xmaSamplesPerFrame);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private static uint BlockBytesToSamples(uint bytes, int channels, uint blockBytes, uint blockSamples)
         {
             return (uint)(((ulong)bytes * blockSamples / blockBytes) / (uint)channels);

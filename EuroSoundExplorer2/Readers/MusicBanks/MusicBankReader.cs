@@ -88,6 +88,9 @@ namespace MusX.Readers
                     case "XB1_":
                         musicObj = newReader.ReadMusicFile(filePath, headerData, 32);
                         break;
+                    case "XB2_":
+                        musicObj = newReader.ReadMusicFile(filePath, headerData, 32);
+                        break;
                 }
             }
 

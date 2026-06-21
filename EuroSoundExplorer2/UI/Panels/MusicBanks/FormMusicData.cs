@@ -135,7 +135,8 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private static uint GetMusicFrequency(StreambankHeader headerFileData)
         {
-            return EuroSoundCodecMatrix.IsXboxPlatform(headerFileData.Platform) ? 44100u : 32000u;
+            return EuroSoundCodecMatrix.IsXboxPlatform(headerFileData.Platform) ||
+                EuroSoundCodecMatrix.IsXbox360Platform(headerFileData.Platform) ? 44100u : 32000u;
         }
     }
 

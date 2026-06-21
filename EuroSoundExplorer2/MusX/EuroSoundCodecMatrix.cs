@@ -11,7 +11,8 @@ namespace MusX
         EurocomImaAdpcm,
         SonyVagAdpcm,
         DspAdpcm,
-        XboxAdpcm
+        XboxAdpcm,
+        Xma
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +33,8 @@ namespace MusX
             Pc,
             Ps2,
             GameCube,
-            Xbox
+            Xbox,
+            Xbox360
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -92,6 +94,10 @@ namespace MusX
             new CodecRule(EurocomVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Xbox, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EurocomVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Xbox, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EurocomVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.Xbox, EuroSoundAudioCodec.EurocomImaAdpcm),
+
+            new CodecRule(EurocomVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EurocomVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EurocomVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
         };
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -128,6 +134,8 @@ namespace MusX
                     return CalculusLoopOffsets.XboxAdpcmToSamples(bytes, channels);
                 case EuroSoundAudioCodec.Pcm16:
                     return CalculusLoopOffsets.Pcm16BytesToSamples(bytes, channels);
+                case EuroSoundAudioCodec.Xma:
+                    return CalculusLoopOffsets.XmaBytesToSamples(bytes, channels);
                 default:
                     return 0;
             }
@@ -142,6 +150,8 @@ namespace MusX
                     return CalculusLoopOffsets.EurocomImaToSamples(offset, channels);
                 case EuroSoundAudioCodec.XboxAdpcm:
                     return CalculusLoopOffsets.XboxAdpcmToSamples(offset, channels);
+                case EuroSoundAudioCodec.Xma:
+                    return CalculusLoopOffsets.XmaBytesToSamples(offset, channels);
                 case EuroSoundAudioCodec.Pcm16:
                 case EuroSoundAudioCodec.SonyVagAdpcm:
                 case EuroSoundAudioCodec.DspAdpcm:
@@ -181,7 +191,17 @@ namespace MusX
         //-------------------------------------------------------------------------------------------------------------------------------
         public static bool IsXboxPlatform(string platform)
         {
-            return ContainsPlatform(platform, "XB") || ContainsPlatform(platform, "Xbox");
+            return (ContainsPlatform(platform, "XB") || ContainsPlatform(platform, "Xbox")) &&
+                !IsXbox360Platform(platform);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public static bool IsXbox360Platform(string platform)
+        {
+            return ContainsPlatform(platform, "XB2") ||
+                ContainsPlatform(platform, "X360") ||
+                ContainsPlatform(platform, "Xbox360") ||
+                ContainsPlatform(platform, "Xbox 360");
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -191,6 +211,12 @@ namespace MusX
                 ContainsPlatform(platform, "Ga") ||
                 ContainsPlatform(platform, "GameCube") ||
                 ContainsPlatform(platform, "wii");
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public static bool IsBigEndianPlatform(string platform)
+        {
+            return IsGameCubePlatform(platform) || IsXbox360Platform(platform);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -204,6 +230,11 @@ namespace MusX
             if (IsPs2Platform(platform))
             {
                 return EuroSoundPlatformGroup.Ps2;
+            }
+
+            if (IsXbox360Platform(platform))
+            {
+                return EuroSoundPlatformGroup.Xbox360;
             }
 
             if (IsXboxPlatform(platform))

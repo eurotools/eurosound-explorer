@@ -74,14 +74,7 @@ namespace sb_explorer
                 _PlatformSelected = value;
 
                 //Check Exceptions
-                if (value == Platform.GameCube && TitleSelected == Title.BatmanBegins)
-                {
-                    StreamsFrequency = 16000;
-                }
-                else
-                {
-                    StreamsFrequency = 22050;
-                }
+                StreamsFrequency = GetDefaultStreamsFrequency(value, TitleSelected);
             }
         }
 
@@ -120,17 +113,13 @@ namespace sb_explorer
                     case Title.IceAge2:
                         FileVersion = 6;
                         break;
+                    case Title.DemoX:
+                        FileVersion = 6;
+                        break;
                 }
 
                 //Check Exceptions
-                if (PlatformSelected == Platform.GameCube && value == Title.BatmanBegins)
-                {
-                    StreamsFrequency = 16000;
-                }
-                else
-                {
-                    StreamsFrequency = 22050;
-                }
+                StreamsFrequency = GetDefaultStreamsFrequency(PlatformSelected, value);
             }
         }
 
@@ -162,6 +151,16 @@ namespace sb_explorer
             {
                 ProjectFolderChanged();
             }
+        }
+
+        private static uint GetDefaultStreamsFrequency(Platform platform, Title title)
+        {
+            if (platform == Platform.GameCube && title == Title.BatmanBegins)
+            {
+                return 16000;
+            }
+
+            return 22050;
         }
     }
 
