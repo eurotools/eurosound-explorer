@@ -1,4 +1,4 @@
-using sb_explorer.Services;
+﻿using sb_explorer.Services;
 using System;
 using System.Text;
 using System.Windows.Forms;
@@ -94,7 +94,6 @@ namespace sb_explorer
                 Hashcodes = parentForm.HashTable,
                 ExportSoundBanks = chkExportSoundBanks.Checked,
                 ExportGroups = chkExportGroups.Checked,
-                ExportDuckerGroups = chkExportDuckerGroups.Checked,
                 ExportSfx = chkExportSfx.Checked,
                 ExportMemoryMaps = chkExportMemoryMaps.Checked,
                 RewriteSamplesOnly = chkRewriteSamplesOnly.Checked,
@@ -105,8 +104,6 @@ namespace sb_explorer
                 ReplaceSfxSamplePoolControl = chkSfxSamplePoolControl.Checked,
                 ReplaceGroupDependencies = chkGroupDependencies.Checked,
                 ReplaceGroupParameters = chkGroupParameters.Checked,
-                ReplaceDuckerDependencies = chkDuckerDependencies.Checked,
-                ReplaceDuckerParameters = chkDuckerParameters.Checked,
                 ReplaceSoundBankDependencies = chkSoundBankDependencies.Checked
             };
         }
@@ -144,7 +141,6 @@ namespace sb_explorer
             cbxMode.SelectedIndex = Math.Max(0, Math.Min(cbxMode.Items.Count - 1, settings.DecompilerMode));
             chkExportSoundBanks.Checked = settings.DecompilerExportSoundBanks;
             chkExportGroups.Checked = settings.DecompilerExportGroups;
-            chkExportDuckerGroups.Checked = settings.DecompilerExportDuckerGroups;
             chkExportSfx.Checked = settings.DecompilerExportSfx;
             chkExportPlatformSamplePools.Checked = settings.DecompilerExportPlatformSamplePools;
             chkSfxParameters.Checked = settings.DecompilerReplaceSfxParameters;
@@ -153,8 +149,6 @@ namespace sb_explorer
             chkSfxSamplePoolControl.Checked = settings.DecompilerReplaceSfxSamplePoolControl;
             chkGroupDependencies.Checked = settings.DecompilerReplaceGroupDependencies;
             chkGroupParameters.Checked = settings.DecompilerReplaceGroupParameters;
-            chkDuckerDependencies.Checked = settings.DecompilerReplaceDuckerDependencies;
-            chkDuckerParameters.Checked = settings.DecompilerReplaceDuckerParameters;
             chkSoundBankDependencies.Checked = settings.DecompilerReplaceSoundBankDependencies;
         }
 
@@ -167,7 +161,6 @@ namespace sb_explorer
             settings.DecompilerMode = cbxMode.SelectedIndex;
             settings.DecompilerExportSoundBanks = chkExportSoundBanks.Checked;
             settings.DecompilerExportGroups = chkExportGroups.Checked;
-            settings.DecompilerExportDuckerGroups = chkExportDuckerGroups.Checked;
             settings.DecompilerExportSfx = chkExportSfx.Checked;
             settings.DecompilerExportPlatformSamplePools = chkExportPlatformSamplePools.Checked;
             settings.DecompilerReplaceSfxParameters = chkSfxParameters.Checked;
@@ -176,8 +169,6 @@ namespace sb_explorer
             settings.DecompilerReplaceSfxSamplePoolControl = chkSfxSamplePoolControl.Checked;
             settings.DecompilerReplaceGroupDependencies = chkGroupDependencies.Checked;
             settings.DecompilerReplaceGroupParameters = chkGroupParameters.Checked;
-            settings.DecompilerReplaceDuckerDependencies = chkDuckerDependencies.Checked;
-            settings.DecompilerReplaceDuckerParameters = chkDuckerParameters.Checked;
             settings.DecompilerReplaceSoundBankDependencies = chkSoundBankDependencies.Checked;
             settings.Save();
         }
@@ -197,7 +188,6 @@ namespace sb_explorer
             message.AppendLine("MusicBanks read: " + result.MusicbanksRead);
             message.AppendLine("SoundBanks written: " + result.SoundbanksWritten);
             message.AppendLine("Groups written: " + result.GroupsWritten);
-            message.AppendLine("Ducker Groups written: " + result.DuckerGroupsWritten);
             message.AppendLine("SFX written: " + result.SfxWritten);
             message.AppendLine("Samples.txt entries: " + result.SamplesWritten);
             message.AppendLine("Music WAVs written: " + result.MusicsWritten);

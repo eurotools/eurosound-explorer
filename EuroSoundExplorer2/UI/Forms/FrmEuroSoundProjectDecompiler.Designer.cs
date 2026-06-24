@@ -1,4 +1,4 @@
-namespace sb_explorer
+﻿namespace sb_explorer
 {
     partial class FrmEuroSoundProjectDecompiler
     {
@@ -32,14 +32,12 @@ namespace sb_explorer
             this.chkExportMemoryMaps = new System.Windows.Forms.CheckBox();
             this.chkRewriteSamplesOnly = new System.Windows.Forms.CheckBox();
             this.chkExportPlatformSamplePools = new System.Windows.Forms.CheckBox();
-            this.chkExportDuckerGroups = new System.Windows.Forms.CheckBox();
+            this.chkExportMusics = new System.Windows.Forms.CheckBox();
             this.chkExportSfx = new System.Windows.Forms.CheckBox();
             this.chkExportGroups = new System.Windows.Forms.CheckBox();
             this.chkExportSoundBanks = new System.Windows.Forms.CheckBox();
             this.grpReplaceSections = new System.Windows.Forms.GroupBox();
             this.chkSfxSamplePoolFiles = new System.Windows.Forms.CheckBox();
-            this.chkDuckerParameters = new System.Windows.Forms.CheckBox();
-            this.chkDuckerDependencies = new System.Windows.Forms.CheckBox();
             this.chkSoundBankDependencies = new System.Windows.Forms.CheckBox();
             this.chkGroupParameters = new System.Windows.Forms.CheckBox();
             this.chkGroupDependencies = new System.Windows.Forms.CheckBox();
@@ -168,7 +166,7 @@ namespace sb_explorer
             this.grpExport.Controls.Add(this.chkExportMemoryMaps);
             this.grpExport.Controls.Add(this.chkRewriteSamplesOnly);
             this.grpExport.Controls.Add(this.chkExportPlatformSamplePools);
-            this.grpExport.Controls.Add(this.chkExportDuckerGroups);
+            this.grpExport.Controls.Add(this.chkExportMusics);
             this.grpExport.Controls.Add(this.chkExportSfx);
             this.grpExport.Controls.Add(this.chkExportGroups);
             this.grpExport.Controls.Add(this.chkExportSoundBanks);
@@ -187,7 +185,7 @@ namespace sb_explorer
             this.chkExportMemoryMaps.Location = new System.Drawing.Point(276, 69);
             this.chkExportMemoryMaps.Name = "chkExportMemoryMaps";
             this.chkExportMemoryMaps.Size = new System.Drawing.Size(92, 17);
-            this.chkExportMemoryMaps.TabIndex = 6;
+            this.chkExportMemoryMaps.TabIndex = 7;
             this.chkExportMemoryMaps.Text = "Memory Maps";
             this.chkExportMemoryMaps.UseVisualStyleBackColor = true;
             // 
@@ -197,32 +195,33 @@ namespace sb_explorer
             this.chkRewriteSamplesOnly.Location = new System.Drawing.Point(16, 69);
             this.chkRewriteSamplesOnly.Name = "chkRewriteSamplesOnly";
             this.chkRewriteSamplesOnly.Size = new System.Drawing.Size(151, 17);
-            this.chkRewriteSamplesOnly.TabIndex = 5;
+            this.chkRewriteSamplesOnly.TabIndex = 6;
             this.chkRewriteSamplesOnly.Text = "Only rebuild Samples.txt";
             this.chkRewriteSamplesOnly.UseVisualStyleBackColor = true;
             // 
             // chkExportPlatformSamplePools
             // 
             this.chkExportPlatformSamplePools.AutoSize = true;
-            this.chkExportPlatformSamplePools.Location = new System.Drawing.Point(276, 46);
+            this.chkExportPlatformSamplePools.Location = new System.Drawing.Point(153, 46);
             this.chkExportPlatformSamplePools.Name = "chkExportPlatformSamplePools";
             this.chkExportPlatformSamplePools.Size = new System.Drawing.Size(166, 17);
-            this.chkExportPlatformSamplePools.TabIndex = 4;
+            this.chkExportPlatformSamplePools.TabIndex = 5;
             this.chkExportPlatformSamplePools.Text = "Platform sample pool variants";
             this.chkExportPlatformSamplePools.UseVisualStyleBackColor = true;
             // 
-            // chkExportDuckerGroups
             // 
-            this.chkExportDuckerGroups.AutoSize = true;
-            this.chkExportDuckerGroups.Checked = true;
-            this.chkExportDuckerGroups.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkExportDuckerGroups.Location = new System.Drawing.Point(153, 46);
-            this.chkExportDuckerGroups.Name = "chkExportDuckerGroups";
-            this.chkExportDuckerGroups.Size = new System.Drawing.Size(97, 17);
-            this.chkExportDuckerGroups.TabIndex = 3;
-            this.chkExportDuckerGroups.Text = "Ducker Groups";
-            this.chkExportDuckerGroups.UseVisualStyleBackColor = true;
             // 
+            // chkExportMusics
+            // 
+            this.chkExportMusics.AutoSize = true;
+            this.chkExportMusics.Checked = true;
+            this.chkExportMusics.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkExportMusics.Location = new System.Drawing.Point(276, 23);
+            this.chkExportMusics.Name = "chkExportMusics";
+            this.chkExportMusics.Size = new System.Drawing.Size(58, 17);
+            this.chkExportMusics.TabIndex = 2;
+            this.chkExportMusics.Text = "Musics";
+            this.chkExportMusics.UseVisualStyleBackColor = true;
             // chkExportSfx
             // 
             this.chkExportSfx.AutoSize = true;
@@ -231,7 +230,7 @@ namespace sb_explorer
             this.chkExportSfx.Location = new System.Drawing.Point(16, 46);
             this.chkExportSfx.Name = "chkExportSfx";
             this.chkExportSfx.Size = new System.Drawing.Size(48, 17);
-            this.chkExportSfx.TabIndex = 2;
+            this.chkExportSfx.TabIndex = 3;
             this.chkExportSfx.Text = "SFXs";
             this.chkExportSfx.UseVisualStyleBackColor = true;
             // 
@@ -264,8 +263,6 @@ namespace sb_explorer
             this.grpReplaceSections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpReplaceSections.Controls.Add(this.chkSfxSamplePoolFiles);
-            this.grpReplaceSections.Controls.Add(this.chkDuckerParameters);
-            this.grpReplaceSections.Controls.Add(this.chkDuckerDependencies);
             this.grpReplaceSections.Controls.Add(this.chkSoundBankDependencies);
             this.grpReplaceSections.Controls.Add(this.chkGroupParameters);
             this.grpReplaceSections.Controls.Add(this.chkGroupDependencies);
@@ -274,7 +271,7 @@ namespace sb_explorer
             this.grpReplaceSections.Controls.Add(this.chkSfxParameters);
             this.grpReplaceSections.Location = new System.Drawing.Point(15, 274);
             this.grpReplaceSections.Name = "grpReplaceSections";
-            this.grpReplaceSections.Size = new System.Drawing.Size(493, 139);
+            this.grpReplaceSections.Size = new System.Drawing.Size(493, 116);
             this.grpReplaceSections.TabIndex = 12;
             this.grpReplaceSections.TabStop = false;
             this.grpReplaceSections.Text = "Replace sections";
@@ -291,29 +288,7 @@ namespace sb_explorer
             this.chkSfxSamplePoolFiles.Text = "SFX sample pool files";
             this.chkSfxSamplePoolFiles.UseVisualStyleBackColor = true;
             // 
-            // chkDuckerParameters
             // 
-            this.chkDuckerParameters.AutoSize = true;
-            this.chkDuckerParameters.Checked = true;
-            this.chkDuckerParameters.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDuckerParameters.Location = new System.Drawing.Point(244, 115);
-            this.chkDuckerParameters.Name = "chkDuckerParameters";
-            this.chkDuckerParameters.Size = new System.Drawing.Size(124, 17);
-            this.chkDuckerParameters.TabIndex = 7;
-            this.chkDuckerParameters.Text = "Ducker parameters";
-            this.chkDuckerParameters.UseVisualStyleBackColor = true;
-            // 
-            // chkDuckerDependencies
-            // 
-            this.chkDuckerDependencies.AutoSize = true;
-            this.chkDuckerDependencies.Checked = true;
-            this.chkDuckerDependencies.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDuckerDependencies.Location = new System.Drawing.Point(16, 115);
-            this.chkDuckerDependencies.Name = "chkDuckerDependencies";
-            this.chkDuckerDependencies.Size = new System.Drawing.Size(137, 17);
-            this.chkDuckerDependencies.TabIndex = 6;
-            this.chkDuckerDependencies.Text = "Ducker dependencies";
-            this.chkDuckerDependencies.UseVisualStyleBackColor = true;
             // 
             // chkSoundBankDependencies
             // 
@@ -390,7 +365,7 @@ namespace sb_explorer
             // btnDecompile
             // 
             this.btnDecompile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDecompile.Location = new System.Drawing.Point(15, 432);
+            this.btnDecompile.Location = new System.Drawing.Point(15, 409);
             this.btnDecompile.Name = "btnDecompile";
             this.btnDecompile.Size = new System.Drawing.Size(75, 23);
             this.btnDecompile.TabIndex = 13;
@@ -402,7 +377,7 @@ namespace sb_explorer
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(433, 432);
+            this.btnCancel.Location = new System.Drawing.Point(433, 409);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 14;
@@ -415,7 +390,7 @@ namespace sb_explorer
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(520, 467);
+            this.ClientSize = new System.Drawing.Size(520, 444);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnDecompile);
             this.Controls.Add(this.grpReplaceSections);
@@ -462,14 +437,12 @@ namespace sb_explorer
         private System.Windows.Forms.CheckBox chkExportMemoryMaps;
         private System.Windows.Forms.CheckBox chkRewriteSamplesOnly;
         private System.Windows.Forms.CheckBox chkExportPlatformSamplePools;
-        private System.Windows.Forms.CheckBox chkExportDuckerGroups;
+        private System.Windows.Forms.CheckBox chkExportMusics;
         private System.Windows.Forms.CheckBox chkExportSfx;
         private System.Windows.Forms.CheckBox chkExportGroups;
         private System.Windows.Forms.CheckBox chkExportSoundBanks;
         private System.Windows.Forms.GroupBox grpReplaceSections;
         private System.Windows.Forms.CheckBox chkSfxSamplePoolFiles;
-        private System.Windows.Forms.CheckBox chkDuckerParameters;
-        private System.Windows.Forms.CheckBox chkDuckerDependencies;
         private System.Windows.Forms.CheckBox chkSoundBankDependencies;
         private System.Windows.Forms.CheckBox chkGroupParameters;
         private System.Windows.Forms.CheckBox chkGroupDependencies;

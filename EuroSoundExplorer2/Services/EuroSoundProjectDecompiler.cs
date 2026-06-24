@@ -1,4 +1,4 @@
-using MusX;
+﻿using MusX;
 using MusX.Objects;
 using MusX.Readers;
 using NAudio.Wave;
@@ -33,7 +33,7 @@ namespace sb_explorer.Services
         public HashcodeParser Hashcodes { get; set; }
         public bool ExportSoundBanks { get; set; }
         public bool ExportGroups { get; set; }
-        public bool ExportDuckerGroups { get; set; }
+        public bool ExportMusics { get; set; }
         public bool ExportSfx { get; set; }
         public bool ExportMemoryMaps { get; set; }
         public bool RewriteSamplesOnly { get; set; }
@@ -44,8 +44,6 @@ namespace sb_explorer.Services
         public bool ReplaceSfxSamplePoolControl { get; set; }
         public bool ReplaceGroupDependencies { get; set; }
         public bool ReplaceGroupParameters { get; set; }
-        public bool ReplaceDuckerDependencies { get; set; }
-        public bool ReplaceDuckerParameters { get; set; }
         public bool ReplaceSoundBankDependencies { get; set; }
     }
 
@@ -54,7 +52,6 @@ namespace sb_explorer.Services
         public int SoundbankFilesRead { get; set; }
         public int SoundbanksWritten { get; set; }
         public int GroupsWritten { get; set; }
-        public int DuckerGroupsWritten { get; set; }
         public int SfxWritten { get; set; }
         public int SamplesWritten { get; set; }
         public int StreambanksRead { get; set; }
@@ -107,12 +104,14 @@ namespace sb_explorer.Services
             ProjectFolders folders = ResolveFolders(options);
             ProjectReference reference = ProjectReference.Load(options.Mode == EuroSoundProjectDecompilerMode.ReplaceSections ? options.EuroSoundProjectFolder : folders.RootFolder);
             List<SoundBankReadResult> soundBanks = ReadSoundBanks(options, worker, result);
-            List<StreamBankReadResult> streamBanks = options.RewriteSamplesOnly
-                ? new List<StreamBankReadResult>()
-                : ReadStreamBanks(options, result);
-            List<MusicBankReadResult> musicBanks = options.RewriteSamplesOnly
-                ? new List<MusicBankReadResult>()
-                : ReadMusicBanks(options, result);
+            bool exportSfxSamplePoolFiles = ShouldExportSfxSamplePoolFiles(options);
+            bool needsStreamBanks = !options.RewriteSamplesOnly && exportSfxSamplePoolFiles;
+            List<StreamBankReadResult> streamBanks = needsStreamBanks
+                ? ReadStreamBanks(options, result)
+                : new List<StreamBankReadResult>();
+            List<MusicBankReadResult> musicBanks = !options.RewriteSamplesOnly && options.ExportMusics
+                ? ReadMusicBanks(options, result)
+                : new List<MusicBankReadResult>();
             List<ProjectDetailsReadResult> projectDetails = options.ExportMemoryMaps && !options.RewriteSamplesOnly
                 ? ReadProjectDetails(options, result)
                 : new List<ProjectDetailsReadResult>();
@@ -129,7 +128,7 @@ namespace sb_explorer.Services
                 .OrderBy(item => GetSoundBankName(item, options.Hashcodes, reference))
                 .ToList();
 
-            Dictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadii = (options.ExportSfx || options.ExportDuckerGroups)
+            Dictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadii = options.ExportSfx
                 ? BuildSoundDetailsRadiusLookup(options)
                 : new Dictionary<uint, EuroSoundSfxRadiusData>();
 
@@ -157,15 +156,11 @@ namespace sb_explorer.Services
                 result.GroupsWritten = WriteGroupFiles(recoveredGroups, folders, reference, options);
             }
 
-            List<RecoveredDuckerGroup> recoveredDuckerGroups = RecoverDuckerGroups(baseSoundBanks, options.Hashcodes, reference, result, soundDetailsRadii);
-            if (options.ExportDuckerGroups)
+            if (options.ExportMusics)
             {
-                worker.ReportProgress(96, "Writing Ducker group files...");
-                result.DuckerGroupsWritten = WriteDuckerGroupFiles(recoveredDuckerGroups, folders, reference, options);
+                worker.ReportProgress(97, "Writing music WAV files...");
+                result.MusicsWritten = WriteMusicFiles(musicBanks, folders, reference, options);
             }
-
-            worker.ReportProgress(97, "Writing music WAV files...");
-            result.MusicsWritten = WriteMusicFiles(musicBanks, folders, reference, options);
 
             if (options.ExportSoundBanks)
             {
@@ -173,8 +168,14 @@ namespace sb_explorer.Services
                 result.SoundbanksWritten = WriteSoundBankFiles(baseSoundBanks, recoveredGroups, folders, reference, options);
             }
 
-            worker.ReportProgress(99, "Writing system files...");
-            result.SamplesWritten = WriteSystemFiles(folders, soundBanks, sampleCatalog, projectDetails, result);
+            bool writeSystemFiles = options.Mode == EuroSoundProjectDecompilerMode.Create ||
+                exportSfxSamplePoolFiles ||
+                (options.ExportMemoryMaps && projectDetails.Count > 0);
+            if (writeSystemFiles)
+            {
+                worker.ReportProgress(99, "Writing system files...");
+                result.SamplesWritten = WriteSystemFiles(folders, soundBanks, sampleCatalog, projectDetails, result);
+            }
 
             WriteDiagnosticReport(options, folders, soundBanks, streamBanks, musicBanks, result);
             worker.ReportProgress(100, "Done");
@@ -224,7 +225,6 @@ namespace sb_explorer.Services
                 RootFolder = rootFolder,
                 SfxFolder = GetOrCreateSubfolder(rootFolder, "SFXs"),
                 GroupsFolder = GetOrCreateSubfolder(rootFolder, "Groups"),
-                DuckersFolder = GetOrCreateSubfolder(rootFolder, "Duckers"),
                 SoundBanksFolder = GetOrCreateSubfolder(rootFolder, "SoundBanks"),
                 MusicsFolder = GetOrCreateSubfolder(rootFolder, "Musics"),
                 SystemFolder = GetOrCreateSubfolder(rootFolder, "System"),
@@ -409,7 +409,10 @@ namespace sb_explorer.Services
             int written = 0;
             HashSet<string> exported = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             List<EuroSoundSfxTextSection> sections = GetSfxSections(options);
-            SamplePoolFileNameResolver sampleNameResolver = new SamplePoolFileNameResolver(allSoundBanks, streamBanks, folders.MasterFolder, reference, options.Hashcodes, sampleCatalog);
+            bool exportSamplePoolFiles = sections.Contains(EuroSoundSfxTextSection.SamplePoolFiles);
+            SamplePoolFileNameResolver sampleNameResolver = exportSamplePoolFiles
+                ? new SamplePoolFileNameResolver(allSoundBanks, streamBanks, folders.MasterFolder, reference, options.Hashcodes, sampleCatalog)
+                : null;
 
             foreach (SoundBankReadResult soundBank in soundBanks)
             {
@@ -429,8 +432,12 @@ namespace sb_explorer.Services
                     }
 
                     string filePath = GetSfxFilePath(sample.HashCodeNumber, folders.SfxFolder, reference, options.Hashcodes, options.ExportPlatformSpecificSamplePoolModes ? soundBank.Header.Platform : null);
-                    string sfxName = Path.GetFileNameWithoutExtension(filePath);
-                    List<string> samplePoolFileNames = sampleNameResolver.GetNames(sample, soundBank, sfxName, filePath, options.Mode);
+                    List<string> samplePoolFileNames = null;
+                    if (sampleNameResolver != null)
+                    {
+                        string sfxName = Path.GetFileNameWithoutExtension(filePath);
+                        samplePoolFileNames = sampleNameResolver.GetNames(sample, soundBank, sfxName, filePath, options.Mode);
+                    }
                     EnsureDirectoryExists(Path.GetDirectoryName(filePath));
                     EuroSoundSfxTextExporter.ExportToFile(
                         sample,
@@ -594,110 +601,6 @@ namespace sb_explorer.Services
 
             return written;
         }
-
-        private static List<RecoveredDuckerGroup> RecoverDuckerGroups(List<SoundBankReadResult> soundBanks, HashcodeParser hashcodes, ProjectReference reference, EuroSoundProjectDecompilerResult result, IDictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadii)
-        {
-            Dictionary<int, RecoveredDuckerGroup> duckers = new Dictionary<int, RecoveredDuckerGroup>();
-
-            foreach (SoundBankReadResult soundBank in soundBanks)
-            {
-                if (soundBank.Header.FileVersion != 6)
-                {
-                    continue;
-                }
-
-                foreach (Sample sample in soundBank.Samples.Values)
-                {
-                    int duckerHashCode = sample.SFXDucker;
-                    if (duckerHashCode == 0)
-                    {
-                        continue;
-                    }
-
-                    if (!duckers.TryGetValue(duckerHashCode, out RecoveredDuckerGroup ducker))
-                    {
-                        ducker = new RecoveredDuckerGroup
-                        {
-                            DuckerHashCode = duckerHashCode,
-                            Ducker = Math.Max(0, (int)sample.Ducker),
-                            DuckerLenght = Math.Max(0, GetRecoveredDuckerLength(sample, soundDetailsRadii))
-                        };
-                        duckers.Add(duckerHashCode, ducker);
-                    }
-                    else if (ducker.Ducker != Math.Max(0, (int)sample.Ducker) || ducker.DuckerLenght != Math.Max(0, GetRecoveredDuckerLength(sample, soundDetailsRadii)))
-                    {
-                        ducker.HasConflict = true;
-                    }
-
-                    string sfxName = GetSfxDependencyName(sample.HashCodeNumber, hashcodes, reference);
-                    ducker.SfxNames.Add(sfxName);
-                }
-            }
-
-            foreach (RecoveredDuckerGroup ducker in duckers.Values)
-            {
-                ducker.Name = reference.FindDuckerByDependencies(ducker.SfxNames) ?? "Ducker_" + ducker.DuckerHashCode.ToString("000", CultureInfo.InvariantCulture);
-                if (ducker.HasConflict)
-                {
-                    result.Warnings.Add("Ducker group " + ducker.DuckerHashCode.ToString(CultureInfo.InvariantCulture) + " has conflicting recovered properties; first values were used.");
-                }
-            }
-
-            return duckers.Values.OrderBy(ducker => ducker.DuckerHashCode).ToList();
-        }
-
-        private static int GetRecoveredDuckerLength(Sample sample, IDictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadii)
-        {
-            if (sample.Ducker <= 0)
-            {
-                return sample.DuckerLenght;
-            }
-
-            EuroSoundSfxRadiusData details = GetSoundDetailsData(sample.HashCodeNumber, soundDetailsRadii);
-            if (details == null || details.DurationCentiseconds <= 0)
-            {
-                return sample.DuckerLenght;
-            }
-
-            return sample.DuckerLenght - details.DurationCentiseconds;
-        }
-
-        private static int WriteDuckerGroupFiles(List<RecoveredDuckerGroup> duckers, ProjectFolders folders, ProjectReference reference, EuroSoundProjectDecompilerOptions options)
-        {
-            int written = 0;
-
-            foreach (RecoveredDuckerGroup ducker in duckers)
-            {
-                string duckerName = SanitizeFileName(ducker.Name);
-                string filePath = reference.GetDuckerPath(duckerName) ?? Path.Combine(folders.DuckersFolder, duckerName + ".txt");
-                List<string> lines = File.Exists(filePath)
-                    ? new List<string>(File.ReadAllLines(filePath))
-                    : CreateDuckerGroupFileLines();
-
-                EnsureHeader(lines, "## EuroSound Ducker Group File");
-
-                if (options.Mode == EuroSoundProjectDecompilerMode.Create || options.ReplaceDuckerDependencies)
-                {
-                    ReplaceSection(lines, DependenciesSection, ducker.SfxNames.OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToList());
-                }
-
-                if (options.Mode == EuroSoundProjectDecompilerMode.Create || options.ReplaceDuckerParameters)
-                {
-                    ReplaceSection(lines, "#DuckerParameters", new List<string>
-                    {
-                        Line("Ducker", ducker.Ducker),
-                        Line("DuckerLenght", ducker.DuckerLenght)
-                    });
-                }
-
-                EnsureDirectoryExists(Path.GetDirectoryName(filePath));
-                File.WriteAllLines(filePath, lines.ToArray(), Encoding.UTF8);
-                written++;
-            }
-
-            return written;
-        }
-
         private static int WriteSoundBankFiles(List<SoundBankReadResult> soundBanks, List<RecoveredGroup> groups, ProjectFolders folders, ProjectReference reference, EuroSoundProjectDecompilerOptions options)
         {
             int written = 0;
@@ -877,7 +780,6 @@ namespace sb_explorer.Services
             lines.Add("Sample entries written: " + result.SamplesWritten.ToString(CultureInfo.InvariantCulture));
             lines.Add("Music WAVs written: " + result.MusicsWritten.ToString(CultureInfo.InvariantCulture));
             lines.Add("Groups written: " + result.GroupsWritten.ToString(CultureInfo.InvariantCulture));
-            lines.Add("Ducker groups written: " + result.DuckerGroupsWritten.ToString(CultureInfo.InvariantCulture));
             lines.Add("Memory maps written: " + result.MemoryMapsWritten.ToString(CultureInfo.InvariantCulture));
             lines.Add("Failed files: " + result.FailedFiles.ToString(CultureInfo.InvariantCulture));
             lines.Add(string.Empty);
@@ -1311,6 +1213,13 @@ namespace sb_explorer.Services
 
             return "Slot_" + slotIndex.ToString("000", CultureInfo.InvariantCulture);
         }
+        private static bool ShouldExportSfxSamplePoolFiles(EuroSoundProjectDecompilerOptions options)
+        {
+            return options != null &&
+                options.ExportSfx &&
+                GetSfxSections(options).Contains(EuroSoundSfxTextSection.SamplePoolFiles);
+        }
+
 
         private static List<EuroSoundSfxTextSection> GetSfxSections(EuroSoundProjectDecompilerOptions options)
         {
@@ -1417,21 +1326,6 @@ namespace sb_explorer.Services
             lines.Add(SectionEnd);
             return lines;
         }
-
-        private static List<string> CreateDuckerGroupFileLines()
-        {
-            List<string> lines = CreateHeaderLines("## EuroSound Ducker Group File");
-            lines.Add("");
-            lines.Add(DependenciesSection);
-            lines.Add(SectionEnd);
-            lines.Add("");
-            lines.Add("#DuckerParameters");
-            lines.Add("Ducker  0");
-            lines.Add("DuckerLenght  0");
-            lines.Add(SectionEnd);
-            return lines;
-        }
-
         private static List<string> CreateSoundBankFileLines(uint hashCode)
         {
             List<string> lines = CreateHeaderLines("## EuroSound Soundbank File");
@@ -2382,7 +2276,6 @@ namespace sb_explorer.Services
             public string RootFolder { get; set; }
             public string SfxFolder { get; set; }
             public string GroupsFolder { get; set; }
-            public string DuckersFolder { get; set; }
             public string SoundBanksFolder { get; set; }
             public string MusicsFolder { get; set; }
             public string SystemFolder { get; set; }
@@ -3026,22 +2919,6 @@ namespace sb_explorer.Services
                 SfxNames = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
             }
         }
-
-        private sealed class RecoveredDuckerGroup
-        {
-            public int DuckerHashCode { get; set; }
-            public string Name { get; set; }
-            public int Ducker { get; set; }
-            public int DuckerLenght { get; set; }
-            public bool HasConflict { get; set; }
-            public SortedSet<string> SfxNames { get; private set; }
-
-            public RecoveredDuckerGroup()
-            {
-                SfxNames = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
-        }
-
         private sealed class ProjectReference
         {
             private readonly Dictionary<uint, string> sfxNameByHash = new Dictionary<uint, string>();
@@ -3049,9 +2926,7 @@ namespace sb_explorer.Services
             private readonly Dictionary<uint, string> soundBankNameByHash = new Dictionary<uint, string>();
             private readonly Dictionary<uint, string> soundBankPathByHash = new Dictionary<uint, string>();
             private readonly Dictionary<string, string> groupPathByName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            private readonly Dictionary<string, string> duckerPathByName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             private readonly List<GroupReference> groups = new List<GroupReference>();
-            private readonly List<GroupReference> duckers = new List<GroupReference>();
 
             public static ProjectReference Load(string projectFolder)
             {
@@ -3063,7 +2938,6 @@ namespace sb_explorer.Services
 
                 reference.LoadSfx(projectFolder);
                 reference.LoadGroups(projectFolder);
-                reference.LoadDuckers(projectFolder);
                 reference.LoadSoundBanks(projectFolder);
                 return reference;
             }
@@ -3084,20 +2958,9 @@ namespace sb_explorer.Services
                 return groupPathByName.TryGetValue(groupName, out path) ? path : null;
             }
 
-            public string GetDuckerPath(string duckerName)
-            {
-                return duckerPathByName.TryGetValue(duckerName, out string path) ? path : null;
-            }
-
             public string FindGroupByDependencies(SortedSet<string> dependencies)
             {
                 GroupReference match = groups.FirstOrDefault(group => group.Dependencies.SetEquals(dependencies));
-                return match?.Name;
-            }
-
-            public string FindDuckerByDependencies(SortedSet<string> dependencies)
-            {
-                GroupReference match = duckers.FirstOrDefault(ducker => ducker.Dependencies.SetEquals(dependencies));
                 return match?.Name;
             }
 
@@ -3159,33 +3022,6 @@ namespace sb_explorer.Services
                     }
                 }
             }
-
-            private void LoadDuckers(string projectFolder)
-            {
-                string duckersFolder = FindFolder(projectFolder, "Duckers");
-                if (duckersFolder == null)
-                {
-                    return;
-                }
-
-                foreach (string filePath in Directory.GetFiles(duckersFolder, "*.txt", SearchOption.AllDirectories))
-                {
-                    List<string> lines = new List<string>(File.ReadAllLines(filePath));
-                    string name = NormalizeName(Path.GetFileNameWithoutExtension(filePath));
-                    SortedSet<string> dependencies = new SortedSet<string>(ReadSection(lines, DependenciesSection).Select(NormalizeName), StringComparer.OrdinalIgnoreCase);
-
-                    duckerPathByName[name] = filePath;
-                    if (dependencies.Count > 0)
-                    {
-                        duckers.Add(new GroupReference
-                        {
-                            Name = name,
-                            Dependencies = dependencies
-                        });
-                    }
-                }
-            }
-
             private void LoadSoundBanks(string projectFolder)
             {
                 string soundBanksFolder = FindFolder(projectFolder, "SoundBanks");

@@ -67,7 +67,7 @@ namespace sb_explorer
                     hashCode |= 0x1BE00000;
                 }
             }
-            else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) && (selectedTitle == Title.Athens || selectedTitle == Title.Spyro || selectedTitle == Title.Robots || selectedTitle == Title.Predator || selectedTitle == Title.BatmanBegins || selectedTitle == Title.DemoX))
+            else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) && (selectedTitle == Title.Athens || selectedTitle == Title.Spyro || selectedTitle == Title.Robots || selectedTitle == Title.Predator || selectedTitle == Title.BatmanBegins))
             {
                 if (fileType == FileType.MusicFile)
                 {
@@ -110,7 +110,9 @@ namespace sb_explorer
                     return FileType.SoundbankFile;
                 }
             }
-            else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) && selectedTitle != Title.IceAge2)
+            else if ((selectedVersion == 1 || selectedVersion == 4 || selectedVersion == 5 || selectedVersion == 6) &&
+                selectedTitle != Title.IceAge2 &&
+                selectedTitle != Title.DemoX)
             {
                 int sectionHashCode = (hashCode & 0x0000F000) >> 12;
                 switch (sectionHashCode)

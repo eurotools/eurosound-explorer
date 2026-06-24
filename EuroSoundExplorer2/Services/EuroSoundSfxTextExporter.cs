@@ -1,4 +1,4 @@
-using MusX.Objects;
+﻿using MusX.Objects;
 using NAudio.Wave;
 using sb_explorer.Classes;
 using System;
@@ -231,6 +231,11 @@ namespace sb_explorer.Services
             lines.Add(Line("UnPausable", Flag(sample.Flags, 1)));
             lines.Add(Line("KillMeOwnGroup", Flag(sample.Flags, 13)));
             lines.Add(Line("OneInstancePerFrame", Flag(sample.Flags, 15)));
+
+            if (version == EuroSoundVersion.EuroSound610)
+            {
+                lines.Add(Line("SfxDucker", sample.SFXDucker));
+            }
 
             if (version == EuroSoundVersion.EuroSound510 || version == EuroSoundVersion.EuroSound610)
             {

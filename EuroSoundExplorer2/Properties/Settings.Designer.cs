@@ -98,12 +98,12 @@ namespace sb_explorer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DecompilerExportDuckerGroups {
+        public bool DecompilerExportMusics {
             get {
-                return ((bool)(this["DecompilerExportDuckerGroups"]));
+                return ((bool)(this["DecompilerExportMusics"]));
             }
             set {
-                this["DecompilerExportDuckerGroups"] = value;
+                this["DecompilerExportMusics"] = value;
             }
         }
         
@@ -200,30 +200,6 @@ namespace sb_explorer.Properties {
             }
             set {
                 this["DecompilerReplaceGroupParameters"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DecompilerReplaceDuckerDependencies {
-            get {
-                return ((bool)(this["DecompilerReplaceDuckerDependencies"]));
-            }
-            set {
-                this["DecompilerReplaceDuckerDependencies"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DecompilerReplaceDuckerParameters {
-            get {
-                return ((bool)(this["DecompilerReplaceDuckerParameters"]));
-            }
-            set {
-                this["DecompilerReplaceDuckerParameters"] = value;
             }
         }
         

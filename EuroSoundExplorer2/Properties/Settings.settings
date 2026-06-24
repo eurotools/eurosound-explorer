@@ -5,13 +5,13 @@
   </Profiles>
   <Settings>
     <Setting Name="DecompilerCompiledFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)"></Value>
     </Setting>
     <Setting Name="DecompilerProjectFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)"></Value>
     </Setting>
     <Setting Name="DecompilerOutputFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)"></Value>
     </Setting>
     <Setting Name="DecompilerMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -22,7 +22,7 @@
     <Setting Name="DecompilerExportGroups" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="DecompilerExportDuckerGroups" Type="System.Boolean" Scope="User">
+    <Setting Name="DecompilerExportMusics" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DecompilerExportSfx" Type="System.Boolean" Scope="User">
@@ -47,12 +47,6 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DecompilerReplaceGroupParameters" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceDuckerDependencies" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceDuckerParameters" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DecompilerReplaceSoundBankDependencies" Type="System.Boolean" Scope="User">
