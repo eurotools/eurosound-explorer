@@ -351,9 +351,10 @@ namespace sb_explorer
                 soundToPlay.channels = (uint)decodedAudio.Channels.Length;
                 if (headerData.FileVersion == 18)
                 {
-                    soundToPlay.isLooped = (selectedSample.Flags & 1) != 0 && selectedSample.LoopStartSample != uint.MaxValue;
-                    soundToPlay.loopStartPoint = selectedSample.LoopStartSample == uint.MaxValue ? 0 : selectedSample.LoopStartSample;
-                    soundToPlay.loopEndPoint = selectedSample.SampleCount > int.MaxValue ? int.MaxValue : (int)selectedSample.SampleCount;
+                    int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
+                    soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);
+                    soundToPlay.loopStartPoint = loopStart;
+                    soundToPlay.loopEndPoint = loopEnd > int.MaxValue ? int.MaxValue : (int)loopEnd;
                 }
                 else
                 {

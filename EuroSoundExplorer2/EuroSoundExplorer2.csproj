@@ -185,6 +185,7 @@
     <Compile Include="Infrastructure\FileSystem\EuroSoundAudioDataReader.cs" />
     <Compile Include="Infrastructure\Binary\EuroSoundBinaryReader.cs" />
     <Compile Include="MusX\EuroSoundCodecMatrix.cs" />
+    <Compile Include="MusX\EuroSoundStreamLoopResolver.cs" />
     <Compile Include="Domain\Headers\ProjectDetailsHeader.cs" />
     <Compile Include="Domain\Headers\SfxCommonHeader.cs" />
     <Compile Include="Domain\Headers\SoundbankHeader.cs" />

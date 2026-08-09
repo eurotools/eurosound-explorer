@@ -2991,8 +2991,8 @@ namespace sb_explorer.Services
             {
                 int sampleCount = pcmData == null || pcmData.Length == 0 ? 0 : pcmData.Min(channel => channel.Length) / 2;
                 if (header != null && header.FileVersion == 18)
-                    return (streamSample.Flags & 1) != 0 && streamSample.LoopStartSample != uint.MaxValue && streamSample.LoopStartSample < sampleCount
-                        ? new WavLoopInfo(streamSample.LoopStartSample, (uint)Math.Max(streamSample.LoopStartSample, sampleCount - 1)) : null;
+                    return EuroSoundStreamLoopResolver.TryResolveV18(streamSample, sampleCount, out uint loopStart, out uint loopEnd)
+                        ? new WavLoopInfo(loopStart, loopEnd - 1) : null;
                 return EuroSoundMarkerLoopResolver.CreateLoopInfo(
                     streamSample == null ? null : streamSample.Markers,
                     sampleCount,
