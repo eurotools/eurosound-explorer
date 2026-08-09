@@ -154,32 +154,25 @@ namespace sb_explorer.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal bool CheckIfEurocomImaIsInvalid(byte[] ImaData)
+        internal bool CheckIfEurocomImaIsInvalid(byte[] imaData, int channels = 1)
         {
-            bool invalidData = false;
-            byte chunckId = 65;
-            for (int j = 0; j < ImaData.Length; j += 32)
+            if (imaData == null || imaData.Length == 0) return true;
+            channels = Math.Max(1, Math.Min(8, channels));
+            const int blockSize = 32;
+            int blockSetSize = blockSize * channels;
+            if ((imaData.Length % blockSetSize) != 0) return true;
+
+            int blockSetIndex = 0;
+            for (int offset = 0; offset < imaData.Length; offset += blockSetSize, blockSetIndex++)
             {
-                byte[] chunckData = new byte[32];
-                Buffer.BlockCopy(ImaData, j, chunckData, 0, chunckData.Length);
-                if (j == 0 && chunckData[3] != 65)
+                byte expectedMarker = (byte)('A' + (blockSetIndex % 26));
+                for (int channel = 0; channel < channels; channel++)
                 {
-                    invalidData = true;
-                    break;
-                }
-                else if (chunckData[3] != chunckId)
-                {
-                    invalidData = true;
-                    break;
-                }
-                chunckId++;
-                if (chunckId > 90)
-                {
-                    chunckId = 65;
+                    int markerOffset = offset + channel * blockSize + 3;
+                    if (imaData[markerOffset] != expectedMarker) return true;
                 }
             }
-
-            return invalidData;
+            return false;
         }
     }
 

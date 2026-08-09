@@ -242,7 +242,7 @@ namespace sb_explorer
             this.btnReloadHashCodes.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnReloadHashCodes.Name = "btnReloadHashCodes";
             this.btnReloadHashCodes.Size = new System.Drawing.Size(25, 27);
-            this.btnReloadHashCodes.Text = "Reload Sound.h";
+            this.btnReloadHashCodes.Text = "Reload Hash Table";
             this.btnReloadHashCodes.Click += new System.EventHandler(this.BtnReloadHashCodes_Click);
             // 
             // btnApplyFilter

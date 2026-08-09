@@ -107,7 +107,10 @@ namespace sb_explorer
                 else
                 {
                     //Enable validation tool - Only For Custom EuroCom ADPCM
-                    if (streamHeader.Platform.Equals("PC__") || streamHeader.Platform.Equals("XB__") || EuroSoundCodecMatrix.IsGameCubePlatform(streamHeader.Platform))
+                    EuroSoundAudioCodec codec = streamedSamples[0].AudioReference == null
+                        ? EuroSoundCodecMatrix.GetCodec(streamHeader.FileVersion, streamHeader.Platform, EuroSoundBankType.StreamBank)
+                        : streamedSamples[0].AudioReference.Codec;
+                    if (codec == EuroSoundAudioCodec.EurocomImaAdpcm)
                     {
                         ButtonValidateAllStreams.Enabled = true;
                     }
@@ -248,10 +251,27 @@ namespace sb_explorer
                 {
                     //Get item and IMA Data
                     ListViewItem currentItem = lvwStreamData.Items[i];
-                    byte[] ImaData = streamedSamples[(int)currentItem.Tag].EncodedData;
+                    StreamSample streamSample = streamedSamples[(int)currentItem.Tag];
+                    byte[] ImaData = streamSample.EncodedData;
 
                     //Show Results
-                    if (audioFunctions.CheckIfEurocomImaIsInvalid(ImaData))
+                    bool isV18Interleaved = GetDisplayedStreamHeader(parentForm).FileVersion == 18;
+                    bool invalid = audioFunctions.CheckIfEurocomImaIsInvalid(ImaData, (int)streamSample.Channels);
+                    if (invalid && isV18Interleaved && streamSample.Frequency == 0)
+                    {
+                        // A standalone v18 MUSX does not store its channel count. If no
+                        // associated SBNK supplied it, infer it from the repeated marker
+                        // sequence of each interleaved channel block.
+                        for (int channelCount = 2; channelCount <= 8; channelCount++)
+                        {
+                            if (!audioFunctions.CheckIfEurocomImaIsInvalid(ImaData, channelCount))
+                            {
+                                invalid = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (invalid)
                     {
                         currentItem.SubItems[1].Text = "INVALID";
                         currentItem.ForeColor = Color.Red;
@@ -322,7 +342,11 @@ namespace sb_explorer
             {
                 soundToPlay = new SoundFile();
                 soundToPlay.PcmData = decodedAudio.Channels;
-                soundToPlay.volume = selectedSample.BaseVolume / 100;
+                // Individual EngineXT streams have no legacy BaseVolume field.
+                // The descriptor leaves it at zero, which must not mute preview playback.
+                soundToPlay.volume = headerData.FileVersion == 18
+                    ? 1.0f
+                    : selectedSample.BaseVolume / 100.0f;
                 soundToPlay.sampleRate = decodedAudio.SampleRate;
                 soundToPlay.channels = (uint)decodedAudio.Channels.Length;
                 if (headerData.FileVersion == 18)

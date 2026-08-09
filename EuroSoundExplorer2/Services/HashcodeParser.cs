@@ -16,18 +16,25 @@ namespace sb_explorer.Classes
         //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadHashTable(string filePath)
         {
+            HashCodes.Clear();
+            HashCodeLabels.Clear();
             if (File.Exists(filePath))
             {
-                //Clear dictionary before adding a new hashtable
-                HashCodes.Clear();
-                HashCodeLabels.Clear();
-
                 //Read new hashtable
                 using (StreamReader sr = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
+                        Match aftEntry = Regex.Match(line, "AFTEntry\\s*\\(\\s*(0x[\\da-fA-F]{1,8})\\s*,\\s*\"((?:\\\\.|[^\"])*)\"");
+                        if (aftEntry.Success)
+                        {
+                            uint unsignedHash = Convert.ToUInt32(aftEntry.Groups[1].Value, 16);
+                            string label = aftEntry.Groups[2].Value.Replace("\\\\", "\\").Replace("\\\"", "\"");
+                            AddHashCode(unchecked((int)unsignedHash), label);
+                            continue;
+                        }
+
                         string pattern = "#define([\\s])+([\\w]+)([\\s])+(0x[\\da-fA-F]{8,8})";
                         MatchCollection matchCollection = Regex.Matches(line, pattern);
                         if (matchCollection.Count > 0)
@@ -40,27 +47,25 @@ namespace sb_explorer.Classes
                                 //Remove HT_Sound prefix
                                 string hashcodeMatch = Regex.Match(line, "([\\w]+)").ToString().Replace("HT_Sound_", string.Empty).Trim();
 
-                                List<string> labels;
-                                if (!HashCodeLabels.TryGetValue(hashCode, out labels))
-                                {
-                                    labels = new List<string>();
-                                    HashCodeLabels.Add(hashCode, labels);
-                                }
-                                if (!labels.Contains(hashcodeMatch))
-                                {
-                                    labels.Add(hashcodeMatch);
-                                }
-
-                                if (!HashCodes.ContainsKey(hashCode))
-                                {
-                                    //Add HashCode
-                                    HashCodes.Add(hashCode, hashcodeMatch);
-                                }
+                                AddHashCode(hashCode, hashcodeMatch);
                             }
                         }
                     }
                 }
             }
+        }
+
+        private void AddHashCode(int hashCode, string label)
+        {
+            if (string.IsNullOrWhiteSpace(label)) return;
+            List<string> labels;
+            if (!HashCodeLabels.TryGetValue(hashCode, out labels))
+            {
+                labels = new List<string>();
+                HashCodeLabels.Add(hashCode, labels);
+            }
+            if (!labels.Contains(label)) labels.Add(label);
+            if (!HashCodes.ContainsKey(hashCode)) HashCodes.Add(hashCode, label);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

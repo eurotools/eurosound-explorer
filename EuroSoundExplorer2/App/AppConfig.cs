@@ -50,7 +50,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        [DisplayName("Sound.h File")]
+        [DisplayName("Hash Table (Sound.h / AudioFileTable.h)")]
         [Category("Project")]
         [Editor(typeof(CustomFileBrowser), typeof(UITypeEditor))]
         public string SoundhFile

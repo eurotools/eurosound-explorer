@@ -146,6 +146,7 @@ namespace sb_explorer
 
             if (Directory.Exists(folder))
             {
+                LoadProjectHashTable(folder);
                 if (btnListView.Checked)
                 {
                     FillListView(folder, selectedPlatform, selectedTitle, hashTable);
@@ -241,7 +242,23 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void BtnReloadHashCodes_Click(object sender, EventArgs e)
         {
-            HashTable.LoadHashTable(Configuration.SoundhFile);
+            if (!LoadProjectHashTable(ProjectFolder))
+                HashTable.LoadHashTable(Configuration.SoundhFile);
+            LoadData();
+        }
+
+        private bool LoadProjectHashTable(string projectFolder)
+        {
+            if (!Directory.Exists(projectFolder)) return false;
+            string audioFileTable = Directory.GetFiles(projectFolder, "AudioFileTable.h", SearchOption.AllDirectories)
+                .OrderBy(path => path.Length)
+                .FirstOrDefault();
+            if (string.IsNullOrEmpty(audioFileTable)) return false;
+            if (!string.Equals(Configuration.SoundhFile, audioFileTable, StringComparison.OrdinalIgnoreCase))
+                Configuration.SoundhFile = audioFileTable;
+            else
+                HashTable.LoadHashTable(audioFileTable);
+            return true;
         }
 
         //-------------------------------------------------------------------------------------------
