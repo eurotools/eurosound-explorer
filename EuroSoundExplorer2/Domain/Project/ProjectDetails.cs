@@ -48,12 +48,40 @@ namespace MusX.Objects
         [Category("Project")]
         public int ProjectCode { get; set; }
 
+        [DisplayName("Effects Count")]
+        [Category("EngineXT v18")]
+        public int EffectsCount { get; set; }
+
+        [DisplayName("Mix Groups Count")]
+        [Category("EngineXT v18")]
+        public int MixGroupsCount { get; set; }
+
+        [DisplayName("Duckers Count")]
+        [Category("EngineXT v18")]
+        public int DuckersCount { get; set; }
+
+        [DisplayName("Culling Groups Count")]
+        [Category("EngineXT v18")]
+        public int CullingGroupsCount { get; set; }
+
+        [DisplayName("Oscillators Count")]
+        [Category("EngineXT v18")]
+        public int OscillatorsCount { get; set; }
+
         public List<ProjectSoundBank> soundBanksData = new List<ProjectSoundBank>();
         public List<ProjectSlots> memorySlotsData = new List<ProjectSlots>();
         public List<ProjectMemoryMap> memoryMapsData = new List<ProjectMemoryMap>();
+        public List<ProjectRuntimeObject> runtimeObjects = new List<ProjectRuntimeObject>();
         public List<int> userValues = new List<int>();
 
         public int[] flagsValues = new int[10];
+    }
+
+    public class ProjectRuntimeObject
+    {
+        public string Type { get; set; }
+        public uint HashCode { get; set; }
+        public string Details { get; set; }
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

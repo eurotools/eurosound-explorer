@@ -52,6 +52,11 @@ namespace MusX.Readers
                 {
                     br.BaseStream.Seek(4, SeekOrigin.Current);
                     fileVersion = br.ReadInt32();
+                    if (fileVersion == 10 && br.BaseStream.Length >= 0x1c)
+                    {
+                        br.BaseStream.Seek(0x18, SeekOrigin.Begin);
+                        fileVersion = br.ReadInt32();
+                    }
                 }
             }
 
@@ -81,8 +86,19 @@ namespace MusX.Readers
                     //Hashcode for the current soundbank 
                     headerData.FileHashCode = BReader.ReadUInt32();
                     //Current version of the file
-                    headerData.FileVersion = BReader.ReadInt32();
-                    if (headerData.FileVersion < 7 || headerData.FileVersion == 201)
+                    int containerVersion = BReader.ReadInt32();
+                    headerData.FileVersion = containerVersion;
+                    if (containerVersion == 10)
+                    {
+                        headerData.FileSize = BReader.ReadUInt32();
+                        headerData.Platform = Encoding.ASCII.GetString(BReader.ReadBytes(4));
+                        headerData.IsBigEndian = EuroSoundCodecMatrix.IsBigEndianPlatform(headerData.Platform);
+                        headerData.Timespan = BReader.ReadUInt32();
+                        headerData.FileVersion = BReader.ReadInt32();
+                        BReader.ReadUInt32();
+                        headerData.EndOffset = 0x800;
+                    }
+                    else if (headerData.FileVersion < 7 || headerData.FileVersion == 201)
                     {
                         //Size of the whole file, in bytes
                         headerData.FileSize = BReader.ReadUInt32();
@@ -101,7 +117,7 @@ namespace MusX.Readers
                             BReader.ReadUInt32();
                         }
 
-                        //Store the last SFX
+                        // EngineXT keeps the engine-visible descriptor at the next 0x800-byte sector.
                         headerData.EndOffset = BReader.BaseStream.Position;
                     }
                     else

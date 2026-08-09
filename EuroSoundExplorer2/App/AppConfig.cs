@@ -116,6 +116,9 @@ namespace sb_explorer
                     case Title.DemoX:
                         FileVersion = 6;
                         break;
+                    case Title.GForce:
+                        FileVersion = 18;
+                        break;
                 }
 
                 //Check Exceptions

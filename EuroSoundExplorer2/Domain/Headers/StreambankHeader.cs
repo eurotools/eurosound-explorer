@@ -14,6 +14,13 @@
         public uint FileStart3;
         public uint FileLength3;
 
+        public uint CodecType;
+        public uint StreamFlags;
+        public uint LoopStartByteOffset;
+        public uint LoopEndByteOffset;
+        public uint SampleCount;
+        public uint LoopStartSample;
+
         //-------------------------------------------------------------------------------------------------------------------------------
         public StreambankHeader(SfxCommonHeader commonHeader = null)
         {

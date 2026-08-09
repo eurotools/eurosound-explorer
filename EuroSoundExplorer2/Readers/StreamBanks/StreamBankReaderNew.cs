@@ -1,6 +1,7 @@
 ﻿using MusX.Objects;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace MusX.Readers
 {
@@ -9,6 +10,91 @@ namespace MusX.Readers
     //-------------------------------------------------------------------------------------------------------------------------------
     public class StreamBankReaderNew : StreamBankReader
     {
+        internal static void ReadStreamFileV18(string filePath, StreambankHeader headerData, List<StreamSample> streamedSamples)
+        {
+            EuroSoundAudioCodec codec;
+            switch (headerData.FileStart1)
+            {
+                case 1: codec = EuroSoundAudioCodec.EurocomImaAdpcm; break;
+                case 2: codec = EuroSoundAudioCodec.SonyVagAdpcm; break;
+                case 3: codec = EuroSoundAudioCodec.DspAdpcm; break;
+                case 4: codec = EuroSoundAudioCodec.Pcm16; break;
+                case 6: codec = EuroSoundAudioCodec.Xma; break;
+                default: codec = EuroSoundAudioCodec.Unknown; break;
+            }
+            StreamSample sample = new StreamSample
+            {
+                AudioOffset = headerData.FileStart2,
+                AudioSize = headerData.FileLength2,
+                BlockPosition = 0,
+                CodecType = headerData.CodecType,
+                Flags = headerData.StreamFlags,
+                SampleCount = headerData.SampleCount,
+                LoopStartSample = headerData.LoopStartSample,
+                LoopStartByteOffset = headerData.LoopStartByteOffset,
+                LoopEndByteOffset = headerData.LoopEndByteOffset,
+                AudioReference = new AudioDataReference { FilePath = filePath, Offset = headerData.FileStart2, Size = headerData.FileLength2, Codec = codec, Frequency = 0, Channels = 1 }
+            };
+            ResolveV18Metadata(filePath, sample);
+            streamedSamples.Add(sample);
+        }
+
+        private static void ResolveV18Metadata(string streamPath, StreamSample sample)
+        {
+            string directory = Path.GetDirectoryName(streamPath);
+            if (string.IsNullOrEmpty(directory)) return;
+            string target = Path.GetFullPath(streamPath);
+            foreach (string candidate in FindCandidateSoundBanks(directory))
+            {
+                if (string.Equals(Path.GetFullPath(candidate), target, StringComparison.OrdinalIgnoreCase) || !HasSbnkPayload(candidate)) continue;
+                try
+                {
+                    SoundBankReader soundBankReader = new SoundBankReader();
+                    SoundbankHeader soundBankHeader = soundBankReader.ReadSfxHeader(candidate, string.Empty);
+                    SortedDictionary<uint, Sample> samples = new SortedDictionary<uint, Sample>();
+                    List<SampleData> waves = new List<SampleData>();
+                    List<uint> duplicates = new List<uint>();
+                    soundBankReader.ReadSoundBank(candidate, soundBankHeader, samples, waves, duplicates);
+                    foreach (SampleData wave in waves)
+                    {
+                        if (wave.AudioReference == null || string.IsNullOrEmpty(wave.AudioReference.FilePath) ||
+                            !string.Equals(Path.GetFullPath(wave.AudioReference.FilePath), target, StringComparison.OrdinalIgnoreCase)) continue;
+                        sample.Frequency = wave.Frequency;
+                        sample.Channels = Math.Max(1u, wave.Channels);
+                        if (wave.TotalSamples != 0) sample.SampleCount = wave.TotalSamples;
+                        if (wave.IsLooped && wave.LoopStartSample != uint.MaxValue) sample.LoopStartSample = wave.LoopStartSample;
+                        sample.AudioReference.Frequency = sample.Frequency;
+                        sample.AudioReference.Channels = (int)sample.Channels;
+                        return;
+                    }
+                }
+                catch (InvalidDataException) { }
+                catch (EndOfStreamException) { }
+            }
+        }
+
+        private static IEnumerable<string> FindCandidateSoundBanks(string streamDirectory)
+        {
+            HashSet<string> yielded = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (string path in Directory.GetFiles(streamDirectory, "*.sfx", SearchOption.TopDirectoryOnly))
+                if (yielded.Add(path)) yield return path;
+            DirectoryInfo parent = Directory.GetParent(streamDirectory);
+            if (parent == null) yield break;
+            foreach (string path in Directory.GetFiles(parent.FullName, "*.sfx", SearchOption.AllDirectories))
+                if (yielded.Add(path)) yield return path;
+        }
+
+        private static bool HasSbnkPayload(string path)
+        {
+            using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                if (stream.Length < 0x804) return false;
+                stream.Position = 0x800;
+                byte[] magic = new byte[4];
+                return stream.Read(magic, 0, 4) == 4 && magic[0] == (byte)'S' && magic[1] == (byte)'B' && magic[2] == (byte)'N' && magic[3] == (byte)'K';
+            }
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------
         internal void ReadStreamFile(string filePath, StreambankHeader headerData, List<StreamSample> streamedSamples)
         {

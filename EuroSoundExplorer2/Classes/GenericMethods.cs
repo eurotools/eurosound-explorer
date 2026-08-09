@@ -39,15 +39,39 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static byte[] DecodeSfxSample(SampleData selectedSample, AudioFunctions audioFunctions, SoundbankHeader headerData, Platform selectedPlatform)
         {
-            EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.SoundBank);
+            EuroSoundAudioCodec codec = selectedSample.AudioReference != null && selectedSample.AudioReference.Codec != EuroSoundAudioCodec.Unknown
+                ? selectedSample.AudioReference.Codec
+                : EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.SoundBank);
             return EuroSoundAudioDecoder.Decode(codec, selectedSample.EncodedData, audioFunctions, selectedSample.DspCoeffs, selectedSample);
+        }
+
+        internal static DecodedAudio DecodeSfxSampleChannels(SampleData selectedSample, AudioFunctions audioFunctions, SoundbankHeader headerData)
+        {
+            EuroSoundAudioCodec codec = selectedSample.AudioReference != null && selectedSample.AudioReference.Codec != EuroSoundAudioCodec.Unknown
+                ? selectedSample.AudioReference.Codec
+                : EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.SoundBank);
+            return EuroSoundAudioDecoder.DecodeChannels(codec, selectedSample.EncodedData, audioFunctions, selectedSample.DspCoeffs,
+                selectedSample, (int)Math.Max(1, selectedSample.Channels), selectedSample.Frequency, selectedSample.TotalSamples, headerData.FileVersion == 18);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static byte[] DecodeStreamSample(StreamSample selectedSample, AudioFunctions audioFunctions, StreambankHeader headerData, Platform selectedPlatform)
         {
-            EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.StreamBank);
+            EuroSoundAudioCodec codec = selectedSample.AudioReference != null && selectedSample.AudioReference.Codec != EuroSoundAudioCodec.Unknown
+                ? selectedSample.AudioReference.Codec
+                : EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.StreamBank);
             return EuroSoundAudioDecoder.Decode(codec, selectedSample.EncodedData, audioFunctions, null, null);
+        }
+
+        internal static DecodedAudio DecodeStreamSampleChannels(StreamSample selectedSample, AudioFunctions audioFunctions, StreambankHeader headerData, uint fallbackFrequency)
+        {
+            EuroSoundAudioCodec codec = selectedSample.AudioReference != null && selectedSample.AudioReference.Codec != EuroSoundAudioCodec.Unknown
+                ? selectedSample.AudioReference.Codec
+                : EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.StreamBank);
+            uint frequency = selectedSample.Frequency == 0 ? fallbackFrequency : selectedSample.Frequency;
+            int channels = (int)Math.Max(1, selectedSample.Channels);
+            return EuroSoundAudioDecoder.DecodeChannels(codec, selectedSample.EncodedData, audioFunctions, null, null,
+                channels, frequency, selectedSample.SampleCount, headerData.FileVersion == 18);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +109,25 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static FileType GetFileType(int hashCode, int selectedVersion, string filePath, Title selectedTitle)
         {
+            if (selectedVersion == 18)
+            {
+                string payloadMagic = ReadPayloadMagic(filePath, 0x800);
+                if (payloadMagic == "SBNK") return FileType.SoundbankFile;
+                if (payloadMagic == "ESPD") return FileType.ProjectDetails;
+                string name = Path.GetFileName(filePath) ?? string.Empty;
+                if (name.IndexOf("projectdetails", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.ProjectDetails;
+                if (name.IndexOf("sounddetails", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.SoundDetailsFile;
+
+                int section = (hashCode >> 20) & 0xF;
+                switch (section)
+                {
+                    case 3: return FileType.ProjectDetails;
+                    case 4: return FileType.StreamFile;
+                    case 5: return FileType.SoundbankFile;
+                    case 6: return FileType.SoundDetailsFile;
+                }
+            }
+
             if (selectedVersion == 6 && Path.GetFileName(filePath).StartsWith("__musicmarkers", StringComparison.OrdinalIgnoreCase))
             {
                 return FileType.MusicMarkers;
@@ -160,6 +203,25 @@ namespace sb_explorer
 
             }
             return FileType.Unknown;
+        }
+
+        private static string ReadPayloadMagic(string filePath, long offset)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    if (stream.Length < offset + 4) return string.Empty;
+                    stream.Position = offset;
+                    byte[] magic = new byte[4];
+                    if (stream.Read(magic, 0, magic.Length) != magic.Length) return string.Empty;
+                    return System.Text.Encoding.ASCII.GetString(magic);
+                }
+            }
+            catch (IOException)
+            {
+                return string.Empty;
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

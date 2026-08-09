@@ -43,6 +43,19 @@ namespace sb_explorer
                 }
             }
             lvwFlags.EndUpdate();
+
+            lvwRuntimeObjects.BeginUpdate();
+            lvwRuntimeObjects.Items.Clear();
+            foreach (ProjectRuntimeObject runtimeObject in projDataObj.runtimeObjects)
+            {
+                lvwRuntimeObjects.Items.Add(new ListViewItem(new[]
+                {
+                    runtimeObject.Type,
+                    string.Format("0x{0:X8}", runtimeObject.HashCode),
+                    runtimeObject.Details
+                }));
+            }
+            lvwRuntimeObjects.EndUpdate();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -52,6 +65,9 @@ namespace sb_explorer
             lvwFlags.BeginUpdate();
             lvwFlags.Items.Clear();
             lvwFlags.EndUpdate();
+            lvwRuntimeObjects.BeginUpdate();
+            lvwRuntimeObjects.Items.Clear();
+            lvwRuntimeObjects.EndUpdate();
         }
     }
 

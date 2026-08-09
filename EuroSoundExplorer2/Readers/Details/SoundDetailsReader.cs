@@ -20,6 +20,34 @@ namespace MusX.Readers
                 projectData.MinHashCode = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
                 projectData.MaxHashCode = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
 
+                if (sfxHeaderData.FileVersion == 18)
+                {
+                    uint count = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
+                    long available = Math.Max(0, BReader.BaseStream.Length - BReader.BaseStream.Position);
+                    count = Math.Min(count, (uint)(available / 16));
+                    projectData.sfxItems = new SoundDetailsData[count];
+                    for (int i = 0; i < projectData.sfxItems.Length; i++)
+                    {
+                        uint packed;
+                        SoundDetailsData item = new SoundDetailsData
+                        {
+                            HashCode = unchecked((int)BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian)),
+                            InnerRadius = BytesFunctions.FlipData(BReader.ReadSingle(), sfxHeaderData.IsBigEndian),
+                            OuterRadius = BytesFunctions.FlipData(BReader.ReadSingle(), sfxHeaderData.IsBigEndian)
+                        };
+                        packed = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
+                        item.Duration = packed & 0x00ffffff;
+                        item.Looping = (packed & (1u << 24)) != 0;
+                        item.SampleStreamed = (packed & (1u << 25)) != 0;
+                        item.Is3D = (packed & (1u << 26)) != 0;
+                        item.Tracking3D = (sbyte)(((packed & (1u << 27)) == 0) ? 1 : 0);
+                        item.KillOnNodeDelete = (packed & (1u << 28)) != 0;
+                        item.IsMusic = (packed & (1u << 29)) != 0;
+                        projectData.sfxItems[i] = item;
+                    }
+                    return projectData;
+                }
+
                 //Read each stored SFX
                 if (sfxHeaderData.FileVersion == 6)
                 {

@@ -20,6 +20,8 @@
         public uint LoopStartSample;
         public uint TotalSamples;
         public uint Duration;
+        public uint WavHashCode;
+        public string StorageType;
         public AudioDataReference AudioReference;
         public byte[] EncodedData
         {

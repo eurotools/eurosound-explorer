@@ -81,6 +81,28 @@ namespace sb_explorer.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        internal IWaveProvider CreateMultiChannelWav(out RawSourceWaveStream[] providers, byte[][] pcmData, SoundFile sound, bool loop)
+        {
+            if (pcmData == null || pcmData.Length == 0) throw new ArgumentException("PCM channel data is empty.", "pcmData");
+            int channelCount = Math.Min(8, pcmData.Length);
+            providers = new RawSourceWaveStream[channelCount];
+            IWaveProvider[] inputs = new IWaveProvider[channelCount];
+            int frequency = SemitonesToFreq((int)sound.sampleRate, GetPitch(sound));
+            for (int channel = 0; channel < channelCount; channel++)
+            {
+                byte[] data = pcmData[channel] ?? new byte[0];
+                if (sound.loopEndPoint > 0 && sound.loopEndPoint <= int.MaxValue / 2)
+                    Array.Resize(ref data, Math.Min(sound.loopEndPoint * 2, data.Length));
+                providers[channel] = new RawSourceWaveStream(new MemoryStream(data), new WaveFormat(frequency, 16, 1));
+                inputs[channel] = loop
+                    ? (IWaveProvider)new LoopStream(providers[channel], checked((int)Math.Min(int.MaxValue, sound.loopStartPoint * 2L))) { EnableLooping = sound.isLooped, Position = sound.startPos * 2L }
+                    : providers[channel];
+            }
+            MultiplexingWaveProvider multiplexed = new MultiplexingWaveProvider(inputs, channelCount);
+            return new VolumeSampleProvider(multiplexed.ToSampleProvider()) { Volume = GetVolume(sound) }.ToWaveProvider();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         internal float GetPitch(SoundFile sampleInfo)
         {
             switch (random.Next(0, 3))

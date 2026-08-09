@@ -37,6 +37,14 @@
         public uint BaseVolume;
         public uint StartMarkersCount;
         public uint MarkersCount;
+        public uint CodecType;
+        public uint Flags;
+        public uint SampleCount;
+        public uint Frequency;
+        public uint Channels = 1;
+        public uint LoopStartSample;
+        public uint LoopStartByteOffset;
+        public uint LoopEndByteOffset;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

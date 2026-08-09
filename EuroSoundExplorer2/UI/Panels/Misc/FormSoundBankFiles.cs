@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using static MusX.Readers.SfxFunctions;
@@ -1198,7 +1199,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void FillListView(string folder, Platform selectedPlatform, Title selectedTitle, HashcodeParser hashTable)
         {
-            string[] files = Directory.GetFiles(folder, "*.sfx", SearchOption.AllDirectories);
+            string[] files = GetSupportedMusXFiles(folder);
             if (files.Length > 0)
             {
                 lvwFiles.BeginUpdate();
@@ -1269,7 +1270,8 @@ namespace sb_explorer
             }
             foreach (FileInfo file in directoryInfo.GetFiles())
             {
-                if (Path.GetExtension(file.Name).Equals(".sfx", StringComparison.OrdinalIgnoreCase))
+                string extension = Path.GetExtension(file.Name);
+                if (extension.Equals(".sfx", StringComparison.OrdinalIgnoreCase) || extension.Equals(".musx", StringComparison.OrdinalIgnoreCase))
                 {
                     SfxCommonHeader headerData = reader.ReadCommonHeader(file.FullName, selectedPlatform.ToString());
 
@@ -1289,6 +1291,14 @@ namespace sb_explorer
                 }
             }
             return directoryNode;
+        }
+
+        private static string[] GetSupportedMusXFiles(string folder)
+        {
+            return Directory.GetFiles(folder, "*.sfx", SearchOption.AllDirectories)
+                .Concat(Directory.GetFiles(folder, "*.musx", SearchOption.AllDirectories))
+                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
     }
 

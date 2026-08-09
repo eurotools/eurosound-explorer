@@ -32,6 +32,7 @@ namespace MusX
             Any,
             Pc,
             Ps2,
+            Ps3,
             GameCube,
             Xbox,
             Xbox360
@@ -57,10 +58,21 @@ namespace MusX
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly int[] Version201 = { 1, 201 };
         private static readonly int[] EurocomVersions = { 4, 5, 6 };
+        private static readonly int[] EngineXtVersions = { 18 };
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly CodecRule[] Rules =
         {
+            new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Pc, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Pc, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Ps3, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Ps3, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.DspAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
             // EuroSound 357 / file version 201
             new CodecRule(Version201, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Pc, EuroSoundAudioCodec.Pcm16),
             new CodecRule(Version201, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Pc, EuroSoundAudioCodec.ImaAdpcm),
@@ -189,6 +201,12 @@ namespace MusX
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        public static bool IsPs3Platform(string platform)
+        {
+            return ContainsPlatform(platform, "PS3");
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         public static bool IsXboxPlatform(string platform)
         {
             return (ContainsPlatform(platform, "XB") || ContainsPlatform(platform, "Xbox")) &&
@@ -199,6 +217,7 @@ namespace MusX
         public static bool IsXbox360Platform(string platform)
         {
             return ContainsPlatform(platform, "XB2") ||
+                ContainsPlatform(platform, "XE") ||
                 ContainsPlatform(platform, "X360") ||
                 ContainsPlatform(platform, "Xbox360") ||
                 ContainsPlatform(platform, "Xbox 360");
@@ -216,7 +235,7 @@ namespace MusX
         //-------------------------------------------------------------------------------------------------------------------------------
         public static bool IsBigEndianPlatform(string platform)
         {
-            return IsGameCubePlatform(platform) || IsXbox360Platform(platform);
+            return IsGameCubePlatform(platform) || IsPs3Platform(platform) || IsXbox360Platform(platform);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -230,6 +249,11 @@ namespace MusX
             if (IsPs2Platform(platform))
             {
                 return EuroSoundPlatformGroup.Ps2;
+            }
+
+            if (IsPs3Platform(platform))
+            {
+                return EuroSoundPlatformGroup.Ps3;
             }
 
             if (IsXbox360Platform(platform))

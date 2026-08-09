@@ -16,7 +16,7 @@ namespace sb_explorer
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
         private WaveOut _waveOut;
         private SoundFile soundToPlay;
-        private RawSourceWaveStream providerLeft, providerRight;
+        private RawSourceWaveStream[] channelProviders;
         private bool isSeeking;
 
         //-------------------------------------------------------------------------------------------
@@ -29,12 +29,6 @@ namespace sb_explorer
             trackBarPosition.SmallChange = 1;
             trackBarPosition.LargeChange = 100;
             trackBarPosition.TickFrequency = 500;
-            trackBarPosition.MouseDown += (sender, args) => isSeeking = true;
-            trackBarPosition.MouseUp += (sender, args) =>
-            {
-                SeekToTrackBarPosition();
-                isSeeking = false;
-            };
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -123,20 +117,30 @@ namespace sb_explorer
                         //Stop current sound to avoid bugs.
                         StopSound();
 
-                        //Save Data
-                        if (soundToPlay.channels > 1)
+                        if (soundToPlay.PcmData.Length == 1)
                         {
-                            EuroSoundWaveWriter.WriteSampleProvider16(
-                                filePath,
-                                audioFunctions.CreateStereoWav(ref providerLeft, ref providerRight, soundToPlay.PcmData, soundToPlay).ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, Math.Min(soundToPlay.PcmData[0].Length, soundToPlay.PcmData[1].Length) * 2L, 2));
+                            RawSourceWaveStream left = null;
+                            EuroSoundWaveWriter.WriteSampleProvider16(filePath,
+                                audioFunctions.CreateMonoWav(ref left, soundToPlay.PcmData[0], soundToPlay).ToSampleProvider(),
+                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.PcmData[0].Length, 1));
+                            left.Dispose();
+                        }
+                        else if (soundToPlay.PcmData.Length == 2)
+                        {
+                            RawSourceWaveStream left = null, right = null;
+                            EuroSoundWaveWriter.WriteSampleProvider16(filePath,
+                                audioFunctions.CreateStereoWav(ref left, ref right, soundToPlay.PcmData, soundToPlay).ToSampleProvider(),
+                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                                    Math.Min(soundToPlay.PcmData[0].Length, soundToPlay.PcmData[1].Length) * 2L, 2));
+                            left.Dispose(); right.Dispose();
                         }
                         else
                         {
-                            EuroSoundWaveWriter.WriteSampleProvider16(
-                                filePath,
-                                audioFunctions.CreateMonoWav(ref providerLeft, soundToPlay.PcmData[0], soundToPlay).ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.PcmData[0].Length, 1));
+                            int channels = Math.Min(8, soundToPlay.PcmData.Length);
+                            int channelBytes = int.MaxValue;
+                            for (int channel = 0; channel < channels; channel++) channelBytes = Math.Min(channelBytes, soundToPlay.PcmData[channel].Length);
+                            EuroSoundWaveWriter.WriteChannelsPcm16(filePath, soundToPlay.PcmData, (int)soundToPlay.sampleRate,
+                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, (long)channelBytes * channels, channels));
                         }
                         MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -156,6 +160,17 @@ namespace sb_explorer
             SeekToTrackBarPosition();
         }
 
+        private void TrackBarPosition_MouseDown(object sender, MouseEventArgs e)
+        {
+            isSeeking = true;
+        }
+
+        private void TrackBarPosition_MouseUp(object sender, MouseEventArgs e)
+        {
+            SeekToTrackBarPosition();
+            isSeeking = false;
+        }
+
         //-------------------------------------------------------------------------------------------
         //  FUNCTIONS
         //-------------------------------------------------------------------------------------------
@@ -173,15 +188,23 @@ namespace sb_explorer
                     StopSound();
                     _waveOut = new WaveOut();
                     IWaveProvider waveDataProv;
-                    if (soundToPlay.channels > 1)
+                    if (soundToPlay.PcmData.Length == 1)
                     {
-                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref providerLeft, ref providerRight, soundToPlay.PcmData, soundToPlay);
+                        RawSourceWaveStream left = null;
+                        waveDataProv = audioFunctions.CreateMonoLoopWav(ref left, soundToPlay.PcmData[0], soundToPlay);
+                        channelProviders = new[] { left };
+                    }
+                    else if (soundToPlay.PcmData.Length == 2)
+                    {
+                        RawSourceWaveStream left = null, right = null;
+                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref left, ref right, soundToPlay.PcmData, soundToPlay);
+                        channelProviders = new[] { left, right };
                     }
                     else
                     {
-                        waveDataProv = audioFunctions.CreateMonoLoopWav(ref providerLeft, soundToPlay.PcmData[0], soundToPlay);
+                        waveDataProv = audioFunctions.CreateMultiChannelWav(out channelProviders, soundToPlay.PcmData, soundToPlay, true);
                     }
-                    labelTotalTime.Text = GetDurationText(providerLeft.TotalTime);
+                    labelTotalTime.Text = GetDurationText(channelProviders[0].TotalTime);
                     _waveOut.Init(waveDataProv);
                     _waveOut.Play();
                 }
@@ -200,12 +223,13 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (_waveOut != null && providerLeft != null)
+            RawSourceWaveStream timeline = GetTimelineProvider();
+            if (_waveOut != null && timeline != null)
             {
-                TimeSpan currentTime = (_waveOut.PlaybackState == PlaybackState.Stopped) ? TimeSpan.Zero : providerLeft.CurrentTime;
-                if (!isSeeking && providerLeft.TotalTime.TotalMilliseconds > 0)
+                TimeSpan currentTime = (_waveOut.PlaybackState == PlaybackState.Stopped) ? TimeSpan.Zero : timeline.CurrentTime;
+                if (!isSeeking && timeline.TotalTime.TotalMilliseconds > 0)
                 {
-                    trackBarPosition.Value = Math.Min(trackBarPosition.Maximum, (int)(trackBarPosition.Maximum * currentTime.TotalMilliseconds / providerLeft.TotalTime.TotalMilliseconds));
+                    trackBarPosition.Value = Math.Min(trackBarPosition.Maximum, (int)(trackBarPosition.Maximum * currentTime.TotalMilliseconds / timeline.TotalTime.TotalMilliseconds));
                 }
                 labelCurrentTime.Text = GetDurationText(currentTime);
             }
@@ -218,18 +242,23 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void SeekToTrackBarPosition()
         {
-            if (providerLeft == null || providerLeft.TotalTime.TotalMilliseconds <= 0)
+            RawSourceWaveStream timeline = GetTimelineProvider();
+            if (timeline == null || timeline.TotalTime.TotalMilliseconds <= 0)
             {
                 return;
             }
 
-            TimeSpan streamPos = TimeSpan.FromMilliseconds(providerLeft.TotalTime.TotalMilliseconds * trackBarPosition.Value / trackBarPosition.Maximum);
-            if (soundToPlay.channels > 1 && providerRight != null)
+            TimeSpan streamPos = TimeSpan.FromMilliseconds(timeline.TotalTime.TotalMilliseconds * trackBarPosition.Value / trackBarPosition.Maximum);
+            for (int channel = 0; channelProviders != null && channel < channelProviders.Length; channel++)
             {
-                providerRight.CurrentTime = streamPos;
+                channelProviders[channel].CurrentTime = streamPos;
             }
-            providerLeft.CurrentTime = streamPos;
             labelCurrentTime.Text = GetDurationText(streamPos);
+        }
+
+        private RawSourceWaveStream GetTimelineProvider()
+        {
+            return channelProviders != null && channelProviders.Length > 0 ? channelProviders[0] : null;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

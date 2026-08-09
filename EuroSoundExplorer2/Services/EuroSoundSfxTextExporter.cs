@@ -73,6 +73,8 @@ namespace sb_explorer.Services
 
                     ReplaceSection(lines, GetSectionMarker(section), BuildSectionLines(section, version, sample, soundDetailsRadii, masterSamplesFolder, fileExists ? lines : null, samplePoolFileNames));
                 }
+
+                ReplaceHashCodeSection(lines, version, sample.HashCodeNumber);
                 if (!fileExists)
                 {
                     UpdateModifiedHeader(lines);
@@ -119,6 +121,8 @@ namespace sb_explorer.Services
 
                 ReplaceSection(lines, GetSectionMarker(section), BuildSectionLines(section, version, sample, soundDetailsRadii, masterSamplesFolder, fileExists ? lines : null, samplePoolFileNames));
             }
+
+            ReplaceHashCodeSection(lines, version, sample.HashCodeNumber);
 
             if (!fileExists)
             {
@@ -332,7 +336,7 @@ namespace sb_explorer.Services
             lines.Add(SectionEnd);
             lines.Add("");
             lines.Add(HashCodeSection);
-            lines.Add("HashCodeNumber " + StripSection(hashCode).ToString(CultureInfo.InvariantCulture));
+            lines.Add("HashCodeNumber " + GetTextHashCode(version, hashCode).ToString(CultureInfo.InvariantCulture));
             lines.Add(SectionEnd);
 
             return lines;
@@ -451,6 +455,26 @@ namespace sb_explorer.Services
         private static uint StripSection(uint hashCode)
         {
             return hashCode & 0x00FFFFFF;
+        }
+
+        private static uint GetTextHashCode(EuroSoundVersion version, uint hashCode)
+        {
+            // Version 6 prefixes SFX hashes with the 0x2D7 section identifier.
+            // EuroSound project text files store only the remaining value, in decimal.
+            if (version == EuroSoundVersion.EuroSound610 && (hashCode & 0xFFFFF000) == 0x2D700000)
+            {
+                return hashCode & 0x00000FFF;
+            }
+
+            return StripSection(hashCode);
+        }
+
+        private static void ReplaceHashCodeSection(List<string> lines, EuroSoundVersion version, uint hashCode)
+        {
+            ReplaceSection(lines, HashCodeSection, new List<string>
+            {
+                "HashCodeNumber " + GetTextHashCode(version, hashCode).ToString(CultureInfo.InvariantCulture)
+            });
         }
 
         private static EuroSoundSfxRadiusData GetRadiusData(uint hashCode, IDictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadii)

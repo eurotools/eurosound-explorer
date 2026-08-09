@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -19,7 +20,6 @@ namespace sb_explorer
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FormStreamBank : DockContent
     {
-        private RawSourceWaveStream rawLeftChannel;
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
         private bool suppressDisplayPreferenceEvents;
 
@@ -56,7 +56,13 @@ namespace sb_explorer
                     string audioSize = DisplayValueFormatter.FormatSize(currentSample.AudioSize, sizesWithUnits);
 
                     //Create item
-                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (i + 1).ToString(), "??", blockPos, markerSize, audioOff, audioSize, currentSample.BaseVolume.ToString() })
+                    string codec = currentSample.AudioReference == null ? "Unknown" : currentSample.AudioReference.Codec.ToString();
+                    string loopStart = currentSample.LoopStartSample == uint.MaxValue ? "None" : currentSample.LoopStartSample.ToString();
+                    ListViewItem listViewItem2 = new ListViewItem(new string[]
+                    {
+                        (i + 1).ToString(), "??", blockPos, markerSize, audioOff, audioSize, currentSample.BaseVolume.ToString(),
+                        codec, currentSample.Frequency.ToString(), currentSample.Channels.ToString(), currentSample.SampleCount.ToString(), loopStart
+                    })
                     {
                         ImageIndex = 0,
                         Tag = i
@@ -171,11 +177,12 @@ namespace sb_explorer
                         if (soundToPlay != null)
                         {
                             //Create Wav File
-                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
-                            EuroSoundWaveWriter.WriteSampleProvider16(
+                            int channelBytes = soundToPlay.PcmData.Min(channel => channel.Length);
+                            EuroSoundWaveWriter.WriteChannelsPcm16(
                                 GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (int)selectedItem.Tag + ".wav")),
-                                wavFile.ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.PcmData[0].Length, 1));
+                                soundToPlay.PcmData, (int)soundToPlay.sampleRate,
+                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                                    (long)channelBytes * soundToPlay.PcmData.Length, soundToPlay.PcmData.Length));
                         }
                     }
                 }
@@ -310,18 +317,27 @@ namespace sb_explorer
             SoundFile soundToPlay = null;
 
             //Create object music
-            byte[] decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, headerData, selectedPlatform);
-            if (decodedData != null)
+            DecodedAudio decodedAudio = GenericMethods.DecodeStreamSampleChannels(selectedSample, audioFunctions, headerData, sampleRate);
+            if (decodedAudio != null && decodedAudio.Channels.Length > 0)
             {
                 soundToPlay = new SoundFile();
-                soundToPlay.PcmData[0] = decodedData;
+                soundToPlay.PcmData = decodedAudio.Channels;
                 soundToPlay.volume = selectedSample.BaseVolume / 100;
-                soundToPlay.sampleRate = sampleRate;
-                soundToPlay.channels = 1;
-                soundToPlay.isLooped = EuroSoundMarkerLoopResolver.IsLooped(selectedSample.Markers, MarkerLoopMode.LoopUnlessEndMarker);
-                soundToPlay.startPos = (int)EuroSoundMarkerLoopResolver.GetStartPosition(selectedSample.Markers);
-                soundToPlay.loopStartPoint = EuroSoundMarkerLoopResolver.GetLoopStart(selectedSample.Markers);
-                soundToPlay.loopEndPoint = (int)EuroSoundMarkerLoopResolver.GetLoopEnd(selectedSample.Markers);
+                soundToPlay.sampleRate = decodedAudio.SampleRate;
+                soundToPlay.channels = (uint)decodedAudio.Channels.Length;
+                if (headerData.FileVersion == 18)
+                {
+                    soundToPlay.isLooped = (selectedSample.Flags & 1) != 0 && selectedSample.LoopStartSample != uint.MaxValue;
+                    soundToPlay.loopStartPoint = selectedSample.LoopStartSample == uint.MaxValue ? 0 : selectedSample.LoopStartSample;
+                    soundToPlay.loopEndPoint = selectedSample.SampleCount > int.MaxValue ? int.MaxValue : (int)selectedSample.SampleCount;
+                }
+                else
+                {
+                    soundToPlay.isLooped = EuroSoundMarkerLoopResolver.IsLooped(selectedSample.Markers, MarkerLoopMode.LoopUnlessEndMarker);
+                    soundToPlay.startPos = (int)EuroSoundMarkerLoopResolver.GetStartPosition(selectedSample.Markers);
+                    soundToPlay.loopStartPoint = EuroSoundMarkerLoopResolver.GetLoopStart(selectedSample.Markers);
+                    soundToPlay.loopEndPoint = (int)EuroSoundMarkerLoopResolver.GetLoopEnd(selectedSample.Markers);
+                }
             }
 
             return soundToPlay;

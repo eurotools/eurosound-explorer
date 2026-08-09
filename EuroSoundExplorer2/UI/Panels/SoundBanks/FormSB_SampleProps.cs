@@ -26,6 +26,72 @@ namespace sb_explorer
             AppConfig MusXheaderData = parentForm.Configuration;
             int fileVersion = parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion != 0 ? parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion : MusXheaderData.FileVersion;
 
+            if (fileVersion == 18 || sampleData.IsV18)
+            {
+                short innerRadius = sampleData.InnerRadius;
+                short outerRadius = sampleData.OuterRadius;
+                if (parentForm.pnlSoundBankFiles.TryGetSoundDetailsRadius(sampleData.HashCodeNumber, out EuroSoundSfxRadiusData radiusData))
+                {
+                    innerRadius = radiusData.InnerRadius;
+                    outerRadius = radiusData.OuterRadius;
+                }
+
+                propertyGrid1.Title = "EngineXT v18 SFX Parameters";
+                propertyGrid1.propsGrid.SelectedObject = new SampleV18ForPropGrid
+                {
+                    Guid = "0x" + sampleData.HashCodeNumber.ToString("X8"),
+                    ParameterAddress = "0x" + sampleData.V18ParameterAddress.ToString("X"),
+                    PoolAddress = "0x" + sampleData.V18PoolAddress.ToString("X"),
+                    ElementCount = sampleData.V18ElementCount,
+                    RuntimeStatus = sampleData.V18RuntimeStatus,
+                    InfoFlags = "0x" + sampleData.V18InfoFlags.ToString("X2"),
+                    AttackTime = sampleData.V18AttackTime,
+                    ReleaseTime = sampleData.V18ReleaseTime,
+                    DuckerOffset = sampleData.V18DuckerOffset,
+                    MixGroup = FormatObjectId(sampleData.V18MixGroup),
+                    Ducker = FormatObjectId(sampleData.V18Ducker),
+                    CullingGroup = FormatObjectId(sampleData.V18CullingGroup),
+                    Oscillator = FormatObjectId(sampleData.V18Oscillator),
+                    Controller = FormatObjectId(sampleData.V18Controller),
+                    ReverbSend = sampleData.V18ReverbSend,
+                    MultiTapSend = sampleData.V18MultiTapSend,
+                    PingPongSend = sampleData.V18PingPongSend,
+                    ChorusSend = sampleData.V18ChorusSend,
+                    Doppler = sampleData.V18Doppler,
+                    LowPassType = (byte)(sampleData.V18LowPass >> 6),
+                    LowPassValue = (byte)(sampleData.V18LowPass & 0x3f),
+                    VolumeRolloff = sampleData.V18VolumeRolloff,
+                    MaxItems = sampleData.V18MaxItems,
+                    Priority = sampleData.V18Priority,
+                    MasterVolume = sampleData.V18MasterVolume,
+                    PlayType = (byte)(sampleData.V18PlayAndCull >> 3),
+                    CullingAction = (byte)(sampleData.V18PlayAndCull & 7),
+                    TriggerChance = sampleData.V18TriggerChance,
+                    RawFlags = "0x" + sampleData.V18Flags.ToString("X8"),
+                    InnerRadius = innerRadius,
+                    OuterRadius = outerRadius
+                };
+
+                string[] v18Flags =
+                {
+                    "IsMusic", "DisableCentreSpeaker", "UnusedBit2", "PoolLoop", "UnusedBit4", "InstantPause", "ScaleDelayWithPitch", "UnusedBit7",
+                    "DisableDistanceCull", "OneInstancePerFrame", "UnusedBit10", "UnusedBit11", "UseGlobalAuxSpeakers", "MorphAffectsPitch",
+                    "GameVarCount bit 0", "GameVarCount bit 1", "GameVarCount bit 2", "GameVarCount bit 3", "GameVarCount bit 4", "GameVarCount bit 5", "GameVarCount bit 6", "GameVarCount bit 7",
+                    "StreamCatchUp", "StreamRememberPosition", "TrackingFadeDistance", "TrackingFixedPan", "UnusedBit26", "TrackingRandomPosition", "TrackingUpdatePanAndDistance", "UnusedBit29", "UnusedBit30", "UnusedBit31"
+                };
+                checkedListBox1.Items.Clear();
+                checkedListBox1.Items.AddRange(v18Flags);
+                for (int i = 0; i < v18Flags.Length; i++) checkedListBox1.SetItemChecked(i, ((sampleData.V18Flags >> i) & 1) != 0);
+                checkedListBox2.Items.Clear();
+                return;
+            }
+
+            propertyGrid1.Title = "SFX Parameters";
+            if (checkedListBox2.Items.Count == 0)
+            {
+                for (int i = 1; i <= 16; i++) checkedListBox2.Items.Add("UserFlags" + i);
+            }
+
             //Clone Values
             SampleForPropGrid gridObj = new SampleForPropGrid
             {
@@ -134,6 +200,11 @@ namespace sb_explorer
             }
 
             return string.Join(" ", parts);
+        }
+
+        private static string FormatObjectId(ushort id)
+        {
+            return id == 0 ? "(none)" : "0x" + id.ToString("X4") + " (" + id + ")";
         }
     }
 

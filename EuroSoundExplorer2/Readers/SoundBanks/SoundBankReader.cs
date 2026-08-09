@@ -1,6 +1,7 @@
 ﻿using MusX.Objects;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace MusX.Readers
 {
@@ -31,6 +32,30 @@ namespace MusX.Readers
         {
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             SoundbankHeader headerData = new SoundbankHeader(commonHeader);
+
+            if (headerData.FileVersion == 18)
+            {
+                using (EuroSoundBinaryReader reader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), headerData.IsBigEndian))
+                {
+                    reader.Seek(0x800, SeekOrigin.Begin);
+                    if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "SBNK") throw new InvalidDataException("EngineXT v18 soundbank has no SBNK descriptor.");
+                    reader.ReadUInt32(); reader.ReadUInt32(); reader.ReadUInt32();
+                    uint sfxCount = reader.ReadUInt32(); long field = reader.BaseStream.Position; int rel = reader.ReadInt32();
+                    headerData.SFXStart = (uint)(field + rel);
+                    headerData.SFXLenght = sfxCount * 16;
+                    reader.ReadUInt32(); reader.ReadInt32();
+                    reader.ReadUInt32(); reader.ReadInt32();
+                    reader.ReadUInt32(); reader.ReadInt32();
+                    uint memoryCount = reader.ReadUInt32(); long memoryField = reader.BaseStream.Position; int memoryRel = reader.ReadInt32();
+                    headerData.SampleInfoStart = (uint)(memoryField + memoryRel);
+                    headerData.SampleInfoLenght = memoryCount * 28;
+                    reader.ReadUInt32(); reader.ReadInt32();
+                    reader.ReadUInt32(); reader.ReadInt32();
+                    headerData.SampleDataLength = reader.ReadUInt32();
+                    headerData.SampleDataStart = unchecked((uint)reader.ReadInt32());
+                }
+                return headerData;
+            }
 
             using (EuroSoundBinaryReader BReader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), headerData.IsBigEndian))
             {
@@ -63,6 +88,11 @@ namespace MusX.Readers
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ReadSoundBank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList, List<uint> duplicatedHashCodes)
         {
+            if (headerData.FileVersion == 18)
+            {
+                SoundBankReaderNew.ReadSoundbankV18(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
+                return;
+            }
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
             {
                 SoundBankReaderOld oldReader = new SoundBankReaderOld();

@@ -55,6 +55,8 @@ namespace sb_explorer
             this.Col_Tracking3D = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_SampleStreamed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Col_OutOfWater = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Col_KillOnNodeDelete = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Col_IsMusic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1.SuspendLayout();
             this.contextMenuListView.SuspendLayout();
             this.SuspendLayout();
@@ -211,7 +213,9 @@ namespace sb_explorer
             this.Col_Looping,
             this.Col_Tracking3D,
             this.Col_SampleStreamed,
-            this.Col_OutOfWater});
+            this.Col_OutOfWater,
+            this.Col_KillOnNodeDelete,
+            this.Col_IsMusic});
             this.lstvSfxItems.ContextMenuStrip = this.contextMenuListView;
             this.lstvSfxItems.ForeColor = System.Drawing.Color.Black;
             this.lstvSfxItems.FullRowSelect = true;
@@ -266,6 +270,16 @@ namespace sb_explorer
             // 
             this.Col_OutOfWater.Text = "Is 3D?";
             this.Col_OutOfWater.Width = 90;
+            //
+            // Col_KillOnNodeDelete
+            //
+            this.Col_KillOnNodeDelete.Text = "Kill On Node Delete";
+            this.Col_KillOnNodeDelete.Width = 115;
+            //
+            // Col_IsMusic
+            //
+            this.Col_IsMusic.Text = "Is Music";
+            this.Col_IsMusic.Width = 75;
             // 
             // FormSD_SoundDetails
             // 
@@ -295,6 +309,8 @@ namespace sb_explorer
         private System.Windows.Forms.ColumnHeader Col_Tracking3D;
         private System.Windows.Forms.ColumnHeader Col_SampleStreamed;
         private System.Windows.Forms.ColumnHeader Col_OutOfWater;
+        private System.Windows.Forms.ColumnHeader Col_KillOnNodeDelete;
+        private System.Windows.Forms.ColumnHeader Col_IsMusic;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel lblTotalItems;
         private System.Windows.Forms.ColumnHeader Col_HashCode;

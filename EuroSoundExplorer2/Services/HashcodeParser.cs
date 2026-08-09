@@ -11,6 +11,7 @@ namespace sb_explorer.Classes
     public class HashcodeParser
     {
         private readonly Dictionary<int, string> HashCodes = new Dictionary<int, string>();
+        private readonly Dictionary<int, List<string>> HashCodeLabels = new Dictionary<int, List<string>>();
 
         //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadHashTable(string filePath)
@@ -19,6 +20,7 @@ namespace sb_explorer.Classes
             {
                 //Clear dictionary before adding a new hashtable
                 HashCodes.Clear();
+                HashCodeLabels.Clear();
 
                 //Read new hashtable
                 using (StreamReader sr = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
@@ -35,13 +37,24 @@ namespace sb_explorer.Classes
                                 line = matchCollection[i].ToString().Replace("#define", string.Empty);
                                 Match match2 = Regex.Match(line, "(0x[\\da-fA-F]{8,8})");
                                 int hashCode = Convert.ToInt32(match2.ToString().Trim(), 16);
+                                //Remove HT_Sound prefix
+                                string hashcodeMatch = Regex.Match(line, "([\\w]+)").ToString().Replace("HT_Sound_", string.Empty).Trim();
+
+                                List<string> labels;
+                                if (!HashCodeLabels.TryGetValue(hashCode, out labels))
+                                {
+                                    labels = new List<string>();
+                                    HashCodeLabels.Add(hashCode, labels);
+                                }
+                                if (!labels.Contains(hashcodeMatch))
+                                {
+                                    labels.Add(hashcodeMatch);
+                                }
+
                                 if (!HashCodes.ContainsKey(hashCode))
                                 {
-                                    //Remove HT_Sound prefix
-                                    string hashcodeMatch = Regex.Match(line, "([\\w]+)").ToString().Replace("HT_Sound_", string.Empty);
-
                                     //Add HashCode
-                                    HashCodes.Add(hashCode, hashcodeMatch.Trim());
+                                    HashCodes.Add(hashCode, hashcodeMatch);
                                 }
                             }
                         }
@@ -66,6 +79,27 @@ namespace sb_explorer.Classes
         public bool HashcodeIsListed(uint hashCode)
         {
             return HashCodes.ContainsKey((int)hashCode);
+        }
+
+        public string GetMusicHashCodeLabel(uint hashCode)
+        {
+            List<string> labels;
+            if (!HashCodeLabels.TryGetValue((int)hashCode, out labels))
+            {
+                return "**HashCode Not Found**";
+            }
+
+            foreach (string label in labels)
+            {
+                if (label.StartsWith("MFX_", StringComparison.OrdinalIgnoreCase) ||
+                    label.StartsWith("_mus_mfx_", StringComparison.OrdinalIgnoreCase) ||
+                    label.StartsWith("mus_mfx_", StringComparison.OrdinalIgnoreCase))
+                {
+                    return label;
+                }
+            }
+
+            return "**HashCode Not Found**";
         }
     }
 

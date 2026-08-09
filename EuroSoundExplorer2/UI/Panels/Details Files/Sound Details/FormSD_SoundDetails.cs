@@ -37,7 +37,9 @@ namespace sb_explorer
                     itemToadd.Looping.ToString(),
                     itemToadd.Tracking3D.ToString(),
                     itemToadd.SampleStreamed.ToString(),
-                    itemToadd.Is3D.ToString()
+                    itemToadd.Is3D.ToString(),
+                    itemToadd.KillOnNodeDelete.ToString(),
+                    itemToadd.IsMusic.ToString()
                 });
 
                 //Check that is not an empty block

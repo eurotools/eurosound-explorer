@@ -31,6 +31,35 @@ namespace MusX.Objects
         public ushort Flags;
         public ushort UserFlags;
 
+        // EngineXT v18 SFXInfo + SFXParameters (kept separately from the legacy projection).
+        public bool IsV18;
+        public byte V18RuntimeStatus;
+        public byte V18InfoFlags;
+        public long V18ParameterAddress;
+        public long V18PoolAddress;
+        public byte V18ElementCount;
+        public uint V18Flags;
+        public ushort V18AttackTime;
+        public ushort V18ReleaseTime;
+        public ushort V18MixGroup;
+        public ushort V18Ducker;
+        public ushort V18CullingGroup;
+        public ushort V18Oscillator;
+        public short V18DuckerOffset;
+        public byte V18ReverbSend;
+        public byte V18MultiTapSend;
+        public byte V18PingPongSend;
+        public byte V18LowPass;
+        public sbyte V18VolumeRolloff;
+        public byte V18MaxItems;
+        public byte V18Priority;
+        public byte V18MasterVolume;
+        public byte V18PlayAndCull;
+        public byte V18Doppler;
+        public byte V18TriggerChance;
+        public byte V18ChorusSend;
+        public ushort V18Controller;
+
         //Samples
         public List<SampleInfo> samplesList = new List<SampleInfo>();
     }

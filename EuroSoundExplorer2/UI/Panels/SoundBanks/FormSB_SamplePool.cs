@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -17,7 +18,6 @@ namespace sb_explorer
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FormSB_SamplePool : DockContent
     {
-        private RawSourceWaveStream rawLeftChannel;
         private Sample soundSampleData;
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
 
@@ -132,11 +132,12 @@ namespace sb_explorer
                         SoundFile soundToPlay = GetSoundFileFromListViewItem(selectedItem);
                         if (soundToPlay != null)
                         {
-                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
-                            EuroSoundWaveWriter.WriteSampleProvider16(
+                            int channelBytes = soundToPlay.PcmData.Min(channel => channel.Length);
+                            EuroSoundWaveWriter.WriteChannelsPcm16(
                                 GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, GetOutputFileName(fileRef, ".wav"))),
-                                wavFile.ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.PcmData[0].Length, 1));
+                                soundToPlay.PcmData, (int)soundToPlay.sampleRate,
+                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                                    (long)channelBytes * soundToPlay.PcmData.Length, soundToPlay.PcmData.Length));
                         }
                     }
                 }
@@ -321,7 +322,6 @@ namespace sb_explorer
         {
             FrmMain parentForm = ((FrmMain)Application.OpenForms[nameof(FrmMain)]);
             SamplePoolFileRef fileRef = (SamplePoolFileRef)selectedItem.Tag;
-            byte[] decodedData = null;
             SoundFile soundToPlay = null;
 
             //SoundBanks
@@ -336,13 +336,13 @@ namespace sb_explorer
                 SampleData selectedSample = wavesList[fileRef.DisplayFileRef];
 
                 //Decode Data
-                decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData, parentForm.Configuration.PlatformSelected);
-                if (decodedData != null)
+                DecodedAudio decodedAudio = GenericMethods.DecodeSfxSampleChannels(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData);
+                if (decodedAudio != null && decodedAudio.Channels.Length > 0)
                 {
                     //Set settings
                     soundToPlay = new SoundFile();
-                    soundToPlay.PcmData[0] = decodedData;
-                    soundToPlay.sampleRate = selectedSample.Frequency;
+                    soundToPlay.PcmData = decodedAudio.Channels;
+                    soundToPlay.sampleRate = decodedAudio.SampleRate;
                     if (ButtonApplyEffects.Checked)
                     {
                         soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
@@ -352,7 +352,7 @@ namespace sb_explorer
                         soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
                         soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                     }
-                    soundToPlay.channels = 1;
+                    soundToPlay.channels = (uint)decodedAudio.Channels.Length;
                     soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
                     soundToPlay.isLooped = selectedSample.IsLooped;
                 }
@@ -371,12 +371,12 @@ namespace sb_explorer
                     StreamSample selectedSample = streamedSamples[fileRef.StreamSampleIndex];
 
                     //Decode Data
-                    decodedData = GenericMethods.DecodeStreamSample(selectedSample, audioFunctions, headerData, parentForm.Configuration.PlatformSelected);
-                    if (decodedData != null)
+                    DecodedAudio decodedAudio = GenericMethods.DecodeStreamSampleChannels(selectedSample, audioFunctions, headerData, (uint)parentForm.Configuration.StreamsFrequency);
+                    if (decodedAudio != null && decodedAudio.Channels.Length > 0)
                     {
                         soundToPlay = new SoundFile();
-                        soundToPlay.PcmData[0] = decodedData;
-                        soundToPlay.sampleRate = (uint)parentForm.Configuration.StreamsFrequency;
+                        soundToPlay.PcmData = decodedAudio.Channels;
+                        soundToPlay.sampleRate = decodedAudio.SampleRate;
                         if (ButtonApplyEffects.Checked)
                         {
                             soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
@@ -386,7 +386,13 @@ namespace sb_explorer
                             soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
                             soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                         }
-                        soundToPlay.channels = 1;
+                        soundToPlay.channels = (uint)decodedAudio.Channels.Length;
+                        if (headerData.FileVersion == 18)
+                        {
+                            soundToPlay.isLooped = (selectedSample.Flags & 1) != 0 && selectedSample.LoopStartSample != uint.MaxValue;
+                            soundToPlay.loopStartPoint = selectedSample.LoopStartSample == uint.MaxValue ? 0 : selectedSample.LoopStartSample;
+                            soundToPlay.loopEndPoint = selectedSample.SampleCount > int.MaxValue ? int.MaxValue : (int)selectedSample.SampleCount;
+                        }
                     }
                 }
                 else

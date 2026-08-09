@@ -1,4 +1,4 @@
-﻿
+
 namespace sb_explorer
 {
     partial class FormPJ_ProjectData
@@ -33,23 +33,27 @@ namespace sb_explorer
             this.lvwFlags = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
             this.colUserFlag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvwRuntimeObjects = new sb_explorer.CustomControls.ListView_ColumnSortingClick();
+            this.colRuntimeType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colRuntimeHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colRuntimeDetails = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            // 
+            //
             // propGrid_ProjData
-            // 
-            this.propGrid_ProjData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.propGrid_ProjData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propGrid_ProjData.HelpVisible = false;
             this.propGrid_ProjData.Location = new System.Drawing.Point(132, 0);
             this.propGrid_ProjData.Name = "propGrid_ProjData";
-            this.propGrid_ProjData.Size = new System.Drawing.Size(263, 349);
+            this.propGrid_ProjData.Size = new System.Drawing.Size(263, 178);
             this.propGrid_ProjData.TabIndex = 0;
             this.propGrid_ProjData.ToolbarVisible = false;
-            // 
+            //
             // lvwFlags
-            // 
-            this.lvwFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            //
+            this.lvwFlags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.lvwFlags.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colUserFlag,
@@ -59,24 +63,58 @@ namespace sb_explorer
             this.lvwFlags.HideSelection = false;
             this.lvwFlags.Location = new System.Drawing.Point(0, 0);
             this.lvwFlags.Name = "lvwFlags";
-            this.lvwFlags.Size = new System.Drawing.Size(126, 349);
+            this.lvwFlags.Size = new System.Drawing.Size(126, 178);
             this.lvwFlags.TabIndex = 1;
             this.lvwFlags.UseCompatibleStateImageBehavior = false;
             this.lvwFlags.View = System.Windows.Forms.View.Details;
-            // 
+            //
             // colUserFlag
-            // 
+            //
             this.colUserFlag.Text = "User Flag";
-            // 
+            //
             // colValue
-            // 
+            //
             this.colValue.Text = "Value";
-            // 
+            //
+            // lvwRuntimeObjects
+            //
+            this.lvwRuntimeObjects.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right))));
+            this.lvwRuntimeObjects.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colRuntimeType,
+            this.colRuntimeHash,
+            this.colRuntimeDetails});
+            this.lvwRuntimeObjects.FullRowSelect = true;
+            this.lvwRuntimeObjects.GridLines = true;
+            this.lvwRuntimeObjects.HideSelection = false;
+            this.lvwRuntimeObjects.Location = new System.Drawing.Point(0, 184);
+            this.lvwRuntimeObjects.Name = "lvwRuntimeObjects";
+            this.lvwRuntimeObjects.Size = new System.Drawing.Size(395, 165);
+            this.lvwRuntimeObjects.TabIndex = 2;
+            this.lvwRuntimeObjects.UseCompatibleStateImageBehavior = false;
+            this.lvwRuntimeObjects.View = System.Windows.Forms.View.Details;
+            //
+            // colRuntimeType
+            //
+            this.colRuntimeType.Text = "Runtime object";
+            this.colRuntimeType.Width = 90;
+            //
+            // colRuntimeHash
+            //
+            this.colRuntimeHash.Text = "Hash";
+            this.colRuntimeHash.Width = 80;
+            //
+            // colRuntimeDetails
+            //
+            this.colRuntimeDetails.Text = "Details";
+            this.colRuntimeDetails.Width = 205;
+            //
             // FormPJ_ProjectData
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(395, 349);
+            this.Controls.Add(this.lvwRuntimeObjects);
             this.Controls.Add(this.lvwFlags);
             this.Controls.Add(this.propGrid_ProjData);
             this.HideOnClose = true;
@@ -93,5 +131,9 @@ namespace sb_explorer
         private CustomControls.ListView_ColumnSortingClick lvwFlags;
         private System.Windows.Forms.ColumnHeader colUserFlag;
         private System.Windows.Forms.ColumnHeader colValue;
+        private CustomControls.ListView_ColumnSortingClick lvwRuntimeObjects;
+        private System.Windows.Forms.ColumnHeader colRuntimeType;
+        private System.Windows.Forms.ColumnHeader colRuntimeHash;
+        private System.Windows.Forms.ColumnHeader colRuntimeDetails;
     }
 }

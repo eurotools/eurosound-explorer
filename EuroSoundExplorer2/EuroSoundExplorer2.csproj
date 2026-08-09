@@ -82,6 +82,7 @@
     <Compile Include="Classes\Enumerations.cs" />
     <Compile Include="UI\Formatting\DisplayValueFormatter.cs" />
     <Compile Include="Services\Audio\EuroSoundAudioDecoder.cs" />
+    <Compile Include="Services\Audio\DecodedAudio.cs" />
     <Compile Include="Services\Audio\EuroSoundMarkerLoopResolver.cs" />
     <Compile Include="Services\Audio\EuroSoundWaveWriter.cs" />
     <Compile Include="Services\Audio\WavLoopInfo.cs" />

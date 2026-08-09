@@ -15,13 +15,15 @@
     public class SoundDetailsData
     {
         public int HashCode;
-        public ushort InnerRadius;
-        public ushort OuterRadius;
+        public float InnerRadius;
+        public float OuterRadius;
         public float Duration;
         public bool Looping;
         public sbyte Tracking3D;
         public bool SampleStreamed;
         public bool Is3D;
+        public bool KillOnNodeDelete;
+        public bool IsMusic;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

@@ -94,6 +94,7 @@ namespace sb_explorer
                 Hashcodes = parentForm.HashTable,
                 ExportSoundBanks = chkExportSoundBanks.Checked,
                 ExportGroups = chkExportGroups.Checked,
+                ExportMusics = chkExportMusics.Checked,
                 ExportSfx = chkExportSfx.Checked,
                 ExportMemoryMaps = chkExportMemoryMaps.Checked,
                 RewriteSamplesOnly = chkRewriteSamplesOnly.Checked,
@@ -141,6 +142,7 @@ namespace sb_explorer
             cbxMode.SelectedIndex = Math.Max(0, Math.Min(cbxMode.Items.Count - 1, settings.DecompilerMode));
             chkExportSoundBanks.Checked = settings.DecompilerExportSoundBanks;
             chkExportGroups.Checked = settings.DecompilerExportGroups;
+            chkExportMusics.Checked = settings.DecompilerExportMusics;
             chkExportSfx.Checked = settings.DecompilerExportSfx;
             chkExportPlatformSamplePools.Checked = settings.DecompilerExportPlatformSamplePools;
             chkSfxParameters.Checked = settings.DecompilerReplaceSfxParameters;
@@ -161,6 +163,7 @@ namespace sb_explorer
             settings.DecompilerMode = cbxMode.SelectedIndex;
             settings.DecompilerExportSoundBanks = chkExportSoundBanks.Checked;
             settings.DecompilerExportGroups = chkExportGroups.Checked;
+            settings.DecompilerExportMusics = chkExportMusics.Checked;
             settings.DecompilerExportSfx = chkExportSfx.Checked;
             settings.DecompilerExportPlatformSamplePools = chkExportPlatformSamplePools.Checked;
             settings.DecompilerReplaceSfxParameters = chkSfxParameters.Checked;

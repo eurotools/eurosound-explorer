@@ -43,6 +43,27 @@ namespace sb_explorer.Services.Audio
             WritePcm16(filePath, interleavedData, sampleRate, 2, loopInfo);
         }
 
+        public static void WriteChannelsPcm16(string filePath, byte[][] channels, int sampleRate, WavLoopInfo loopInfo)
+        {
+            if (channels == null || channels.Length == 0) throw new ArgumentNullException("channels");
+            int channelCount = Math.Min(8, channels.Length);
+            int channelBytes = int.MaxValue;
+            for (int i = 0; i < channelCount; i++)
+            {
+                if (channels[i] == null) throw new ArgumentNullException("channels");
+                channelBytes = Math.Min(channelBytes, channels[i].Length & ~1);
+            }
+            byte[] interleaved = new byte[checked(channelBytes * channelCount)];
+            int output = 0;
+            for (int input = 0; input < channelBytes; input += 2)
+                for (int channel = 0; channel < channelCount; channel++)
+                {
+                    interleaved[output++] = channels[channel][input];
+                    interleaved[output++] = channels[channel][input + 1];
+                }
+            WritePcm16(filePath, interleaved, sampleRate, channelCount, loopInfo);
+        }
+
         public static void WriteSampleProvider16(string filePath, ISampleProvider sampleProvider, WavLoopInfo loopInfo)
         {
             if (sampleProvider == null)

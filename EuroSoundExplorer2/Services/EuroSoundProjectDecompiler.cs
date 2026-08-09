@@ -226,7 +226,7 @@ namespace sb_explorer.Services
                 SfxFolder = GetOrCreateSubfolder(rootFolder, "SFXs"),
                 GroupsFolder = GetOrCreateSubfolder(rootFolder, "Groups"),
                 SoundBanksFolder = GetOrCreateSubfolder(rootFolder, "SoundBanks"),
-                MusicsFolder = GetOrCreateSubfolder(rootFolder, "Musics"),
+                MusicsFolder = GetOrCreateSubfolder(rootFolder, "Music"),
                 SystemFolder = GetOrCreateSubfolder(rootFolder, "System"),
                 MasterFolder = GetOrCreateSubfolder(rootFolder, "Master")
             };
@@ -665,6 +665,7 @@ namespace sb_explorer.Services
             }
 
             int written = 0;
+            string musicDataFolder = GetOrCreateSubfolder(folders.MusicsFolder, "ESData");
             foreach (IGrouping<uint, MusicBankReadResult> group in musicBanks.GroupBy(item => item.HashCode))
             {
                 MusicBankReadResult bestMusic = group
@@ -676,7 +677,7 @@ namespace sb_explorer.Services
                     continue;
                 }
 
-                string musicName = GetMusicName(group.Key, bestMusic.FilePath, reference, options.Hashcodes);
+                string musicName = GetMusicName(group.Key, bestMusic.FilePath, bestMusic.Header.FileVersion, reference, options.Hashcodes);
                 string wavPath = GenericMethods.GetFinalPath(Path.Combine(folders.MusicsFolder, musicName + ".wav"));
                 string markerPath = Path.ChangeExtension(wavPath, ".mkr");
 
@@ -689,10 +690,42 @@ namespace sb_explorer.Services
 
                 WriteMusicMasterWav(wavPath, bestMusic, leftPcm, rightPcm);
                 WriteMusicMarkerFile(markerPath, bestMusic);
+                WriteMusicDataFile(
+                    Path.Combine(musicDataFolder, Path.GetFileNameWithoutExtension(wavPath) + ".txt"),
+                    GetMusicExportHashCode(group.Key, bestMusic.Header.FileVersion));
                 written++;
             }
 
             return written;
+        }
+
+        private static void WriteMusicDataFile(string filePath, uint hashCode)
+        {
+            string timestamp = DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            string userName = Environment.UserName;
+            string[] lines =
+            {
+                "## EuroSound Music File",
+                "## First Created ... " + timestamp,
+                "## Created By ... " + userName,
+                "## Last Modified ... " + timestamp,
+                "## Last Modified By ... " + userName,
+                string.Empty,
+                HashCodeSection,
+                "HashCodeNumber " + hashCode.ToString(CultureInfo.InvariantCulture),
+                SectionEnd,
+                string.Empty,
+                "#MusicData",
+                "Volume 100",
+                SectionEnd,
+                string.Empty,
+                "#TIMESTAMPS",
+                "MidiFileLastOutput 99",
+                "WavFileLastOutput 99",
+                SectionEnd
+            };
+
+            File.WriteAllLines(filePath, lines, new UTF8Encoding(false));
         }
 
         private static bool TryDecodeMusic(MusicBankReadResult musicBank, out byte[] leftPcm, out byte[] rightPcm)
@@ -890,9 +923,9 @@ namespace sb_explorer.Services
             return musicBanks == null ? 0 : musicBanks.Sum(musicBank => musicBank.Music == null || musicBank.Music.Markers == null ? 0 : musicBank.Music.Markers.Length);
         }
 
-        private static string GetMusicName(uint hashCode, string filePath, ProjectReference reference, HashcodeParser hashcodes)
+        private static string GetMusicName(uint hashCode, string filePath, int fileVersion, ProjectReference reference, HashcodeParser hashcodes)
         {
-            string label = GetHashCodeLabel(hashcodes, hashCode);
+            string label = GetMusicHashCodeLabel(hashcodes, hashCode, fileVersion);
             if (string.IsNullOrWhiteSpace(label) || label.StartsWith("**", StringComparison.Ordinal))
             {
                 label = Path.GetFileNameWithoutExtension(filePath);
@@ -900,10 +933,77 @@ namespace sb_explorer.Services
 
             if (string.IsNullOrWhiteSpace(label))
             {
-                label = "Music_" + StripSection(hashCode).ToString("X4", CultureInfo.InvariantCulture);
+                label = GetMusicExportHashCode(hashCode, fileVersion).ToString("X4", CultureInfo.InvariantCulture);
+            }
+
+            label = RemoveMusicExportPrefix(label);
+            if (string.IsNullOrWhiteSpace(label))
+            {
+                label = GetMusicExportHashCode(hashCode, fileVersion).ToString("X4", CultureInfo.InvariantCulture);
             }
 
             return SanitizeFileName(label);
+        }
+
+        private static string GetMusicHashCodeLabel(HashcodeParser hashcodes, uint hashCode, int fileVersion)
+        {
+            uint exportHashCode = GetMusicExportHashCode(hashCode, fileVersion);
+            uint[] lookupKeys =
+            {
+                hashCode,
+                hashCode & 0x00FFFFFFu,
+                hashCode & 0x0000FFFFu,
+                fileVersion == 4 ? 0x1B000000u | exportHashCode : exportHashCode,
+                exportHashCode
+            };
+
+            foreach (uint lookupKey in lookupKeys.Distinct())
+            {
+                string label = hashcodes.GetMusicHashCodeLabel(lookupKey);
+                if (!string.IsNullOrWhiteSpace(label) && !label.StartsWith("**", StringComparison.Ordinal))
+                {
+                    return label;
+                }
+            }
+
+            return SfxMissingName;
+        }
+
+        private static string RemoveMusicExportPrefix(string label)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+            {
+                return label;
+            }
+
+            string trimmedLabel = label.Trim();
+            string[] prefixes = { "_mus_mfx_", "mus_mfx_", "mfx_" };
+            foreach (string prefix in prefixes)
+            {
+                if (trimmedLabel.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    return trimmedLabel.Substring(prefix.Length);
+                }
+            }
+
+            return trimmedLabel;
+        }
+
+        private static uint GetMusicExportHashCode(uint hashCode, int fileVersion)
+        {
+            if (fileVersion == 4)
+            {
+                // Version 4 compiled music banks store 0xF000 | index, while
+                // EuroSound project files store only the low 12-bit index.
+                return hashCode & 0x00000FFFu;
+            }
+
+            if (fileVersion == 6)
+            {
+                return hashCode & 0x0000FFFFu;
+            }
+
+            return StripSection(hashCode);
         }
 
         private static int GetMusicSourceSampleRate(StreambankHeader header)
@@ -2590,8 +2690,8 @@ namespace sb_explorer.Services
                     return;
                 }
 
-                byte[] decodedData = DecodeSample(bestSample.SampleData, bestSample.SoundBank.Header);
-                if (decodedData == null || decodedData.Length == 0)
+                DecodedAudio decodedData = DecodeSample(bestSample.SampleData, bestSample.SoundBank.Header);
+                if (decodedData == null || decodedData.Channels.Length == 0)
                 {
                     return;
                 }
@@ -2599,9 +2699,9 @@ namespace sb_explorer.Services
                 EnsureDirectoryExists(Path.GetDirectoryName(wavPath));
                 WriteMasterWav(
                     wavPath,
-                    decodedData,
-                    Math.Max(1, (int)bestSample.SampleData.Frequency),
-                    CreateSampleLoopInfo(bestSample.SampleData, decodedData));
+                    decodedData.Channels,
+                    Math.Max(1, (int)decodedData.SampleRate),
+                    CreateSampleLoopInfo(bestSample.SampleData, decodedData.Channels));
                 AddSampleCatalogEntry(relativeWavPath, bestSample, sampleKey, false, wavPath);
             }
 
@@ -2682,15 +2782,15 @@ namespace sb_explorer.Services
                     return;
                 }
 
-                byte[] decodedData = DecodeStreamSample(streamSample, streamBank.Header);
-                if (decodedData == null || decodedData.Length == 0)
+                DecodedAudio decodedData = DecodeStreamSample(streamSample, streamBank.Header);
+                if (decodedData == null || decodedData.Channels.Length == 0)
                 {
                     sampleCatalog?.Add(relativeWavPath, DefaultStreamSampleRate, true, wavPath);
                     return;
                 }
 
                 EnsureDirectoryExists(Path.GetDirectoryName(wavPath));
-                WriteMasterWav(wavPath, decodedData, DefaultStreamSampleRate, CreateStreamLoopInfo(streamSample, decodedData));
+                WriteMasterWav(wavPath, decodedData.Channels, Math.Max(1, (int)decodedData.SampleRate), CreateStreamLoopInfo(streamSample, streamBank.Header, decodedData.Channels));
                 sampleCatalog?.Add(relativeWavPath, DefaultStreamSampleRate, true, wavPath);
             }
 
@@ -2793,17 +2893,17 @@ namespace sb_explorer.Services
                 return (sfxHashCode & 0x0000FFFF).ToString("X4", CultureInfo.InvariantCulture) + "|" + sampleIndex.ToString(CultureInfo.InvariantCulture);
             }
 
-            private static byte[] DecodeSample(SampleData sampleData, SoundbankHeader header)
+            private static DecodedAudio DecodeSample(SampleData sampleData, SoundbankHeader header)
             {
                 SampleData decodeData = CloneSampleData(sampleData);
                 AudioFunctions audioFunctions = new AudioFunctions();
-                return GenericMethods.DecodeSfxSample(decodeData, audioFunctions, header, GetPlatform(header.Platform));
+                return GenericMethods.DecodeSfxSampleChannels(decodeData, audioFunctions, header);
             }
 
-            private static byte[] DecodeStreamSample(StreamSample streamSample, StreambankHeader header)
+            private static DecodedAudio DecodeStreamSample(StreamSample streamSample, StreambankHeader header)
             {
                 AudioFunctions audioFunctions = new AudioFunctions();
-                return GenericMethods.DecodeStreamSample(streamSample, audioFunctions, header, GetPlatform(header.Platform));
+                return GenericMethods.DecodeStreamSampleChannels(streamSample, audioFunctions, header, DefaultStreamSampleRate);
             }
 
             private static SampleData CloneSampleData(SampleData sampleData)
@@ -2822,6 +2922,8 @@ namespace sb_explorer.Services
                     OriginalLoopOffset = sampleData.OriginalLoopOffset,
                     TotalSamples = sampleData.TotalSamples,
                     Duration = sampleData.Duration,
+                    WavHashCode = sampleData.WavHashCode,
+                    StorageType = sampleData.StorageType,
                     EncodedData = sampleData.EncodedData,
                     DspCoeffs = sampleData.DspCoeffs
                 };
@@ -2850,35 +2952,50 @@ namespace sb_explorer.Services
                 return Platform.PC;
             }
 
-            private static void WriteMasterWav(string wavPath, byte[] pcmData, int sourceSampleRate, WavLoopInfo sourceLoopInfo)
+            private static void WriteMasterWav(string wavPath, byte[][] pcmData, int sourceSampleRate, WavLoopInfo sourceLoopInfo)
             {
-                using (RawSourceWaveStream sourceStream = new RawSourceWaveStream(new MemoryStream(pcmData), new WaveFormat(sourceSampleRate, 16, 1)))
+                int channels = Math.Min(8, pcmData.Length);
+                RawSourceWaveStream[] streams = new RawSourceWaveStream[channels];
+                try
                 {
-                    ISampleProvider sampleProvider = sourceStream.ToSampleProvider();
-                    if (sourceSampleRate != MasterSampleRate)
+                    IWaveProvider[] inputs = new IWaveProvider[channels];
+                    for (int channel = 0; channel < channels; channel++)
                     {
-                        sampleProvider = new WdlResamplingSampleProvider(sampleProvider, MasterSampleRate);
+                        streams[channel] = new RawSourceWaveStream(new MemoryStream(pcmData[channel]), new WaveFormat(sourceSampleRate, 16, 1));
+                        inputs[channel] = streams[channel];
                     }
-
+                    ISampleProvider sampleProvider = new MultiplexingWaveProvider(inputs, channels).ToSampleProvider();
+                    if (sourceSampleRate != MasterSampleRate)
+                        sampleProvider = new WdlResamplingSampleProvider(sampleProvider, MasterSampleRate);
                     EuroSoundWaveWriter.WriteSampleProvider16(wavPath, sampleProvider, ScaleLoopInfo(sourceLoopInfo, sourceSampleRate, MasterSampleRate));
+                }
+                finally
+                {
+                    for (int channel = 0; channel < streams.Length; channel++) if (streams[channel] != null) streams[channel].Dispose();
                 }
             }
 
-            private static WavLoopInfo CreateSampleLoopInfo(SampleData sampleData, byte[] pcmData)
+            private static WavLoopInfo CreateSampleLoopInfo(SampleData sampleData, byte[][] pcmData)
             {
                 if (sampleData == null || !sampleData.IsLooped)
                 {
                     return null;
                 }
 
-                return EuroSoundWaveWriter.CreateLoopInfo(true, sampleData.LoopStartOffset, pcmData == null ? 0 : pcmData.Length, 1);
+                int channels = pcmData == null ? 0 : pcmData.Length;
+                int channelBytes = channels == 0 ? 0 : pcmData.Min(channel => channel.Length);
+                return EuroSoundWaveWriter.CreateLoopInfo(true, sampleData.LoopStartOffset, (long)channelBytes * channels, channels);
             }
 
-            private static WavLoopInfo CreateStreamLoopInfo(StreamSample streamSample, byte[] pcmData)
+            private static WavLoopInfo CreateStreamLoopInfo(StreamSample streamSample, StreambankHeader header, byte[][] pcmData)
             {
+                int sampleCount = pcmData == null || pcmData.Length == 0 ? 0 : pcmData.Min(channel => channel.Length) / 2;
+                if (header != null && header.FileVersion == 18)
+                    return (streamSample.Flags & 1) != 0 && streamSample.LoopStartSample != uint.MaxValue && streamSample.LoopStartSample < sampleCount
+                        ? new WavLoopInfo(streamSample.LoopStartSample, (uint)Math.Max(streamSample.LoopStartSample, sampleCount - 1)) : null;
                 return EuroSoundMarkerLoopResolver.CreateLoopInfo(
                     streamSample == null ? null : streamSample.Markers,
-                    (pcmData == null ? 0 : pcmData.Length) / 2,
+                    sampleCount,
                     MarkerLoopMode.LoopUnlessEndMarker);
             }
 

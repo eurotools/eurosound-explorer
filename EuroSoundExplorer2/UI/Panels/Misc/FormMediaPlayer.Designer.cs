@@ -221,6 +221,8 @@ namespace sb_explorer
             this.trackBarPosition.TabIndex = 17;
             this.trackBarPosition.TickFrequency = 2;
             this.trackBarPosition.Scroll += new System.EventHandler(this.TrackBarPosition_Scroll);
+            this.trackBarPosition.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TrackBarPosition_MouseDown);
+            this.trackBarPosition.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TrackBarPosition_MouseUp);
             // 
             // timer1
             // 

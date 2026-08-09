@@ -115,6 +115,8 @@ namespace sb_explorer
             AddCodecRows(6, "6 (EuroSound 650)");
             AddCodecRow(6, "6 (EuroSound 650)", "Wii");
             AddCodecRow(6, "6 (EuroSound 650)", "XB2_");
+            AddCodecRow(18, "18 (EngineXT / G-Force)", "PC");
+            AddCodecRow(18, "18 (EngineXT / G-Force)", "PS2");
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

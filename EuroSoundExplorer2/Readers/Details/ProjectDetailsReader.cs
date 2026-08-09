@@ -15,6 +15,13 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             ProjectDetailsHeader headerData = new ProjectDetailsHeader(commonHeader);
 
+            if (headerData.FileVersion == 18)
+            {
+                headerData.MemoryStart = 0x800;
+                headerData.MemoryLength = headerData.FileSize > 0x800 ? headerData.FileSize - 0x800 : 0;
+                return headerData;
+            }
+
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 BReader.BaseStream.Seek(headerData.EndOffset, SeekOrigin.Begin);
@@ -38,6 +45,12 @@ namespace MusX.Readers
 
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
+                if (headerData.FileVersion == 18)
+                {
+                    ReadProjectFileVersion18(BReader, headerData, projectData);
+                    return projectData;
+                }
+
                 if (headerData.FileVersion == 6)
                 {
                     ReadProjectFileVersion6(BReader, headerData, projectData);
@@ -89,6 +102,243 @@ namespace MusX.Readers
             }
             return projectData;
         }
+
+        private static void ReadProjectFileVersion18(BinaryReader reader, ProjectDetailsHeader header, ProjectDetails project)
+        {
+            reader.BaseStream.Position = 0x800;
+            if (ReadFourCC(reader) != "ESPD") throw new InvalidDataException("EngineXT ProjectDetails has no ESPD descriptor.");
+            bool bigEndian = header.IsBigEndian;
+            uint version = ReadUInt32(reader, bigEndian);
+            if (version != 18) throw new InvalidDataException("The EngineXT reader currently supports ESPD data version 18.");
+            uint dataSizeOrPublish = ReadUInt32(reader, bigEndian);
+            ReadUInt32(reader, bigEndian);
+
+            uint soundbankCount;
+            long soundbankTable;
+            long memoryMap;
+            uint effectsCount, mixCount, duckCount, cullCount, oscillatorCount;
+            long effectsTable, mixTable, duckTable, cullTable, oscillatorTable;
+            if (dataSizeOrPublish == 0)
+            {
+                // Current EngineXT v18 publisher: file size + stream heap, followed by eleven count/offset pairs.
+                ReadUInt32(reader, bigEndian);
+                project.StereoStreamCount = unchecked((int)ReadUInt32(reader, bigEndian));
+                uint memoryMapCount = ReadUInt32(reader, bigEndian);
+                long memoryOffsetField = reader.BaseStream.Position;
+                memoryMap = memoryOffsetField + ReadInt32(reader, bigEndian);
+                effectsCount = ReadUInt32(reader, bigEndian); effectsTable = ReadRelativeTarget(reader, bigEndian);
+                mixCount = ReadUInt32(reader, bigEndian); mixTable = ReadRelativeTarget(reader, bigEndian);
+                duckCount = ReadUInt32(reader, bigEndian); duckTable = ReadRelativeTarget(reader, bigEndian);
+                cullCount = ReadUInt32(reader, bigEndian); cullTable = ReadRelativeTarget(reader, bigEndian);
+                soundbankCount = ReadUInt32(reader, bigEndian);
+                long soundbankOffsetField = reader.BaseStream.Position;
+                soundbankTable = soundbankOffsetField + ReadInt32(reader, bigEndian);
+                oscillatorCount = ReadUInt32(reader, bigEndian); oscillatorTable = ReadRelativeTarget(reader, bigEndian);
+                project.ProjectCode = (int)memoryMapCount;
+            }
+            else
+            {
+                // Original v18 layout used by shipped EngineXT titles.
+                ReadUInt32(reader, bigEndian); // output count
+                effectsCount = ReadUInt32(reader, bigEndian); effectsTable = ReadRelativeTarget(reader, bigEndian);
+                mixCount = ReadUInt32(reader, bigEndian); mixTable = ReadRelativeTarget(reader, bigEndian);
+                duckCount = ReadUInt32(reader, bigEndian); duckTable = ReadRelativeTarget(reader, bigEndian);
+                cullCount = ReadUInt32(reader, bigEndian); cullTable = ReadRelativeTarget(reader, bigEndian);
+                soundbankCount = ReadUInt32(reader, bigEndian);
+                long soundbankOffsetField = reader.BaseStream.Position;
+                soundbankTable = soundbankOffsetField + ReadInt32(reader, bigEndian);
+                oscillatorCount = ReadUInt32(reader, bigEndian); oscillatorTable = ReadRelativeTarget(reader, bigEndian);
+                memoryMap = reader.BaseStream.Position;
+            }
+
+            project.EffectsCount = (int)effectsCount;
+            project.MixGroupsCount = (int)mixCount;
+            project.DuckersCount = (int)duckCount;
+            project.CullingGroupsCount = (int)cullCount;
+            project.OscillatorsCount = (int)oscillatorCount;
+
+            if (memoryMap + 72 <= reader.BaseStream.Length)
+            {
+                reader.BaseStream.Position = memoryMap;
+                ProjectMemoryMap map = new ProjectMemoryMap();
+                project.MaximumMemoryMapSize = ReadInt32(reader, bigEndian);
+                map.Name = string.Format("0x{0:X8}", ReadUInt32(reader, bigEndian));
+                for (int i = 0; i < 8; i++)
+                {
+                    uint slotHash = ReadUInt32(reader, bigEndian);
+                    uint sizeAndHeap = ReadUInt32(reader, bigEndian);
+                    int size = (int)(sizeAndHeap & 0x7fffffff);
+                    if (slotHash == 0 && size == 0) continue;
+                    map.SlotSizes.Add(size);
+                    project.memorySlotsData.Add(new ProjectSlots { SlotNumber = unchecked((int)slotHash), MemorySize = size, Quantity = (sizeAndHeap & 0x80000000) != 0 ? 1 : 0 });
+                }
+                project.memoryMapsData.Add(map);
+                project.MemmorySlotsCount = project.memorySlotsData.Count;
+            }
+
+            project.SoundBanksCount = (int)soundbankCount;
+            project.SoundBanksOffset = (int)soundbankTable;
+            if (soundbankTable < 0 || soundbankTable > reader.BaseStream.Length - soundbankCount * 12L) return;
+            reader.BaseStream.Position = soundbankTable;
+            for (int i = 0; i < soundbankCount; i++)
+            {
+                int bankHash = ReadInt32(reader, bigEndian);
+                ReadInt32(reader, bigEndian);
+                int slotHash = ReadInt32(reader, bigEndian);
+                project.soundBanksData.Add(new ProjectSoundBank { HashCode = bankHash, SlotNumber = slotHash });
+            }
+
+
+            ReadEffects(reader, project, effectsTable, effectsCount, bigEndian);
+            ReadMixGroups(reader, project, mixTable, mixCount, bigEndian);
+            ReadDuckers(reader, project, duckTable, duckCount, bigEndian);
+            ReadCullingGroups(reader, project, cullTable, cullCount, bigEndian);
+            ReadOscillators(reader, project, oscillatorTable, oscillatorCount, bigEndian);
+        }
+
+        private static long ReadRelativeTarget(BinaryReader reader, bool bigEndian)
+        {
+            long field = reader.BaseStream.Position;
+            int relative = ReadInt32(reader, bigEndian);
+            return relative == 0 ? 0 : field + relative;
+        }
+
+        private static void ReadEffects(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 8L)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 8L;
+                uint hash = ReadUInt32(reader, bigEndian);
+                long data = ReadRelativeTarget(reader, bigEndian);
+                string details = string.Empty;
+                if (CanRead(reader, data, 8))
+                {
+                    reader.BaseStream.Position = data;
+                    uint dataHash = ReadUInt32(reader, bigEndian);
+                    uint type = ReadUInt32(reader, bigEndian);
+                    int parameterCount = GetEffectParameterCount(type);
+                    System.Text.StringBuilder values = new System.Text.StringBuilder();
+                    for (int parameter = 0; parameter < parameterCount && CanRead(reader, reader.BaseStream.Position, 4); parameter++)
+                    {
+                        if (parameter > 0) values.Append(", ");
+                        if (type == 1 && parameter == 0) values.Append(ReadInt32(reader, bigEndian));
+                        else values.Append(ReadSingle(reader, bigEndian).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                    details = string.Format("Type {0}, data hash 0x{1:X8}, parameters [{2}]", type, dataHash, values);
+                }
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Effect", HashCode = hash, Details = details });
+            }
+        }
+
+        private static void ReadMixGroups(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 12L)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 12L;
+                uint hash = ReadUInt32(reader, bigEndian);
+                float volume = ReadSingle(reader, bigEndian);
+                uint parent = ReadUInt32(reader, bigEndian);
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Mix Group", HashCode = hash, Details = string.Format("Volume {0:0.###}, parent 0x{1:X8}", volume, parent) });
+            }
+        }
+
+        private static void ReadDuckers(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 8L)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 8L;
+                uint hash = ReadUInt32(reader, bigEndian);
+                long data = ReadRelativeTarget(reader, bigEndian);
+                string details = "0 inputs";
+                if (CanRead(reader, data, 4))
+                {
+                    reader.BaseStream.Position = data;
+                    uint inputs = ReadUInt32(reader, bigEndian);
+                    System.Text.StringBuilder values = new System.Text.StringBuilder();
+                    for (uint input = 0; input < inputs && CanRead(reader, reader.BaseStream.Position, 4); input++)
+                    {
+                        if (input > 0) values.Append(", ");
+                        ushort inputHash = ReadUInt16(reader, bigEndian);
+                        byte volume = reader.ReadByte(); reader.ReadByte();
+                        values.AppendFormat("0x{0:X4}: {1}%", inputHash, volume);
+                    }
+                    details = inputs + " inputs [" + values + "]";
+                }
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Ducker", HashCode = hash, Details = details });
+            }
+        }
+
+        private static void ReadCullingGroups(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 12L)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 12L;
+                uint hash = ReadUInt32(reader, bigEndian);
+                uint maximum = ReadUInt32(reader, bigEndian);
+                uint action = ReadUInt32(reader, bigEndian);
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Culling Group", HashCode = hash, Details = string.Format("Maximum {0}, action {1}", maximum, action) });
+            }
+        }
+
+        private static void ReadOscillators(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 36L)) return;
+            string[] names = { "Pitch", "Volume", "LowPass", "Morph", "Angle" };
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 36L;
+                uint hash = ReadUInt32(reader, bigEndian);
+                System.Text.StringBuilder details = new System.Text.StringBuilder();
+                for (int component = 0; component < names.Length; component++)
+                {
+                    if (component > 0) details.Append("; ");
+                    byte waveType = reader.ReadByte();
+                    byte amplitude = reader.ReadByte();
+                    ushort rate = ReadUInt16(reader, bigEndian);
+                    ushort release = ReadUInt16(reader, bigEndian);
+                    details.AppendFormat("{0}: wave {1}, amp {2}, rate {3}ms, release {4}ms", names[component], waveType, amplitude, rate, release);
+                }
+                ReadUInt16(reader, bigEndian);
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Oscillator", HashCode = hash, Details = details.ToString() });
+            }
+        }
+
+        private static int GetEffectParameterCount(uint type)
+        {
+            switch (type)
+            {
+                case 0: return 6;
+                case 1: return 28;
+                case 2: return 6;
+                case 3: return 5;
+                case 4: return 4;
+                case 5: return 3;
+                case 6:
+                case 7:
+                case 8: return 2;
+                default: return 0;
+            }
+        }
+
+        private static float ReadSingle(BinaryReader reader, bool bigEndian)
+        {
+            byte[] bytes = reader.ReadBytes(4);
+            if (bigEndian) System.Array.Reverse(bytes);
+            return System.BitConverter.ToSingle(bytes, 0);
+        }
+
+        private static bool CanRead(BinaryReader reader, long position, long size)
+        {
+            return position >= 0 && size >= 0 && position <= reader.BaseStream.Length - size;
+        }
+
+        private static uint ReadUInt32(BinaryReader reader, bool bigEndian) { return BytesFunctions.FlipData(reader.ReadUInt32(), bigEndian); }
+        private static int ReadInt32(BinaryReader reader, bool bigEndian) { return BytesFunctions.FlipData(reader.ReadInt32(), bigEndian); }
+        private static ushort ReadUInt16(BinaryReader reader, bool bigEndian) { return BytesFunctions.FlipData(reader.ReadUInt16(), bigEndian); }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private static void ReadProjectFileVersion6(BinaryReader BReader, ProjectDetailsHeader headerData, ProjectDetails projectData)

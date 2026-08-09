@@ -6,6 +6,7 @@ using sb_explorer.UI.Formatting;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -16,7 +17,6 @@ namespace sb_explorer
     //-------------------------------------------------------------------------------------------------------------------------------
     public partial class FormSB_WavHeaderData : DockContent
     {
-        private RawSourceWaveStream rawLeftChannel;
         private readonly AudioFunctions audioFunctions = new AudioFunctions();
         private bool suppressDisplayPreferenceEvents;
 
@@ -52,7 +52,8 @@ namespace sb_explorer
                         : DisplayValueFormatter.FormatOffset(waveData.OriginalLoopOffset, hexOffsets);
 
                     //Create item and add it to list
-                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, memorySize, sampleSize, waveData.Frequency.ToString(), binaryLoopOffset, loopSample, waveData.Duration.ToString() })
+                    string codec = waveData.AudioReference == null ? "Unknown" : waveData.AudioReference.Codec.ToString();
+                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, memorySize, sampleSize, waveData.Frequency.ToString(), binaryLoopOffset, loopSample, waveData.Duration.ToString(), codec, waveData.Channels.ToString(), waveData.TotalSamples.ToString(), string.Format("0x{0:X8}", waveData.WavHashCode), waveData.StorageType ?? string.Empty })
                     {
                         ImageIndex = 0,
                         Tag = index
@@ -154,22 +155,23 @@ namespace sb_explorer
                         SampleData selectedSample = wavesList[(short)selectedItem.Tag];
 
                         //Create object music
-                        byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData, parentForm.Configuration.PlatformSelected);
-                        if (decodedData != null)
+                        DecodedAudio decodedAudio = GenericMethods.DecodeSfxSampleChannels(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData);
+                        if (decodedAudio != null && decodedAudio.Channels.Length > 0)
                         {
                             SoundFile soundToPlay = new SoundFile();
-                            soundToPlay.PcmData[0] = decodedData;
+                            soundToPlay.PcmData = decodedAudio.Channels;
                             soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
                             soundToPlay.isLooped = selectedSample.IsLooped;
-                            soundToPlay.sampleRate = selectedSample.Frequency;
-                            soundToPlay.channels = selectedSample.Channels;
+                            soundToPlay.sampleRate = decodedAudio.SampleRate;
+                            soundToPlay.channels = (uint)decodedAudio.Channels.Length;
 
                             //Create Wav File
-                            IWaveProvider wavFile = audioFunctions.CreateMonoWav(ref rawLeftChannel, soundToPlay.PcmData[0], soundToPlay);
-                            EuroSoundWaveWriter.WriteSampleProvider16(
+                            int channelBytes = soundToPlay.PcmData.Min(channel => channel.Length);
+                            EuroSoundWaveWriter.WriteChannelsPcm16(
                                 GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".wav")),
-                                wavFile.ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.PcmData[0].Length, 1));
+                                soundToPlay.PcmData, (int)soundToPlay.sampleRate,
+                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                                    (long)channelBytes * soundToPlay.PcmData.Length, soundToPlay.PcmData.Length));
                         }
                     }
                 }
@@ -194,15 +196,15 @@ namespace sb_explorer
                 SampleData selectedSample = wavesList[(short)listView1.SelectedItems[0].Tag];
 
                 //Create object music
-                byte[] decodedData = GenericMethods.DecodeSfxSample(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData, parentForm.Configuration.PlatformSelected);
-                if (decodedData != null)
+                DecodedAudio decodedAudio = GenericMethods.DecodeSfxSampleChannels(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData);
+                if (decodedAudio != null && decodedAudio.Channels.Length > 0)
                 {
                     SoundFile soundToPlay = new SoundFile();
-                    soundToPlay.PcmData[0] = decodedData;
+                    soundToPlay.PcmData = decodedAudio.Channels;
                     soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
                     soundToPlay.isLooped = selectedSample.IsLooped;
-                    soundToPlay.sampleRate = selectedSample.Frequency;
-                    soundToPlay.channels = selectedSample.Channels;
+                    soundToPlay.sampleRate = decodedAudio.SampleRate;
+                    soundToPlay.channels = (uint)decodedAudio.Channels.Length;
 
                     //Send to Media Player
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
