@@ -2025,9 +2025,13 @@ namespace sb_explorer.Services
             {
                 return 1;
             }
-            if (EuroSoundCodecMatrix.IsXbox360Platform(platform))
+            if (EuroSoundCodecMatrix.IsPs3Platform(platform))
             {
                 return 2;
+            }
+            if (EuroSoundCodecMatrix.IsXbox360Platform(platform))
+            {
+                return 3;
             }
             if (platform.IndexOf("XB", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -2179,6 +2183,10 @@ namespace sb_explorer.Services
         private static string InferPlatformFromPath(string filePath)
         {
             string value = filePath ?? string.Empty;
+            if (value.IndexOf("_bin_ps3", StringComparison.OrdinalIgnoreCase) >= 0 || value.IndexOf("PS3", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return "PS3";
+            }
             if (value.IndexOf("_bin_ps2", StringComparison.OrdinalIgnoreCase) >= 0 || value.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return "PS2";
@@ -2259,6 +2267,10 @@ namespace sb_explorer.Services
             }
 
             string value = platform.Trim();
+            if (EuroSoundCodecMatrix.IsPs3Platform(value))
+            {
+                return "PS3";
+            }
             if (value.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return "PS2";
@@ -2939,6 +2951,10 @@ namespace sb_explorer.Services
                 if (value.IndexOf("PS2", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     return Platform.PS2;
+                }
+                if (EuroSoundCodecMatrix.IsPs3Platform(value))
+                {
+                    return Platform.PS3;
                 }
                 if (EuroSoundCodecMatrix.IsXbox360Platform(value))
                 {

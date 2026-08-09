@@ -175,6 +175,7 @@ namespace MusX.Readers
                 uint referenceOffset = dataOffset;
                 uint referenceSize = dataSize;
                 uint loopStartSample = loopOffset;
+                uint loopEndByteOffset = 0;
                 if (wavType != 0 && !string.IsNullOrEmpty(audioPath))
                 {
                     referenceOffset = 0x800;
@@ -190,6 +191,7 @@ namespace MusX.Readers
                         {
                             if (streamHeader.FileLength2 <= referenceSize) referenceSize = streamHeader.FileLength2;
                             if (streamHeader.LoopStartSample != uint.MaxValue) loopStartSample = streamHeader.LoopStartSample;
+                            loopEndByteOffset = streamHeader.LoopEndByteOffset;
                         }
                     }
                     catch (InvalidDataException) { }
@@ -214,6 +216,7 @@ namespace MusX.Readers
                     LoopStartOffset = wavType != 0 ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
                     OriginalLoopOffset = loopOffset,
                     LoopStartSample = wavType != 0 ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
+                    LoopEndByteOffset = loopEndByteOffset,
                     AudioReference = audioReference
                 };
                 indices[entry] = (short)waves.Count;

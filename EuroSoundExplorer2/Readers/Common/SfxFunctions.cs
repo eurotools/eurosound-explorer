@@ -136,6 +136,14 @@ namespace MusX.Readers
         //-------------------------------------------------------------------------------------------------------------------------------
         public int GetNumberOfSFXs(string filePath, SoundbankHeader sbData)
         {
+            // In EngineXT the SBNK descriptor already supplies the count and
+            // ReadSfxHeader exposes its 16-byte pointer-table span here. The
+            // first value at SFXStart is an SFX hash, not a legacy count.
+            if (sbData.FileVersion == 18)
+            {
+                return checked((int)(sbData.SFXLenght / 16));
+            }
+
             int totalSfx = -1;
             using (BinaryReader br = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {

@@ -18,6 +18,7 @@
         public uint LoopStartOffset;
         public uint OriginalLoopOffset;
         public uint LoopStartSample;
+        public uint LoopEndByteOffset;
         public uint TotalSamples;
         public uint Duration;
         public uint WavHashCode;

@@ -353,8 +353,18 @@ namespace sb_explorer
                         soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                     }
                     soundToPlay.channels = (uint)decodedAudio.Channels.Length;
-                    soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
-                    soundToPlay.isLooped = selectedSample.IsLooped;
+                    if (parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion == 18)
+                    {
+                        int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
+                        soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);
+                        soundToPlay.loopStartPoint = loopStart;
+                        soundToPlay.loopEndPoint = loopEnd > int.MaxValue ? int.MaxValue : (int)loopEnd;
+                    }
+                    else
+                    {
+                        soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
+                        soundToPlay.isLooped = selectedSample.IsLooped;
+                    }
                 }
             }
             else if (fileRef.IsStream && ((soundSampleData.Flags >> 10) & 1) == 0) //Streambanks

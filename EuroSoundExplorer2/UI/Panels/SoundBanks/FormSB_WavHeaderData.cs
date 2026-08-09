@@ -1,5 +1,6 @@
 ﻿using MusX.Objects;
 using NAudio.Wave;
+using MusX;
 using sb_explorer.Classes;
 using sb_explorer.Services.Audio;
 using sb_explorer.UI.Formatting;
@@ -160,18 +161,19 @@ namespace sb_explorer
                         {
                             SoundFile soundToPlay = new SoundFile();
                             soundToPlay.PcmData = decodedAudio.Channels;
-                            soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
-                            soundToPlay.isLooped = selectedSample.IsLooped;
                             soundToPlay.sampleRate = decodedAudio.SampleRate;
                             soundToPlay.channels = (uint)decodedAudio.Channels.Length;
+                            ApplyLoopMetadata(soundToPlay, selectedSample, decodedAudio, parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion);
 
                             //Create Wav File
                             int channelBytes = soundToPlay.PcmData.Min(channel => channel.Length);
+                            WavLoopInfo loopInfo = soundToPlay.isLooped && soundToPlay.loopEndPoint > 0
+                                ? new WavLoopInfo(soundToPlay.loopStartPoint, (uint)(soundToPlay.loopEndPoint - 1))
+                                : EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                                    (long)channelBytes * soundToPlay.PcmData.Length, soundToPlay.PcmData.Length);
                             EuroSoundWaveWriter.WriteChannelsPcm16(
                                 GenericMethods.GetFinalPath(Path.Combine(folderBrowserDialog1.SelectedPath, (short)selectedItem.Tag + ".wav")),
-                                soundToPlay.PcmData, (int)soundToPlay.sampleRate,
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
-                                    (long)channelBytes * soundToPlay.PcmData.Length, soundToPlay.PcmData.Length));
+                                soundToPlay.PcmData, (int)soundToPlay.sampleRate, loopInfo);
                         }
                     }
                 }
@@ -201,10 +203,9 @@ namespace sb_explorer
                 {
                     SoundFile soundToPlay = new SoundFile();
                     soundToPlay.PcmData = decodedAudio.Channels;
-                    soundToPlay.loopStartPoint = selectedSample.LoopStartOffset;
-                    soundToPlay.isLooped = selectedSample.IsLooped;
                     soundToPlay.sampleRate = decodedAudio.SampleRate;
                     soundToPlay.channels = (uint)decodedAudio.Channels.Length;
+                    ApplyLoopMetadata(soundToPlay, selectedSample, decodedAudio, parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion);
 
                     //Send to Media Player
                     ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
@@ -223,6 +224,21 @@ namespace sb_explorer
                     itemUsage.ShowDialog();
                 }
             }
+        }
+
+        private static void ApplyLoopMetadata(SoundFile sound, SampleData sample, DecodedAudio decodedAudio, int fileVersion)
+        {
+            if (fileVersion == 18)
+            {
+                int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
+                sound.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(sample, decodedSamples, out uint loopStart, out uint loopEnd);
+                sound.loopStartPoint = loopStart;
+                sound.loopEndPoint = loopEnd > int.MaxValue ? int.MaxValue : (int)loopEnd;
+                return;
+            }
+
+            sound.loopStartPoint = sample.LoopStartOffset;
+            sound.isLooped = sample.IsLooped;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

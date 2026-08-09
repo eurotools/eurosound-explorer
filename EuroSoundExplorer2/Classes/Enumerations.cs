@@ -12,6 +12,7 @@
             GameCube,
             PC,
             PS2,
+            PS3,
             Wii,
             Xbox,
             Xbox360,

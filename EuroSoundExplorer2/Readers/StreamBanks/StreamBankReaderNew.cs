@@ -35,11 +35,11 @@ namespace MusX.Readers
                 LoopEndByteOffset = headerData.LoopEndByteOffset,
                 AudioReference = new AudioDataReference { FilePath = filePath, Offset = headerData.FileStart2, Size = headerData.FileLength2, Codec = codec, Frequency = 0, Channels = 1 }
             };
-            ResolveV18Metadata(filePath, sample);
+            ResolveV18Metadata(filePath, sample, headerData.Platform);
             streamedSamples.Add(sample);
         }
 
-        private static void ResolveV18Metadata(string streamPath, StreamSample sample)
+        private static void ResolveV18Metadata(string streamPath, StreamSample sample, string platform)
         {
             string directory = Path.GetDirectoryName(streamPath);
             if (string.IsNullOrEmpty(directory)) return;
@@ -50,7 +50,7 @@ namespace MusX.Readers
                 try
                 {
                     SoundBankReader soundBankReader = new SoundBankReader();
-                    SoundbankHeader soundBankHeader = soundBankReader.ReadSfxHeader(candidate, string.Empty);
+                    SoundbankHeader soundBankHeader = soundBankReader.ReadSfxHeader(candidate, platform);
                     SortedDictionary<uint, Sample> samples = new SortedDictionary<uint, Sample>();
                     List<SampleData> waves = new List<SampleData>();
                     List<uint> duplicates = new List<uint>();
