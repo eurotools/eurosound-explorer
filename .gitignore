@@ -20,6 +20,7 @@ mono_crash.*
 [Bb]in/[Rr]elease/
 **/[Bb]in/[Dd]ebug/
 **/[Bb]in/[Rr]elease/
+**/[Bb]in/
 
 # Build results
 [Dd]ebug/
