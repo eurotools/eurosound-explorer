@@ -1,81 +1,91 @@
 ﻿using System.ComponentModel;
 
+using System;
+
 namespace sb_explorer.Classes
 {
-    internal class SampleForPropGrid
+    [AttributeUsage(AttributeTargets.Property)]
+    internal sealed class MinimumLegacyVersionAttribute : Attribute
     {
-        //Parameters
-        [DisplayName("Ducker Length")]
-        [Category("All Versions")]
+        public int Version { get; private set; }
+
+        public MinimumLegacyVersionAttribute(int version)
+        {
+            Version = version;
+        }
+    }
+
+    internal class SampleForPropGrid : ICustomTypeDescriptor
+    {
+        [Browsable(false)]
+        public int FileVersion { get; set; }
+
+        [Category("Timing"), DisplayName("Ducker Length")]
         public short DuckerLenght { get; set; }
-
-        [DisplayName("Min Delay")]
-        [Category("All Versions")]
+        [Category("Timing"), DisplayName("Min Delay")]
         public short MinDelay { get; set; }
-
-        [DisplayName("Max Delay")]
-        [Category("All Versions")]
+        [Category("Timing"), DisplayName("Max Delay")]
         public short MaxDelay { get; set; }
-
-        [DisplayName("Reverb Send")]
-        [Category("All Versions")]
+        [Category("Effects"), DisplayName("Reverb Send")]
         public sbyte ReverbSend { get; set; }
-
-        [DisplayName("Tracking Type")]
-        [Category("All Versions")]
+        [Category("Spatial"), DisplayName("Tracking Type")]
         public string TrackingType { get; set; }
-
-        [DisplayName("Max Voices")]
-        [Category("All Versions")]
+        [Category("Playback"), DisplayName("Max Voices")]
         public sbyte MaxVoices { get; set; }
-
-        [DisplayName("Priority")]
-        [Category("All Versions")]
+        [Category("Playback"), DisplayName("Priority")]
         public sbyte Priority { get; set; }
-
-        [DisplayName("Ducker")]
-        [Category("All Versions")]
+        [Category("Project references"), DisplayName("Ducker")]
         public sbyte Ducker { get; set; }
-
-        [DisplayName("Master Volume")]
-        [Category("All Versions")]
+        [Category("Playback"), DisplayName("Master Volume")]
         public sbyte MasterVolume { get; set; }
-
-        [DisplayName("Group HashCode")]
-        [Category("From v4 and above")]
+        [Category("Project references"), DisplayName("Group HashCode"), MinimumLegacyVersion(4)]
         public short GroupHashCode { get; set; }
-
-        [DisplayName("Group Max Channels")]
-        [Category("From v4 and above")]
+        [Category("Playback"), DisplayName("Group Max Channels"), MinimumLegacyVersion(4)]
         public sbyte GroupMaxChannels { get; set; }
-
-        [DisplayName("Doppler Value")]
-        [Category("From v5 and above")]
+        [Category("Effects"), DisplayName("Doppler Value"), MinimumLegacyVersion(5)]
         public sbyte DopplerValue { get; set; }
-
-        [DisplayName("User Value")]
-        [Category("From v5 and above")]
+        [Category("Miscellaneous"), DisplayName("User Value"), MinimumLegacyVersion(5)]
         public sbyte UserValue { get; set; }
-
-        [DisplayName("SFX Ducker")]
-        [Category("From v6 and above")]
+        [Category("Project references"), DisplayName("SFX Ducker"), MinimumLegacyVersion(6)]
         public sbyte SFXDucker { get; set; }
-
-        [DisplayName("Spare")]
-        [Category("From v6 and above")]
+        [Category("Miscellaneous"), DisplayName("Spare"), MinimumLegacyVersion(6)]
         public sbyte Spare { get; set; }
-
-        [DisplayName("Inner Radius")]
-        [Category("All Versions")]
+        [Category("Spatial"), DisplayName("Inner Radius")]
         public short InnerRadius { get; set; }
-
-        [DisplayName("Outer Radius")]
-        [Category("All Versions")]
+        [Category("Spatial"), DisplayName("Outer Radius")]
         public short OuterRadius { get; set; }
-
-        [DisplayName("Flags")]
-        [Category("All Versions")]
+        [Category("Flags"), DisplayName("Flags")]
         public ushort Flags { get; set; }
+
+        AttributeCollection ICustomTypeDescriptor.GetAttributes() { return TypeDescriptor.GetAttributes(this, true); }
+        string ICustomTypeDescriptor.GetClassName() { return TypeDescriptor.GetClassName(this, true); }
+        string ICustomTypeDescriptor.GetComponentName() { return TypeDescriptor.GetComponentName(this, true); }
+        TypeConverter ICustomTypeDescriptor.GetConverter() { return TypeDescriptor.GetConverter(this, true); }
+        EventDescriptor ICustomTypeDescriptor.GetDefaultEvent() { return TypeDescriptor.GetDefaultEvent(this, true); }
+        PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty() { return TypeDescriptor.GetDefaultProperty(this, true); }
+        object ICustomTypeDescriptor.GetEditor(Type editorBaseType) { return TypeDescriptor.GetEditor(this, editorBaseType, true); }
+        EventDescriptorCollection ICustomTypeDescriptor.GetEvents(Attribute[] attributes) { return TypeDescriptor.GetEvents(this, attributes, true); }
+        EventDescriptorCollection ICustomTypeDescriptor.GetEvents() { return TypeDescriptor.GetEvents(this, true); }
+        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes) { return GetVisibleProperties(attributes); }
+        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties() { return GetVisibleProperties(null); }
+        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd) { return this; }
+
+        private PropertyDescriptorCollection GetVisibleProperties(Attribute[] attributes)
+        {
+            PropertyDescriptorCollection properties = attributes == null
+                ? TypeDescriptor.GetProperties(this, true)
+                : TypeDescriptor.GetProperties(this, attributes, true);
+            PropertyDescriptor[] visible = new PropertyDescriptor[properties.Count];
+            int count = 0;
+            foreach (PropertyDescriptor property in properties)
+            {
+                MinimumLegacyVersionAttribute minimum = (MinimumLegacyVersionAttribute)property.Attributes[typeof(MinimumLegacyVersionAttribute)];
+                if (property.IsBrowsable && (minimum == null || (FileVersion >= minimum.Version && FileVersion <= 6)))
+                    visible[count++] = property;
+            }
+            Array.Resize(ref visible, count);
+            return new PropertyDescriptorCollection(visible, true);
+        }
     }
 
     internal sealed class SampleV18ForPropGrid
@@ -135,9 +145,9 @@ namespace sb_explorer.Classes
         [Category("Playback"), DisplayName("Master volume (%)")]
         public byte MasterVolume { get; set; }
         [Category("Playback"), DisplayName("Play type")]
-        public byte PlayType { get; set; }
+        public string PlayType { get; set; }
         [Category("Playback"), DisplayName("Culling action")]
-        public byte CullingAction { get; set; }
+        public string CullingAction { get; set; }
         [Category("Playback"), DisplayName("Trigger chance (%)")]
         public byte TriggerChance { get; set; }
 

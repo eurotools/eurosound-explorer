@@ -146,7 +146,7 @@ namespace sb_explorer
                             channelBytes = Math.Min(channelBytes, originalChannels[channel].Length & ~1);
                         }
                         EuroSoundWaveWriter.WriteChannelsPcm16(filePath, originalChannels, (int)soundToPlay.sampleRate,
-                            EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                            EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.loopEndPoint,
                                 (long)channelBytes * channels, channels));
                         MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

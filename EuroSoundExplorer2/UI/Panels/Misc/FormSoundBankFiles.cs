@@ -1329,6 +1329,19 @@ namespace sb_explorer
             return directoryNode;
         }
 
+        internal void ClearProjectData()
+        {
+            ClearLoadedData(FileType.SoundbankFile);
+            ClearLoadedData(FileType.StreamFile);
+            ClearLoadedData(FileType.MusicFile);
+            ClearLoadedData(FileType.SBI);
+            ClearLoadedData(FileType.ProjectDetails);
+            ClearLoadedData(FileType.SoundDetailsFile);
+            ClearLoadedData(FileType.MusicDetails);
+            ClearLoadedData(FileType.MusicMarkers);
+            MainForm.pnlSbSampleProps.ClearData();
+        }
+
         private static string[] GetSupportedMusXFiles(string folder)
         {
             return EnumerateFilesSafely(folder, "*")

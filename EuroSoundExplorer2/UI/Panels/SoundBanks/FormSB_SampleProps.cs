@@ -36,7 +36,7 @@ namespace sb_explorer
                     outerRadius = radiusData.OuterRadius;
                 }
 
-                propertyGrid1.Title = "EngineXT v18 SFX Parameters";
+                propertyGrid1.Title = "SFX Parameters";
                 propertyGrid1.propsGrid.SelectedObject = new SampleV18ForPropGrid
                 {
                     Guid = "0x" + sampleData.HashCodeNumber.ToString("X8"),
@@ -64,8 +64,8 @@ namespace sb_explorer
                     MaxItems = sampleData.V18MaxItems,
                     Priority = sampleData.V18Priority,
                     MasterVolume = sampleData.V18MasterVolume,
-                    PlayType = (byte)(sampleData.V18PlayAndCull >> 3),
-                    CullingAction = (byte)(sampleData.V18PlayAndCull & 7),
+                    PlayType = GetPlayTypeDescription((byte)(sampleData.V18PlayAndCull >> 3)),
+                    CullingAction = GetCullingActionDescription((byte)(sampleData.V18PlayAndCull & 7)),
                     TriggerChance = sampleData.V18TriggerChance,
                     RawFlags = "0x" + sampleData.V18Flags.ToString("X8"),
                     InnerRadius = innerRadius,
@@ -95,6 +95,7 @@ namespace sb_explorer
             //Clone Values
             SampleForPropGrid gridObj = new SampleForPropGrid
             {
+                FileVersion = fileVersion,
                 DuckerLenght = sampleData.DuckerLenght,
                 MinDelay = sampleData.MinDelay,
                 MaxDelay = sampleData.MaxDelay,
@@ -176,6 +177,12 @@ namespace sb_explorer
             }
         }
 
+        public void ClearData()
+        {
+            propertyGrid1.propsGrid.SelectedObject = null;
+            propertyGrid1.Title = "SFX Parameters";
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------
         private static string GetTrackingTypeDescription(byte trackingType)
         {
@@ -205,6 +212,44 @@ namespace sb_explorer
         private static string FormatObjectId(ushort id)
         {
             return id == 0 ? "(none)" : "0x" + id.ToString("X4") + " (" + id + ")";
+        }
+
+        private static string GetPlayTypeDescription(byte playType)
+        {
+            string[] descriptions =
+            {
+                "Single cycled",
+                "Single random",
+                "Single shuffled",
+                "Sentence sequence",
+                "Sentence shuffled",
+                "Polyphonic",
+                "Morph",
+                "Morph radii",
+                "Polyphonic wait"
+            };
+
+            return playType < descriptions.Length
+                ? descriptions[playType] + " (" + playType + ")"
+                : "Unknown (" + playType + ")";
+        }
+
+        private static string GetCullingActionDescription(byte cullingAction)
+        {
+            string[] descriptions =
+            {
+                "None",
+                "Stop oldest",
+                "Stop new",
+                "Steal quietest",
+                "Stop group",
+                "Stop lowest priority",
+                "Stop quietest"
+            };
+
+            return cullingAction < descriptions.Length
+                ? descriptions[cullingAction] + " (" + cullingAction + ")"
+                : "Unknown (" + cullingAction + ")";
         }
     }
 

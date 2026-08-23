@@ -72,7 +72,15 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void Configuration_ProjectFolderChanged()
         {
+            ReloadProjectContext();
+        }
+
+        internal void ReloadProjectContext()
+        {
+            pnlMediaPlayer.LoadSoundData(null);
+            pnlSoundBankFiles.ClearProjectData();
             ProjectConfigurationDetector.Apply(Configuration, AppState.ProjectProfiles);
+            HashTable.LoadHashTable(Configuration.SoundhFile);
             pnlSettings.RefreshSettings();
             pnlSoundBankFiles.LoadData();
         }

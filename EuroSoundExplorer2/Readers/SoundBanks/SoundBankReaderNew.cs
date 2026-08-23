@@ -225,7 +225,9 @@ namespace MusX.Readers
                     Channels = channels,
                     TotalSamples = sampleCount,
                     LoopStartOffset = wavType != WavType.Memory ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
-                    OriginalLoopOffset = loopOffset,
+                    // EngineXT writes 0xFFFFFFFF when the WAV does not loop. Keep that
+                    // implementation sentinel out of Wav Header Data and expose 0 instead.
+                    OriginalLoopOffset = ((flags >> 3) & 1) != 0 && loopOffset != uint.MaxValue ? loopOffset : 0,
                     LoopStartSample = wavType != WavType.Memory ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
                     LoopEndByteOffset = loopEndByteOffset,
                     AudioReference = audioReference

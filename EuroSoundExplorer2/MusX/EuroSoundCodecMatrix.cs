@@ -104,7 +104,7 @@ namespace MusX
             new CodecRule(EurocomVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
             new CodecRule(EurocomVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
 
-            new CodecRule(EurocomVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(EurocomVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.DspAdpcm),
             new CodecRule(EurocomVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EurocomVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
 

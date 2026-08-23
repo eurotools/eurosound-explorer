@@ -345,7 +345,7 @@ namespace sb_explorer
                 else
                 {
                     main.Configuration.PlatformSelected = (Platform)comboPlatforms.SelectedItem;
-                    if (Directory.Exists(main.Configuration.ProjectFolder)) main.pnlSoundBankFiles.LoadData();
+                    if (Directory.Exists(main.Configuration.ProjectFolder)) main.ReloadProjectContext();
                     PropGridSettings.Refresh();
                 }
             };
@@ -423,7 +423,7 @@ namespace sb_explorer
             main.Configuration.SoundhFile = profile.HashTable;
             main.Configuration.PlatformSelected = platform;
             if (!string.Equals(main.Configuration.ProjectFolder, folder, StringComparison.OrdinalIgnoreCase)) main.Configuration.ProjectFolder = folder;
-            else main.pnlSoundBankFiles.LoadData();
+            else main.ReloadProjectContext();
             PropGridSettings.Refresh();
         }
 

@@ -77,6 +77,11 @@ namespace sb_explorer.Services.Audio
 
         public static WavLoopInfo CreateLoopInfo(bool isLooped, uint loopStartSample, long pcmByteLength, int channels)
         {
+            return CreateLoopInfo(isLooped, loopStartSample, 0, pcmByteLength, channels);
+        }
+
+        public static WavLoopInfo CreateLoopInfo(bool isLooped, uint loopStartSample, int loopEndPoint, long pcmByteLength, int channels)
+        {
             if (!isLooped || channels <= 0)
             {
                 return null;
@@ -88,7 +93,18 @@ namespace sb_explorer.Services.Audio
                 return null;
             }
 
-            return new WavLoopInfo(loopStartSample, totalSamples - 1);
+            // SoundFile.loopEndPoint is exclusive, while the WAV smpl chunk stores
+            // an inclusive end sample. Invalid or unavailable endpoints fall back
+            // to the final PCM sample.
+            uint loopEndSample = loopEndPoint > 0 && (uint)loopEndPoint <= totalSamples
+                ? (uint)loopEndPoint - 1
+                : totalSamples - 1;
+            if (loopEndSample <= loopStartSample)
+            {
+                loopEndSample = totalSamples - 1;
+            }
+
+            return loopEndSample > loopStartSample ? new WavLoopInfo(loopStartSample, loopEndSample) : null;
         }
 
         private static byte[] RenderSampleProviderToPcm16(ISampleProvider sampleProvider)
