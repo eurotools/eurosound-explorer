@@ -42,10 +42,12 @@ namespace MusX.Readers
                     uint frequency = reader.ReadUInt32();
                     uint codec = reader.ReadUInt32();
                     uint flags = reader.ReadUInt32();
-                    headerData.LoopStartSample = reader.ReadUInt32();
+                    // DAT5 follows AudioCode's stream layout: encoded loop start,
+                    // encoded end, logical sample count, exact decoded loop sample.
                     headerData.LoopStartByteOffset = reader.ReadUInt32();
-                    headerData.SampleCount = reader.ReadUInt32();
                     headerData.LoopEndByteOffset = reader.ReadUInt32();
+                    headerData.SampleCount = reader.ReadUInt32();
+                    headerData.LoopStartSample = reader.ReadUInt32();
                     headerData.FileStart1 = codec;
                     headerData.FileLength1 = flags;
                     headerData.CodecType = codec;

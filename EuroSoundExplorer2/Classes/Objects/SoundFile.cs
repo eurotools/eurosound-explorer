@@ -18,6 +18,8 @@
         public float volumeOffset;
         public float pitchOffset;
         public float panningOffset;
+        public bool applyPoolEffects;
+        public bool panningIsAngle;
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

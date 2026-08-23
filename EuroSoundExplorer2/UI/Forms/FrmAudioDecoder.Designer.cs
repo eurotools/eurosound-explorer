@@ -65,18 +65,19 @@ namespace sb_explorer
             this.lbxFormats.Items.AddRange(new object[] {
             "Sony ADPCM",
             "Software ADPCM",
-            "Nintendo ADPCM",
+            "Nintendo DSP ADPCM (Legacy v15/v18)",
+            "Nintendo DSP ADPCM (NGCA v21)",
             "Eurocom ADPCM",
             "Xbox ADPCM"});
             this.lbxFormats.Location = new System.Drawing.Point(12, 41);
             this.lbxFormats.Name = "lbxFormats";
-            this.lbxFormats.Size = new System.Drawing.Size(191, 69);
+            this.lbxFormats.Size = new System.Drawing.Size(191, 82);
             this.lbxFormats.TabIndex = 1;
             // 
             // lblFrequency
             // 
             this.lblFrequency.AutoSize = true;
-            this.lblFrequency.Location = new System.Drawing.Point(12, 118);
+            this.lblFrequency.Location = new System.Drawing.Point(12, 131);
             this.lblFrequency.Name = "lblFrequency";
             this.lblFrequency.Size = new System.Drawing.Size(57, 13);
             this.lblFrequency.TabIndex = 2;
@@ -91,7 +92,7 @@ namespace sb_explorer
             0,
             0,
             0});
-            this.nudFrequency.Location = new System.Drawing.Point(89, 116);
+            this.nudFrequency.Location = new System.Drawing.Point(89, 129);
             this.nudFrequency.Maximum = new decimal(new int[] {
             44100,
             0,
@@ -116,7 +117,7 @@ namespace sb_explorer
             this.nudChannels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nudChannels.Enabled = false;
-            this.nudChannels.Location = new System.Drawing.Point(89, 142);
+            this.nudChannels.Location = new System.Drawing.Point(89, 155);
             this.nudChannels.Maximum = new decimal(new int[] {
             2,
             0,
@@ -139,7 +140,7 @@ namespace sb_explorer
             // lblChannels
             // 
             this.lblChannels.AutoSize = true;
-            this.lblChannels.Location = new System.Drawing.Point(12, 144);
+            this.lblChannels.Location = new System.Drawing.Point(12, 157);
             this.lblChannels.Name = "lblChannels";
             this.lblChannels.Size = new System.Drawing.Size(51, 13);
             this.lblChannels.TabIndex = 4;
@@ -149,7 +150,7 @@ namespace sb_explorer
             // 
             this.nudHeaderBytes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.nudHeaderBytes.Location = new System.Drawing.Point(89, 168);
+            this.nudHeaderBytes.Location = new System.Drawing.Point(89, 181);
             this.nudHeaderBytes.Maximum = new decimal(new int[] {
             1024,
             0,
@@ -162,7 +163,7 @@ namespace sb_explorer
             // lblHeaderBytes
             // 
             this.lblHeaderBytes.AutoSize = true;
-            this.lblHeaderBytes.Location = new System.Drawing.Point(12, 170);
+            this.lblHeaderBytes.Location = new System.Drawing.Point(12, 183);
             this.lblHeaderBytes.Name = "lblHeaderBytes";
             this.lblHeaderBytes.Size = new System.Drawing.Size(71, 13);
             this.lblHeaderBytes.TabIndex = 6;
@@ -172,7 +173,7 @@ namespace sb_explorer
             // 
             this.btnConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnConvert.Enabled = false;
-            this.btnConvert.Location = new System.Drawing.Point(12, 207);
+            this.btnConvert.Location = new System.Drawing.Point(12, 220);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(75, 23);
             this.btnConvert.TabIndex = 8;
@@ -184,7 +185,7 @@ namespace sb_explorer
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(128, 207);
+            this.btnCancel.Location = new System.Drawing.Point(128, 220);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -199,7 +200,7 @@ namespace sb_explorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(215, 242);
+            this.ClientSize = new System.Drawing.Size(215, 255);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConvert);
             this.Controls.Add(this.nudHeaderBytes);

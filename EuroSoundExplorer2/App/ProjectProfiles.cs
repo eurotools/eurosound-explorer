@@ -241,7 +241,8 @@ namespace sb_explorer
         {
             if (!Directory.Exists(folder)) return null;
             return Directory.GetFiles(folder, "Sound.h", SearchOption.AllDirectories).FirstOrDefault() ??
-                Directory.GetFiles(folder, "AudioFileTable.h", SearchOption.AllDirectories).FirstOrDefault();
+                Directory.GetFiles(folder, "AudioFileTable.h", SearchOption.AllDirectories).FirstOrDefault() ??
+                Directory.GetFiles(folder, "SFX_Defines.h", SearchOption.AllDirectories).FirstOrDefault();
         }
 
         internal static Platform ParsePlatform(string value)

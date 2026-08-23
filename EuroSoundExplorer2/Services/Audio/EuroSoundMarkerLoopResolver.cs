@@ -1,4 +1,5 @@
 using MusX.Objects;
+using System;
 
 namespace sb_explorer.Services.Audio
 {
@@ -43,6 +44,27 @@ namespace sb_explorer.Services.Audio
             return !HasEndMarker(markers);
         }
 
+        public static bool TryResolvePlayback(Marker[] markers, int totalSamples, MarkerLoopMode mode,
+            out int startPosition, out uint loopStart, out int loopEndExclusive)
+        {
+            startPosition = 0;
+            loopStart = 0;
+            loopEndExclusive = 0;
+            if (totalSamples <= 0) return false;
+
+            uint available = (uint)totalSamples;
+            startPosition = (int)Math.Min(GetStartPosition(markers), available - 1);
+            if (!IsLooped(markers, mode)) return false;
+
+            Marker loopMarker = FindLoopMarker(markers);
+            loopStart = loopMarker == null ? 0 : Math.Min(loopMarker.LoopStart, available);
+            uint end = loopMarker == null || loopMarker.Position == 0
+                ? available
+                : Math.Min(available, loopMarker.Position == uint.MaxValue ? uint.MaxValue : loopMarker.Position + 1);
+            loopEndExclusive = end > int.MaxValue ? int.MaxValue : (int)end;
+            return loopStart < end;
+        }
+
         public static WavLoopInfo CreateLoopInfo(Marker[] markers, int totalSamples, MarkerLoopMode mode)
         {
             if (!IsLooped(markers, mode) || totalSamples <= 0)
@@ -50,19 +72,9 @@ namespace sb_explorer.Services.Audio
                 return null;
             }
 
-            uint loopStart = 0;
-            uint loopEnd = (uint)(totalSamples - 1);
-            Marker loopMarker = FindLoopMarker(markers);
-            if (loopMarker != null)
-            {
-                loopStart = loopMarker.LoopStart;
-                if (loopMarker.Position > 0 && loopMarker.Position < loopEnd)
-                {
-                    loopEnd = loopMarker.Position;
-                }
-            }
-
-            return loopStart < loopEnd ? new WavLoopInfo(loopStart, loopEnd) : null;
+            if (!TryResolvePlayback(markers, totalSamples, mode, out int ignoredStart, out uint loopStart, out int loopEndExclusive))
+                return null;
+            return new WavLoopInfo(loopStart, (uint)(loopEndExclusive - 1));
         }
 
         private static Marker FindStartMarker(Marker[] markers)

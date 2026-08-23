@@ -358,10 +358,13 @@ namespace sb_explorer
                 }
                 else
                 {
-                    soundToPlay.isLooped = EuroSoundMarkerLoopResolver.IsLooped(selectedSample.Markers, MarkerLoopMode.LoopUnlessEndMarker);
-                    soundToPlay.startPos = (int)EuroSoundMarkerLoopResolver.GetStartPosition(selectedSample.Markers);
-                    soundToPlay.loopStartPoint = EuroSoundMarkerLoopResolver.GetLoopStart(selectedSample.Markers);
-                    soundToPlay.loopEndPoint = (int)EuroSoundMarkerLoopResolver.GetLoopEnd(selectedSample.Markers);
+                    int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
+                    soundToPlay.isLooped = EuroSoundMarkerLoopResolver.TryResolvePlayback(
+                        selectedSample.Markers, decodedSamples, MarkerLoopMode.LoopUnlessEndMarker,
+                        out int startPosition, out uint loopStart, out int loopEnd);
+                    soundToPlay.startPos = startPosition;
+                    soundToPlay.loopStartPoint = loopStart;
+                    soundToPlay.loopEndPoint = loopEnd;
                 }
             }
 

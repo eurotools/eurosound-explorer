@@ -480,9 +480,15 @@ namespace sb_explorer
         private void AddCodecRow(int version, string versionLabel, string platform)
         {
             string soundBankCodec = EuroSoundCodecMatrix.GetCodec(version, platform, EuroSoundBankType.SoundBank).ToString();
-            if (soundBankCodec == EuroSoundAudioCodec.DspAdpcm.ToString())
+            if (soundBankCodec == EuroSoundAudioCodec.DspAdpcmNgca.ToString())
+                soundBankCodec = "Nintendo DSP ADPCM (NGCA)";
+            else if (soundBankCodec == EuroSoundAudioCodec.DspAdpcmLegacy.ToString())
+                soundBankCodec = version == 15 || version == 18
+                    ? "Nintendo DSP ADPCM (Legacy/NGCA; per sample)"
+                    : "Nintendo DSP ADPCM (Legacy)";
+            else if (soundBankCodec == EuroSoundAudioCodec.DspAdpcm.ToString())
             {
-                soundBankCodec += version >= 21 ? " (NGCA)" : " (legacy header)";
+                soundBankCodec = "Nintendo DSP ADPCM (external coefficients)";
             }
             gridCodecMatrix.Rows.Add(
                 versionLabel,

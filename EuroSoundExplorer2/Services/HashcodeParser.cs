@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace sb_explorer.Classes
@@ -12,16 +13,19 @@ namespace sb_explorer.Classes
     {
         private readonly Dictionary<int, string> HashCodes = new Dictionary<int, string>();
         private readonly Dictionary<int, List<string>> HashCodeLabels = new Dictionary<int, List<string>>();
+        public int Count { get { return HashCodes.Count; } }
+        public string LastLoadedFile { get; private set; }
 
         //-------------------------------------------------------------------------------------------------------------------------------
         public void LoadHashTable(string filePath)
         {
             HashCodes.Clear();
             HashCodeLabels.Clear();
-            if (File.Exists(filePath))
+            LastLoadedFile = null;
+            foreach (string sourcePath in ResolveHashTableFiles(filePath))
             {
-                //Read new hashtable
-                using (StreamReader sr = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                if (LastLoadedFile == null) LastLoadedFile = sourcePath;
+                using (StreamReader sr = new StreamReader(File.Open(sourcePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
                 {
                     string line;
                     while ((line = sr.ReadLine()) != null)
@@ -53,6 +57,27 @@ namespace sb_explorer.Classes
                     }
                 }
             }
+        }
+
+        private static IEnumerable<string> ResolveHashTableFiles(string filePath)
+        {
+            List<string> files = new List<string>();
+            if (File.Exists(filePath)) files.Add(Path.GetFullPath(filePath));
+
+            string directory = string.IsNullOrWhiteSpace(filePath) ? null : Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
+            {
+                string name = Path.GetFileName(filePath) ?? string.Empty;
+                if (!File.Exists(filePath) || name.Equals("SFX_Defines.h", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("MFX_Defines.h", StringComparison.OrdinalIgnoreCase))
+                {
+                    string sfx = Path.Combine(directory, "SFX_Defines.h");
+                    string mfx = Path.Combine(directory, "MFX_Defines.h");
+                    if (File.Exists(sfx)) files.Add(Path.GetFullPath(sfx));
+                    if (File.Exists(mfx)) files.Add(Path.GetFullPath(mfx));
+                }
+            }
+            return files.Distinct(StringComparer.OrdinalIgnoreCase);
         }
 
         private void AddHashCode(int hashCode, string label)

@@ -252,20 +252,35 @@ namespace sb_explorer
             if (!LoadProjectHashTable(ProjectFolder))
                 HashTable.LoadHashTable(Configuration.SoundhFile);
             LoadData();
+            MainForm.pnlSbHashCodes.SetHashCodesToListView();
+            MainForm.pnlSbiSoundbanks.DisplayHashCodes();
+            MainForm.pnlSbiMusicbanks.DisplayHashCodes();
         }
 
         private bool LoadProjectHashTable(string projectFolder)
         {
             if (!Directory.Exists(projectFolder)) return false;
-            string audioFileTable = EnumerateFilesSafely(projectFolder, "AudioFileTable.h")
+            if (!string.IsNullOrWhiteSpace(Configuration.SoundhFile))
+            {
+                HashTable.LoadHashTable(Configuration.SoundhFile);
+                if (HashTable.Count > 0)
+                {
+                    if (!string.IsNullOrEmpty(HashTable.LastLoadedFile) &&
+                        !string.Equals(Configuration.SoundhFile, HashTable.LastLoadedFile, StringComparison.OrdinalIgnoreCase))
+                        Configuration.SoundhFile = HashTable.LastLoadedFile;
+                    return true;
+                }
+            }
+            string audioFileTable = EnumerateFilesSafely(projectFolder, "Sound.h")
+                .Concat(EnumerateFilesSafely(projectFolder, "AudioFileTable.h"))
+                .Concat(EnumerateFilesSafely(projectFolder, "SFX_Defines.h"))
                 .OrderBy(path => path.Length)
                 .FirstOrDefault();
             if (string.IsNullOrEmpty(audioFileTable)) return false;
             if (!string.Equals(Configuration.SoundhFile, audioFileTable, StringComparison.OrdinalIgnoreCase))
                 Configuration.SoundhFile = audioFileTable;
-            else
-                HashTable.LoadHashTable(audioFileTable);
-            return true;
+            HashTable.LoadHashTable(audioFileTable);
+            return HashTable.Count > 0;
         }
 
         //-------------------------------------------------------------------------------------------
@@ -1196,38 +1211,25 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private int GetNumberOfSFXs(string filePath, FileType fileType)
+        private string GetEntryCountText(string filePath, FileType fileType, SfxCommonHeader commonHeader)
         {
-            int total = 0;
             switch (fileType)
             {
                 case FileType.SoundbankFile:
                     SoundbankHeader sbData = reader.ReadSfxHeader(filePath, SelectedPlatformName);
-                    total = reader.GetNumberOfSFXs(filePath, sbData);
-                    break;
+                    return reader.GetNumberOfSFXs(filePath, sbData).ToString(System.Globalization.CultureInfo.InvariantCulture);
                 case FileType.StreamFile:
-                    SfxCommonHeader streamCommonHeader = reader.ReadCommonHeader(filePath, SelectedPlatformName);
+                    SfxCommonHeader streamCommonHeader = commonHeader ?? reader.ReadCommonHeader(filePath, SelectedPlatformName);
                     if (streamCommonHeader.FileVersion == 15 || streamCommonHeader.FileVersion == 18 || streamCommonHeader.FileVersion == 21)
                     {
-                        // EngineXT stores one stream per MUSX file. Avoid parsing encrypted v21
-                        // payload metadata merely to populate the file-list count column.
-                        total = 1;
+                        // These are individual stream files, not streambanks.
+                        return "N/A";
                     }
-                    else
-                    {
-                        StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, SelectedPlatformName);
-                        total = (int)(strData.FileLength1 / 4);
-                    }
-                    break;
-                case FileType.MusicFile:
-                    total = 1;
-                    break;
-                case FileType.MusicMarkers:
-                    SfxCommonHeader headerData = musicMarkersReader.ReadCommonHeader(filePath, SelectedPlatformName);
-                    total = (int)musicMarkersReader.ReadMusicMarkersFile(filePath, headerData).MusicHeadersCount;
-                    break;
+                    StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, SelectedPlatformName);
+                    return (strData.FileLength1 / 4).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                default:
+                    return "N/A";
             }
-            return total;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1253,7 +1255,7 @@ namespace sb_explorer
                         files[i].Substring(folder.Length),
                         "Unloaded",
                         GenericMethods.GetFileSize(files[i]),
-                        GetNumberOfSFXs(files[i], fileType).ToString(),
+                        GetEntryCountText(files[i], fileType, headerDat),
                         fileType.ToString()
                     })
                     {
@@ -1329,8 +1331,9 @@ namespace sb_explorer
 
         private static string[] GetSupportedMusXFiles(string folder)
         {
-            return EnumerateFilesSafely(folder, "*.sfx")
-                .Concat(EnumerateFilesSafely(folder, "*.musx"))
+            return EnumerateFilesSafely(folder, "*")
+                .Where(path => string.Equals(Path.GetExtension(path), ".sfx", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(Path.GetExtension(path), ".musx", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
                 .ToArray();
         }

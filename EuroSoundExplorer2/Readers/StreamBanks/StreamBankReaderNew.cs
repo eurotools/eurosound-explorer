@@ -17,11 +17,13 @@ namespace MusX.Readers
             {
                 case 1: codec = EuroSoundAudioCodec.EurocomImaAdpcm; break;
                 case 2: codec = EuroSoundAudioCodec.SonyVagAdpcm; break;
-                case 3: codec = EuroSoundAudioCodec.DspAdpcm; break;
+                case 3: codec = headerData.FileVersion >= 21 ? EuroSoundAudioCodec.DspAdpcmNgca : EuroSoundAudioCodec.DspAdpcmLegacy; break;
                 case 4: codec = EuroSoundAudioCodec.Pcm16; break;
                 case 6: codec = EuroSoundAudioCodec.Xma; break;
                 default: codec = EuroSoundAudioCodec.Unknown; break;
             }
+            if (headerData.FileStart1 == 3)
+                codec = DetectDspContainerCodec(filePath, headerData.FileStart2, codec);
             StreamSample sample = new StreamSample
             {
                 AudioOffset = headerData.FileStart2,
@@ -39,6 +41,22 @@ namespace MusX.Readers
             };
             ResolveV18Metadata(filePath, sample, headerData.Platform);
             streamedSamples.Add(sample);
+        }
+
+        private static EuroSoundAudioCodec DetectDspContainerCodec(string filePath, uint offset, EuroSoundAudioCodec fallback)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    if (offset > stream.Length - 4) return fallback;
+                    stream.Position = offset;
+                    return stream.ReadByte() == 'N' && stream.ReadByte() == 'G' && stream.ReadByte() == 'C' && stream.ReadByte() == 'A'
+                        ? EuroSoundAudioCodec.DspAdpcmNgca
+                        : EuroSoundAudioCodec.DspAdpcmLegacy;
+                }
+            }
+            catch (IOException) { return fallback; }
         }
 
         private static void ResolveV18Metadata(string streamPath, StreamSample sample, string platform)

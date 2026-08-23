@@ -19,6 +19,7 @@ namespace sb_explorer
         {
             InitializeComponent();
             lbxFormats.SelectedIndex = 0;
+            lbxFormats.SelectedIndexChanged += LbxFormats_SelectedIndexChanged;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------
@@ -59,34 +60,17 @@ namespace sb_explorer
                                 ImaAdpcm imaCodec = new ImaAdpcm();
                                 pcmConvertedData = audioClass.ShortArrayToByteArray(imaCodec.Decode(adpcmDataToDecode, adpcmDataToDecode.Length * 2));
                                 break;
-                            case 2: // Nintendo DSP
-                                    //Get coefs required for decoding
-                                if (nudHeaderBytes.Value >= 96)
-                                {
-                                    short[] DspCoeffs = new short[16];
-                                    using (BinaryReader BReader = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)))
-                                    {
-                                        BReader.BaseStream.Seek(28, SeekOrigin.Current);
-                                        for (int j = 0; j < DspCoeffs.Length; j++)
-                                        {
-                                            DspCoeffs[j] = FlipShort(BReader.ReadInt16());
-                                        }
-                                    }
-
-                                    //Decode data
-                                    DspAdpcm nintendoCodec = new DspAdpcm();
-                                    pcmConvertedData = audioClass.ShortArrayToByteArray(nintendoCodec.Decode(adpcmDataToDecode, DspCoeffs));
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Could not decode this format because DSP Coeffs are missing!\nThe DSP header (96 bytes size minimum) should be included in this file.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                }
+                            case 2: // EngineXT v15/v18 legacy DSP container
+                                pcmConvertedData = audioClass.ShortArrayToByteArray(new LegacyDspAdpcm().Decode(rawAdpcmFile));
                                 break;
-                            case 3: // Eurocom ADPCM
+                            case 3: // EngineXT v21 NGCA DSP container
+                                pcmConvertedData = audioClass.ShortArrayToByteArray(new NgcaDspAdpcm().Decode(rawAdpcmFile));
+                                break;
+                            case 4: // Eurocom ADPCM
                                 Eurocom_ImaAdpcm eurocomCodec = new Eurocom_ImaAdpcm();
                                 pcmConvertedData = audioClass.ShortArrayToByteArray(eurocomCodec.Decode(adpcmDataToDecode));
                                 break;
-                            case 4: // Xbox ADPCM
+                            case 5: // Xbox ADPCM
                                 XboxAdpcm xboxCodec = new XboxAdpcm();
                                 pcmConvertedData = audioClass.ShortArrayToByteArray(xboxCodec.Decode(adpcmDataToDecode));
                                 break;
@@ -125,10 +109,12 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private short FlipShort(short valueToFlip)
+        private void LbxFormats_SelectedIndexChanged(object sender, EventArgs e)
         {
-            short finalData = (short)(valueToFlip >> 8 & byte.MaxValue | (valueToFlip & byte.MaxValue) << 8);
-            return finalData;
+            if (lbxFormats.SelectedIndex == 2)
+                nudHeaderBytes.Value = LegacyDspAdpcm.HeaderSize;
+            else if (lbxFormats.SelectedIndex == 3)
+                nudHeaderBytes.Value = NgcaDspAdpcm.HeaderSize;
         }
     }
 

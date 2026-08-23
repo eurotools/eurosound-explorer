@@ -206,12 +206,12 @@ namespace sb_explorer
                     else if (soundToPlay.PcmData.Length == 2)
                     {
                         RawSourceWaveStream left = null, right = null;
-                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref left, ref right, soundToPlay.PcmData, soundToPlay, pitch, volume);
+                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref left, ref right, soundToPlay.PcmData, soundToPlay, pitch, pan, volume);
                         channelProviders = new[] { left, right };
                     }
                     else
                     {
-                        waveDataProv = audioFunctions.CreateMultiChannelWav(out channelProviders, soundToPlay.PcmData, soundToPlay, true, pitch, volume);
+                        waveDataProv = audioFunctions.CreateMultiChannelWav(out channelProviders, soundToPlay.PcmData, soundToPlay, true, pitch, pan, volume);
                     }
                     labelTotalTime.Text = GetDurationText(channelProviders[0].TotalTime);
                     _waveOut.Init(waveDataProv);

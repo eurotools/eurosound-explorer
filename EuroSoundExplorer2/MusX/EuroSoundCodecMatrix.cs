@@ -11,6 +11,8 @@ namespace MusX
         EurocomImaAdpcm,
         SonyVagAdpcm,
         DspAdpcm,
+        DspAdpcmLegacy,
+        DspAdpcmNgca,
         XboxAdpcm,
         Xma
     }
@@ -59,6 +61,8 @@ namespace MusX
         private static readonly int[] Version201 = { 1, 201 };
         private static readonly int[] EurocomVersions = { 4, 5, 6 };
         private static readonly int[] EngineXtVersions = { 15, 18, 21 };
+        private static readonly int[] EngineXtLegacyVersions = { 15, 18 };
+        private static readonly int[] EngineXtNgcaVersions = { 21 };
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly CodecRule[] Rules =
@@ -69,7 +73,8 @@ namespace MusX
             new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Ps3, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Ps3, EuroSoundAudioCodec.EurocomImaAdpcm),
-            new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.DspAdpcm),
+            new CodecRule(EngineXtLegacyVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.DspAdpcmLegacy),
+            new CodecRule(EngineXtNgcaVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.DspAdpcmNgca),
             new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
@@ -141,6 +146,8 @@ namespace MusX
                 case EuroSoundAudioCodec.SonyVagAdpcm:
                     return CalculusLoopOffsets.SonyVagToSamples(bytes, channels);
                 case EuroSoundAudioCodec.DspAdpcm:
+                case EuroSoundAudioCodec.DspAdpcmLegacy:
+                case EuroSoundAudioCodec.DspAdpcmNgca:
                     return CalculusLoopOffsets.DspAdpcmToSamples(bytes, channels);
                 case EuroSoundAudioCodec.XboxAdpcm:
                     return CalculusLoopOffsets.XboxAdpcmToSamples(bytes, channels);
@@ -167,6 +174,8 @@ namespace MusX
                 case EuroSoundAudioCodec.Pcm16:
                 case EuroSoundAudioCodec.SonyVagAdpcm:
                 case EuroSoundAudioCodec.DspAdpcm:
+                case EuroSoundAudioCodec.DspAdpcmLegacy:
+                case EuroSoundAudioCodec.DspAdpcmNgca:
                     return CalculusLoopOffsets.Pcm16BytesToSamples(offset, channels);
                 case EuroSoundAudioCodec.ImaAdpcm:
                     return CalculusLoopOffsets.Pcm16BytesToSamples(offset, channels);

@@ -48,9 +48,13 @@ namespace sb_explorer.Services.Audio
                     });
                     break;
                 case EuroSoundAudioCodec.DspAdpcm:
-                    channels = engineXt18
-                        ? DecodeEngineXtDsp(encodedData, channelCount, audioFunctions)
-                        : new[] { audioFunctions.ShortArrayToByteArray(new DspAdpcm().Decode(encodedData, dspCoeffs)) };
+                    channels = new[] { audioFunctions.ShortArrayToByteArray(new DspAdpcm().Decode(encodedData, dspCoeffs)) };
+                    break;
+                case EuroSoundAudioCodec.DspAdpcmLegacy:
+                    channels = DecodeEngineXtDsp(encodedData, channelCount, audioFunctions, false);
+                    break;
+                case EuroSoundAudioCodec.DspAdpcmNgca:
+                    channels = DecodeEngineXtDsp(encodedData, channelCount, audioFunctions, true);
                     break;
                 default:
                     byte[] mono = Decode(codec, encodedData, audioFunctions, dspCoeffs, selectedSample);
@@ -108,6 +112,12 @@ namespace sb_explorer.Services.Audio
                 case EuroSoundAudioCodec.DspAdpcm:
                     DspAdpcm gcDecoder = new DspAdpcm();
                     return audioFunctions.ShortArrayToByteArray(gcDecoder.Decode(encodedData, dspCoeffs));
+
+                case EuroSoundAudioCodec.DspAdpcmLegacy:
+                    return audioFunctions.ShortArrayToByteArray(new LegacyDspAdpcm().Decode(encodedData));
+
+                case EuroSoundAudioCodec.DspAdpcmNgca:
+                    return audioFunctions.ShortArrayToByteArray(new NgcaDspAdpcm().Decode(encodedData));
 
                 case EuroSoundAudioCodec.XboxAdpcm:
                     XboxAdpcm xboxDecoder = new XboxAdpcm();
@@ -193,28 +203,17 @@ namespace sb_explorer.Services.Audio
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private static byte[][] DecodeEngineXtDsp(byte[] source, int channels, AudioFunctions audioFunctions)
+        private static byte[][] DecodeEngineXtDsp(byte[] source, int channels, AudioFunctions audioFunctions, bool ngca)
         {
             int regionBytes = source.Length / channels;
             byte[][] result = new byte[channels][];
             for (int channel = 0; channel < channels; channel++)
             {
                 int start = channel * regionBytes;
-                if (regionBytes < 64) { result[channel] = new byte[0]; continue; }
-                bool hasNgcaHeader = source[start] == (byte)'N' && source[start + 1] == (byte)'G' &&
-                    source[start + 2] == (byte)'C' && source[start + 3] == (byte)'A';
-                int coefficientOffset = hasNgcaHeader ? 0x0c : 0x1c;
-                int payloadOffset = hasNgcaHeader ? 0x40 : 0x60;
-                if (regionBytes < payloadOffset) { result[channel] = new byte[0]; continue; }
-                short[] coefficients = new short[16];
-                for (int i = 0; i < coefficients.Length; i++)
-                {
-                    int p = start + coefficientOffset + i * 2;
-                    coefficients[i] = unchecked((short)((source[p] << 8) | source[p + 1]));
-                }
-                byte[] payload = new byte[regionBytes - payloadOffset];
-                Buffer.BlockCopy(source, start + payloadOffset, payload, 0, payload.Length);
-                result[channel] = audioFunctions.ShortArrayToByteArray(new DspAdpcm().Decode(payload, coefficients));
+                short[] decoded = ngca
+                    ? new NgcaDspAdpcm().Decode(source, start, regionBytes)
+                    : new LegacyDspAdpcm().Decode(source, start, regionBytes);
+                result[channel] = audioFunctions.ShortArrayToByteArray(decoded);
             }
             return result;
         }

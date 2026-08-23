@@ -34,9 +34,9 @@ namespace MusX.Readers
                 long wavDataStart = ReadV18Int32(reader, bigEndian); // physical file offset, unlike GAFRO pointers
 
                 Dictionary<long, short> waveIndices = new Dictionary<long, short>();
-                ReadV18WaveTable(reader, filePath, memoryTable, memoryCount, WavType.Memory, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
-                ReadV18WaveTable(reader, filePath, streamTable, streamCount, WavType.Stream, 0, 0, wavesList, waveIndices, bigEndian);
-                ReadV18WaveTable(reader, filePath, instantTable, instantCount, WavType.InstantStream, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
+                ReadV18WaveTable(reader, filePath, memoryTable, memoryCount, WavType.Memory, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian, dataVersion);
+                ReadV18WaveTable(reader, filePath, streamTable, streamCount, WavType.Stream, 0, 0, wavesList, waveIndices, bigEndian, dataVersion);
+                ReadV18WaveTable(reader, filePath, instantTable, instantCount, WavType.InstantStream, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian, dataVersion);
 
                 for (int i = 0; i < sfxCount; i++)
                 {
@@ -137,7 +137,7 @@ namespace MusX.Readers
             }
         }
 
-        private static void ReadV18WaveTable(BinaryReader reader, string filePath, long table, uint count, WavType wavType, long wavDataStart, uint wavDataSize, List<SampleData> waves, Dictionary<long, short> indices, bool bigEndian)
+        private static void ReadV18WaveTable(BinaryReader reader, string filePath, long table, uint count, WavType wavType, long wavDataStart, uint wavDataSize, List<SampleData> waves, Dictionary<long, short> indices, bool bigEndian, uint dataVersion)
         {
             int entrySize = wavType == WavType.Stream ? 24 : wavType == WavType.InstantStream ? 32 : 28;
             for (int i = 0; i < count; i++)
@@ -179,7 +179,7 @@ namespace MusX.Readers
                     if (dataSize == 0 && fileEnd > dataOffset) dataSize = fileEnd - dataOffset;
                 }
 
-                EuroSoundAudioCodec codec = CodecFromV18Value(flags & 7);
+                EuroSoundAudioCodec codec = CodecFromV18Value(flags & 7, dataVersion);
                 string audioPath = wavType == WavType.Memory ? filePath : FindV18StreamFile(filePath, wavHash);
                 uint referenceOffset = dataOffset;
                 uint referenceSize = dataSize;
@@ -210,6 +210,8 @@ namespace MusX.Readers
                     dataOffset = referenceOffset;
                     dataSize = referenceSize;
                 }
+                if ((flags & 7) == 3 && !string.IsNullOrEmpty(audioPath))
+                    codec = DetectDspContainerCodec(audioPath, referenceOffset, codec);
                 AudioDataReference audioReference = string.IsNullOrEmpty(audioPath) ? null : new AudioDataReference { FilePath = audioPath, Offset = referenceOffset, Size = referenceSize, Codec = codec, Frequency = frequency, Channels = channels };
                 SampleData wave = new SampleData
                 {
@@ -244,6 +246,8 @@ namespace MusX.Readers
                 case EuroSoundAudioCodec.SonyVagAdpcm:
                     return CalculusLoopOffsets.SonyVagToSamples(offset, channels);
                 case EuroSoundAudioCodec.DspAdpcm:
+                case EuroSoundAudioCodec.DspAdpcmLegacy:
+                case EuroSoundAudioCodec.DspAdpcmNgca:
                     return CalculusLoopOffsets.DspAdpcmToSamples(offset, channels);
                 case EuroSoundAudioCodec.Pcm16:
                     return CalculusLoopOffsets.Pcm16BytesToSamples(offset, channels);
@@ -252,9 +256,25 @@ namespace MusX.Readers
             }
         }
 
-        private static EuroSoundAudioCodec CodecFromV18Value(int value)
+        private static EuroSoundAudioCodec CodecFromV18Value(int value, uint dataVersion)
         {
-            switch (value) { case 1: return EuroSoundAudioCodec.EurocomImaAdpcm; case 2: return EuroSoundAudioCodec.SonyVagAdpcm; case 3: return EuroSoundAudioCodec.DspAdpcm; case 4: return EuroSoundAudioCodec.Pcm16; case 6: return EuroSoundAudioCodec.Xma; default: return EuroSoundAudioCodec.Unknown; }
+            switch (value) { case 1: return EuroSoundAudioCodec.EurocomImaAdpcm; case 2: return EuroSoundAudioCodec.SonyVagAdpcm; case 3: return dataVersion >= 21 ? EuroSoundAudioCodec.DspAdpcmNgca : EuroSoundAudioCodec.DspAdpcmLegacy; case 4: return EuroSoundAudioCodec.Pcm16; case 6: return EuroSoundAudioCodec.Xma; default: return EuroSoundAudioCodec.Unknown; }
+        }
+
+        private static EuroSoundAudioCodec DetectDspContainerCodec(string filePath, uint offset, EuroSoundAudioCodec fallback)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    if (offset > stream.Length - 4) return fallback;
+                    stream.Position = offset;
+                    return stream.ReadByte() == 'N' && stream.ReadByte() == 'G' && stream.ReadByte() == 'C' && stream.ReadByte() == 'A'
+                        ? EuroSoundAudioCodec.DspAdpcmNgca
+                        : EuroSoundAudioCodec.DspAdpcmLegacy;
+                }
+            }
+            catch (IOException) { return fallback; }
         }
 
         private static string FindV18StreamFile(string soundbankPath, uint wavHash)

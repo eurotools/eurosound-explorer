@@ -3028,7 +3028,7 @@ namespace sb_explorer.Services
             private static WavLoopInfo CreateStreamLoopInfo(StreamSample streamSample, StreambankHeader header, byte[][] pcmData)
             {
                 int sampleCount = pcmData == null || pcmData.Length == 0 ? 0 : pcmData.Min(channel => channel.Length) / 2;
-                if (header != null && header.FileVersion == 18)
+                if (header != null && (header.FileVersion == 15 || header.FileVersion == 18 || header.FileVersion == 21))
                     return EuroSoundStreamLoopResolver.TryResolveV18(streamSample, sampleCount, out uint loopStart, out uint loopEnd)
                         ? new WavLoopInfo(loopStart, loopEnd - 1) : null;
                 return EuroSoundMarkerLoopResolver.CreateLoopInfo(

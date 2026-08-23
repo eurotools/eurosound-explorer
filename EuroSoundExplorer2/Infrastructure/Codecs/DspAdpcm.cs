@@ -117,5 +117,61 @@ namespace AudioDecoders
         }
     }
 
+    // EngineXT v15/v18 stores one 0x60-byte big-endian DSP header per channel.
+    public sealed class LegacyDspAdpcm
+    {
+        public const int HeaderSize = 0x60;
+
+        public short[] Decode(byte[] container)
+        {
+            return Decode(container, 0, container == null ? 0 : container.Length);
+        }
+
+        public short[] Decode(byte[] container, int offset, int length)
+        {
+            if (container == null) throw new ArgumentNullException("container");
+            if (offset < 0 || length < HeaderSize || offset > container.Length - length)
+                throw new System.IO.InvalidDataException("Legacy DSP ADPCM requires a 0x60-byte channel header.");
+            short[] coefficients = ReadBigEndianCoefficients(container, offset + 0x1c);
+            byte[] payload = new byte[length - HeaderSize];
+            Buffer.BlockCopy(container, offset + HeaderSize, payload, 0, payload.Length);
+            return new DspAdpcm().Decode(payload, coefficients);
+        }
+
+        internal static short[] ReadBigEndianCoefficients(byte[] source, int offset)
+        {
+            if (offset < 0 || offset > source.Length - 32)
+                throw new System.IO.InvalidDataException("DSP ADPCM coefficient table is truncated.");
+            short[] result = new short[16];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = unchecked((short)((source[offset + i * 2] << 8) | source[offset + i * 2 + 1]));
+            return result;
+        }
+    }
+
+    // EngineXT v21 uses the compact 0x40-byte NGCA channel header.
+    public sealed class NgcaDspAdpcm
+    {
+        public const int HeaderSize = 0x40;
+
+        public short[] Decode(byte[] container)
+        {
+            return Decode(container, 0, container == null ? 0 : container.Length);
+        }
+
+        public short[] Decode(byte[] container, int offset, int length)
+        {
+            if (container == null) throw new ArgumentNullException("container");
+            if (offset < 0 || length < HeaderSize || offset > container.Length - length ||
+                container[offset] != (byte)'N' || container[offset + 1] != (byte)'G' ||
+                container[offset + 2] != (byte)'C' || container[offset + 3] != (byte)'A')
+                throw new System.IO.InvalidDataException("NGCA DSP ADPCM requires a valid 0x40-byte NGCA channel header.");
+            short[] coefficients = LegacyDspAdpcm.ReadBigEndianCoefficients(container, offset + 0x0c);
+            byte[] payload = new byte[length - HeaderSize];
+            Buffer.BlockCopy(container, offset + HeaderSize, payload, 0, payload.Length);
+            return new DspAdpcm().Decode(payload, coefficients);
+        }
+    }
+
     //-------------------------------------------------------------------------------------------------------------------------------
 }

@@ -41,7 +41,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        [DisplayName("Hash Table (Sound.h / AudioFileTable.h)")]
+        [DisplayName("Hash Table (Sound.h / AudioFileTable.h / SFX_Defines.h)")]
         [Category("Project")]
         [Editor(typeof(CustomFileBrowser), typeof(UITypeEditor))]
         public string SoundhFile

@@ -80,11 +80,14 @@ namespace sb_explorer
                     volume = musicData.BaseVolume / 100.0f,
                     sampleRate = frequency,
                     channels = 2,
-                    isLooped = EuroSoundMarkerLoopResolver.IsLooped(musicData.Markers, MarkerLoopMode.RequireLoopMarker),
-                    startPos = (int)EuroSoundMarkerLoopResolver.GetStartPosition(musicData.Markers),
-                    loopStartPoint = EuroSoundMarkerLoopResolver.GetLoopStart(musicData.Markers),
-                    loopEndPoint = (int)EuroSoundMarkerLoopResolver.GetLoopEnd(musicData.Markers),
                 };
+                int decodedSamples = Math.Min(decodedDataL.Length, decodedDataR.Length) / 2;
+                soundToPlay.isLooped = EuroSoundMarkerLoopResolver.TryResolvePlayback(
+                    musicData.Markers, decodedSamples, MarkerLoopMode.RequireLoopMarker,
+                    out int startPosition, out uint loopStart, out int loopEnd);
+                soundToPlay.startPos = startPosition;
+                soundToPlay.loopStartPoint = loopStart;
+                soundToPlay.loopEndPoint = loopEnd;
 
                 ((FrmMain)Application.OpenForms[nameof(FrmMain)]).pnlMediaPlayer.LoadSoundData(soundToPlay);
             }

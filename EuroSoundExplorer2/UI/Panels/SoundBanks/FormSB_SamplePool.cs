@@ -343,15 +343,7 @@ namespace sb_explorer
                     soundToPlay = new SoundFile();
                     soundToPlay.PcmData = decodedAudio.Channels;
                     soundToPlay.sampleRate = decodedAudio.SampleRate;
-                    if (ButtonApplyEffects.Checked)
-                    {
-                        soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
-                        soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
-                        soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
-                        soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
-                        soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
-                        soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
-                    }
+                    ConfigurePoolEffects(soundToPlay, selectedItem, parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion);
                     soundToPlay.channels = (uint)decodedAudio.Channels.Length;
                     if (parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion == 18 || parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion == 21)
                     {
@@ -387,22 +379,24 @@ namespace sb_explorer
                         soundToPlay = new SoundFile();
                         soundToPlay.PcmData = decodedAudio.Channels;
                         soundToPlay.sampleRate = decodedAudio.SampleRate;
-                        if (ButtonApplyEffects.Checked)
-                        {
-                            soundToPlay.volume = float.Parse(selectedItem.SubItems[1].Text) / 100;
-                            soundToPlay.volumeOffset = float.Parse(selectedItem.SubItems[2].Text) / 100;
-                            soundToPlay.pitch = float.Parse(selectedItem.SubItems[3].Text);
-                            soundToPlay.pitchOffset = float.Parse(selectedItem.SubItems[4].Text);
-                            soundToPlay.panning = float.Parse(selectedItem.SubItems[5].Text) / 100;
-                            soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
-                        }
+                        ConfigurePoolEffects(soundToPlay, selectedItem, headerData.FileVersion);
                         soundToPlay.channels = (uint)decodedAudio.Channels.Length;
-                        if (headerData.FileVersion == 18 || headerData.FileVersion == 21)
+                        if (headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21)
                         {
                             int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
                             soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);
                             soundToPlay.loopStartPoint = loopStart;
                             soundToPlay.loopEndPoint = loopEnd > int.MaxValue ? int.MaxValue : (int)loopEnd;
+                        }
+                        else
+                        {
+                            int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
+                            soundToPlay.isLooped = EuroSoundMarkerLoopResolver.TryResolvePlayback(
+                                selectedSample.Markers, decodedSamples, MarkerLoopMode.LoopUnlessEndMarker,
+                                out int startPosition, out uint loopStart, out int loopEnd);
+                            soundToPlay.startPos = startPosition;
+                            soundToPlay.loopStartPoint = loopStart;
+                            soundToPlay.loopEndPoint = loopEnd;
                         }
                     }
                 }
@@ -413,6 +407,30 @@ namespace sb_explorer
             }
 
             return soundToPlay;
+        }
+
+        private void ConfigurePoolEffects(SoundFile sound, ListViewItem selectedItem, int fileVersion)
+        {
+            sound.applyPoolEffects = ButtonApplyEffects.Checked;
+            if (!sound.applyPoolEffects || soundSampleData == null || selectedItem.Index < 0 || selectedItem.Index >= soundSampleData.samplesList.Count)
+                return;
+
+            SampleInfo poolElement = soundSampleData.samplesList[selectedItem.Index];
+            sound.volume = poolElement.Volume / 100.0f;
+            sound.volumeOffset = Math.Abs(poolElement.VolumeOffset) / 100.0f;
+            sound.pitch = poolElement.Pitch;
+            sound.pitchOffset = Math.Abs(poolElement.PitchOffset);
+            sound.panningIsAngle = fileVersion == 18 || fileVersion == 21;
+            if (sound.panningIsAngle)
+            {
+                sound.panning = poolElement.Pan;
+                sound.panningOffset = Math.Abs(poolElement.PanOffset);
+            }
+            else
+            {
+                sound.panning = poolElement.Pan / 100.0f;
+                sound.panningOffset = Math.Abs(poolElement.PanOffset) / 100.0f;
+            }
         }
     }
 
