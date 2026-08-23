@@ -58,7 +58,7 @@ namespace MusX
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly int[] Version201 = { 1, 201 };
         private static readonly int[] EurocomVersions = { 4, 5, 6 };
-        private static readonly int[] EngineXtVersions = { 18 };
+        private static readonly int[] EngineXtVersions = { 15, 18, 21 };
 
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly CodecRule[] Rules =

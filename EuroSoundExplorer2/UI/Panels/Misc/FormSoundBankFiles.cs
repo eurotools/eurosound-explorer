@@ -144,6 +144,13 @@ namespace sb_explorer
             Title selectedTitle = Configuration.TitleSelected;
             string folder = ProjectFolder;
 
+            if (Configuration.FileVersion == 201 && Configuration.PlatformSelected == Platform.None)
+            {
+                MessageBox.Show("File version 201 does not store a reliable platform. Select the project platform in Settings before continuing.",
+                    Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (Directory.Exists(folder))
             {
                 LoadProjectHashTable(folder);
@@ -250,7 +257,7 @@ namespace sb_explorer
         private bool LoadProjectHashTable(string projectFolder)
         {
             if (!Directory.Exists(projectFolder)) return false;
-            string audioFileTable = Directory.GetFiles(projectFolder, "AudioFileTable.h", SearchOption.AllDirectories)
+            string audioFileTable = EnumerateFilesSafely(projectFolder, "AudioFileTable.h")
                 .OrderBy(path => path.Length)
                 .FirstOrDefault();
             if (string.IsNullOrEmpty(audioFileTable)) return false;
@@ -1199,8 +1206,18 @@ namespace sb_explorer
                     total = reader.GetNumberOfSFXs(filePath, sbData);
                     break;
                 case FileType.StreamFile:
-                    StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, SelectedPlatformName);
-                    total = (int)(strData.FileLength1 / 4);
+                    SfxCommonHeader streamCommonHeader = reader.ReadCommonHeader(filePath, SelectedPlatformName);
+                    if (streamCommonHeader.FileVersion == 15 || streamCommonHeader.FileVersion == 18 || streamCommonHeader.FileVersion == 21)
+                    {
+                        // EngineXT stores one stream per MUSX file. Avoid parsing encrypted v21
+                        // payload metadata merely to populate the file-list count column.
+                        total = 1;
+                    }
+                    else
+                    {
+                        StreambankHeader strData = streamReader.ReadStreamBankHeader(filePath, SelectedPlatformName);
+                        total = (int)(strData.FileLength1 / 4);
+                    }
                     break;
                 case FileType.MusicFile:
                     total = 1;
@@ -1276,7 +1293,7 @@ namespace sb_explorer
         private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo, Platform selectedPlatform, Title selectedTitle)
         {
             TreeNode directoryNode = new TreeNode(directoryInfo.Name);
-            foreach (DirectoryInfo directory in directoryInfo.GetDirectories())
+            foreach (DirectoryInfo directory in GetDirectoriesSafely(directoryInfo))
             {
                 //Create node and set image
                 TreeNode nodeData = CreateDirectoryNode(directory, selectedPlatform, selectedTitle);
@@ -1285,7 +1302,7 @@ namespace sb_explorer
                 //Add node
                 directoryNode.Nodes.Add(nodeData);
             }
-            foreach (FileInfo file in directoryInfo.GetFiles())
+            foreach (FileInfo file in GetFilesSafely(directoryInfo))
             {
                 string extension = Path.GetExtension(file.Name);
                 if (extension.Equals(".sfx", StringComparison.OrdinalIgnoreCase) || extension.Equals(".musx", StringComparison.OrdinalIgnoreCase))
@@ -1312,10 +1329,97 @@ namespace sb_explorer
 
         private static string[] GetSupportedMusXFiles(string folder)
         {
-            return Directory.GetFiles(folder, "*.sfx", SearchOption.AllDirectories)
-                .Concat(Directory.GetFiles(folder, "*.musx", SearchOption.AllDirectories))
+            return EnumerateFilesSafely(folder, "*.sfx")
+                .Concat(EnumerateFilesSafely(folder, "*.musx"))
                 .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
                 .ToArray();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static IEnumerable<string> EnumerateFilesSafely(string rootFolder, string searchPattern)
+        {
+            if (string.IsNullOrWhiteSpace(rootFolder) || !Directory.Exists(rootFolder))
+                yield break;
+
+            Stack<string> pendingFolders = new Stack<string>();
+            pendingFolders.Push(rootFolder);
+
+            while (pendingFolders.Count > 0)
+            {
+                string currentFolder = pendingFolders.Pop();
+
+                string[] files;
+                try
+                {
+                    files = Directory.GetFiles(currentFolder, searchPattern, SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex) when (IsIgnorableDirectoryException(ex))
+                {
+                    files = new string[0];
+                }
+
+                foreach (string file in files)
+                    yield return file;
+
+                string[] directories;
+                try
+                {
+                    directories = Directory.GetDirectories(currentFolder, "*", SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex) when (IsIgnorableDirectoryException(ex))
+                {
+                    continue;
+                }
+
+                foreach (string directory in directories)
+                {
+                    try
+                    {
+                        if ((File.GetAttributes(directory) & FileAttributes.ReparsePoint) == 0)
+                            pendingFolders.Push(directory);
+                    }
+                    catch (Exception ex) when (IsIgnorableDirectoryException(ex))
+                    {
+                    }
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static DirectoryInfo[] GetDirectoriesSafely(DirectoryInfo directory)
+        {
+            try
+            {
+                return directory.GetDirectories()
+                    .Where(item => (item.Attributes & FileAttributes.ReparsePoint) == 0)
+                    .ToArray();
+            }
+            catch (Exception ex) when (IsIgnorableDirectoryException(ex))
+            {
+                return new DirectoryInfo[0];
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static FileInfo[] GetFilesSafely(DirectoryInfo directory)
+        {
+            try
+            {
+                return directory.GetFiles();
+            }
+            catch (Exception ex) when (IsIgnorableDirectoryException(ex))
+            {
+                return new FileInfo[0];
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static bool IsIgnorableDirectoryException(Exception exception)
+        {
+            return exception is IOException
+                || exception is UnauthorizedAccessException
+                || exception is ArgumentException
+                || exception is NotSupportedException;
         }
     }
 

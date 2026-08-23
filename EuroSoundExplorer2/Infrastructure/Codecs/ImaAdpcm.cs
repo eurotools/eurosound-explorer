@@ -34,6 +34,10 @@
         //-------------------------------------------------------------------------------------------------------------------------------
         public short[] Decode(byte[] adpcmData, int numSamples)
         {
+            if (adpcmData == null) throw new System.ArgumentNullException("adpcmData");
+            if (numSamples < 0 || numSamples > adpcmData.Length * 2)
+                throw new System.IO.InvalidDataException("IMA ADPCM sample count exceeds the available encoded data.");
+
             short[] outBuff = new short[numSamples];
             int inp;            /* Input buffer pointer */
             int outIndex = 0;   /* output buffer pointer */

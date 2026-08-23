@@ -34,6 +34,9 @@
         //-------------------------------------------------------------------------------------------------------------------------------
         public short[] Decode(byte[] adpcmData)
         {
+            if (adpcmData == null) throw new System.ArgumentNullException("adpcmData");
+            if ((adpcmData.Length % 32) != 0) throw new System.IO.InvalidDataException("Eurocom IMA ADPCM data contains a truncated 32-byte block.");
+
             int numSamples = adpcmData.Length * 56 / 32;
             short[] outBuff = new short[numSamples];
             int inp;           		/* Input buffer pointer */
@@ -67,8 +70,7 @@
                     valpred = (short)(adpcmData[inp++] | (sbyte)adpcmData[inp++] << 8);
                     index = adpcmData[inp]; inp += 2;
 
-                    if (index > 88)
-                        index = 0;
+                    if (index > 88) throw new System.IO.InvalidDataException("Invalid Eurocom IMA ADPCM step index: " + index + ".");
                 }
 
                 /* Step 1 - get the delta value */

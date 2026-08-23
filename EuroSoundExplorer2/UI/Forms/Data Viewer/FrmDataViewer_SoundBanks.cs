@@ -448,6 +448,16 @@ namespace sb_explorer
                 TreeAdd(markerList, nameof(item.Padding0), item.Padding0);
                 TreeAdd(markerList, nameof(item.Padding1), item.Padding1);
             }
+
+            if (fileData.MarkerPositions.Count > 0)
+            {
+                TreeNode markerPositions = new TreeNode("Marker Positions " + fileData.MarkerPositions.Count);
+                musicMarkersInfo.Nodes.Add(markerPositions);
+                for (int i = 0; i < fileData.MarkerPositions.Count; i++)
+                {
+                    TreeAdd(markerPositions, "Position[" + i + "]", fileData.MarkerPositions[i]);
+                }
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

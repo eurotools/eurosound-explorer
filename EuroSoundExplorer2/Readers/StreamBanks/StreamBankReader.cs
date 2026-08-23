@@ -16,7 +16,49 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             StreambankHeader headerData = new StreambankHeader(commonHeader);
 
-            if (headerData.FileVersion == 18)
+            if (headerData.FileVersion == 21)
+            {
+                // EngineXT v21 DAT5 descriptors are little-endian even on Wii.
+                using (EuroSoundBinaryReader reader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), false))
+                {
+                    reader.Seek(0x40, SeekOrigin.Begin);
+                    if (System.Text.Encoding.ASCII.GetString(reader.ReadBytes(4)) != "DAT5")
+                    {
+                        // Some shipped v21 files have the large-file payload encrypted, so the
+                        // DAT5 descriptor is not visible. Keep them browsable as one opaque stream;
+                        // decoding remains unavailable until its codec metadata can be decrypted.
+                        headerData.CodecType = 0;
+                        headerData.StreamFlags = 0;
+                        headerData.Channels = 1;
+                        headerData.Frequency = 0;
+                        headerData.FileStart1 = 0;
+                        headerData.FileLength1 = 0;
+                        headerData.FileStart2 = 0x800;
+                        headerData.FileLength2 = (uint)Math.Min(uint.MaxValue, Math.Max(0, reader.BaseStream.Length - 0x800));
+                        return headerData;
+                    }
+                    uint audioSize = reader.ReadUInt32();
+                    uint channels = reader.ReadUInt32();
+                    uint frequency = reader.ReadUInt32();
+                    uint codec = reader.ReadUInt32();
+                    uint flags = reader.ReadUInt32();
+                    headerData.LoopStartSample = reader.ReadUInt32();
+                    headerData.LoopStartByteOffset = reader.ReadUInt32();
+                    headerData.SampleCount = reader.ReadUInt32();
+                    headerData.LoopEndByteOffset = reader.ReadUInt32();
+                    headerData.FileStart1 = codec;
+                    headerData.FileLength1 = flags;
+                    headerData.CodecType = codec;
+                    headerData.StreamFlags = flags;
+                    headerData.Channels = channels;
+                    headerData.Frequency = frequency;
+                    headerData.FileStart2 = 0x800;
+                    headerData.FileLength2 = Math.Min(audioSize, (uint)Math.Max(0, reader.BaseStream.Length - 0x800));
+                }
+                return headerData;
+            }
+
+            if (headerData.FileVersion == 15 || headerData.FileVersion == 18)
             {
                 // Unlike ESPD/SBNK, the v18 stream metadata remains little-endian on XE__.
                 using (EuroSoundBinaryReader reader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), false))
@@ -70,7 +112,7 @@ namespace MusX.Readers
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ReadStreamBank(string filePath, StreambankHeader headerData, List<StreamSample> streamedSamples)
         {
-            if (headerData.FileVersion == 18)
+            if (headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21)
             {
                 StreamBankReaderNew.ReadStreamFileV18(filePath, headerData, streamedSamples);
                 return;

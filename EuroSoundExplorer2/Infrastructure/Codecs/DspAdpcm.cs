@@ -22,6 +22,9 @@ namespace AudioDecoders
         //-------------------------------------------------------------------------------------------------------------------------------
         public short[] Decode(byte[] adpcm, short[] coefficients)
         {
+            if (adpcm == null) throw new ArgumentNullException("adpcm");
+            if (coefficients == null) throw new ArgumentNullException("coefficients");
+            if (coefficients.Length < 16) throw new System.IO.InvalidDataException("DSP ADPCM requires 16 coefficients.");
             GcAdpcmParameters config = new GcAdpcmParameters
             {
                 SampleCount = NibbleCountToSampleCount(adpcm.Length * 2)
@@ -40,6 +43,7 @@ namespace AudioDecoders
                     byte predictorScale = adpcm[inIndex++];
                     int scale = (1 << (byte)(predictorScale & 0xF)) * 2048;
                     int predictor = (byte)((predictorScale >> 4) & 0xF);
+                    if (predictor >= 8) throw new System.IO.InvalidDataException("Invalid DSP ADPCM predictor index: " + predictor + ".");
                     short coef1 = coefficients[predictor * 2];
                     short coef2 = coefficients[predictor * 2 + 1];
 

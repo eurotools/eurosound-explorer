@@ -44,13 +44,33 @@ namespace sb_explorer
             StopSound();
 
             //Assign Values
+            if (soundData == null || soundData.PcmData == null || soundData.PcmData.Length == 0 || soundData.sampleRate == 0)
+            {
+                soundToPlay = null;
+                return;
+            }
+            for (int channel = 0; channel < soundData.PcmData.Length; channel++)
+            {
+                if (soundData.PcmData[channel] == null)
+                {
+                    soundToPlay = null;
+                    return;
+                }
+            }
+
             soundToPlay = soundData;
+            soundToPlay.channels = (uint)Math.Min(8, soundToPlay.PcmData.Length);
+            string playerTitle = soundToPlay.channels > 2
+                ? string.Format("Media Player (showing channels 1-2 of {0})", soundToPlay.channels)
+                : "Media Player";
+            Text = playerTitle;
+            TabText = playerTitle;
             trackBarPosition.Value = 0;
             labelCurrentTime.Text = GetDurationText(TimeSpan.Zero);
             labelTotalTime.Text = GetDurationText(GetSoundDuration());
 
             //Draw waves
-            if (soundToPlay.channels > 1)
+            if (soundToPlay.PcmData.Length > 1)
             {
                 splitContainer1.Panel2Collapsed = false;
 
@@ -117,31 +137,17 @@ namespace sb_explorer
                         //Stop current sound to avoid bugs.
                         StopSound();
 
-                        if (soundToPlay.PcmData.Length == 1)
+                        int channels = Math.Min(8, soundToPlay.PcmData.Length);
+                        byte[][] originalChannels = new byte[channels][];
+                        int channelBytes = int.MaxValue;
+                        for (int channel = 0; channel < channels; channel++)
                         {
-                            RawSourceWaveStream left = null;
-                            EuroSoundWaveWriter.WriteSampleProvider16(filePath,
-                                audioFunctions.CreateMonoWav(ref left, soundToPlay.PcmData[0], soundToPlay).ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, soundToPlay.PcmData[0].Length, 1));
-                            left.Dispose();
+                            originalChannels[channel] = soundToPlay.PcmData[channel];
+                            channelBytes = Math.Min(channelBytes, originalChannels[channel].Length & ~1);
                         }
-                        else if (soundToPlay.PcmData.Length == 2)
-                        {
-                            RawSourceWaveStream left = null, right = null;
-                            EuroSoundWaveWriter.WriteSampleProvider16(filePath,
-                                audioFunctions.CreateStereoWav(ref left, ref right, soundToPlay.PcmData, soundToPlay).ToSampleProvider(),
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
-                                    Math.Min(soundToPlay.PcmData[0].Length, soundToPlay.PcmData[1].Length) * 2L, 2));
-                            left.Dispose(); right.Dispose();
-                        }
-                        else
-                        {
-                            int channels = Math.Min(8, soundToPlay.PcmData.Length);
-                            int channelBytes = int.MaxValue;
-                            for (int channel = 0; channel < channels; channel++) channelBytes = Math.Min(channelBytes, soundToPlay.PcmData[channel].Length);
-                            EuroSoundWaveWriter.WriteChannelsPcm16(filePath, soundToPlay.PcmData, (int)soundToPlay.sampleRate,
-                                EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint, (long)channelBytes * channels, channels));
-                        }
+                        EuroSoundWaveWriter.WriteChannelsPcm16(filePath, originalChannels, (int)soundToPlay.sampleRate,
+                            EuroSoundWaveWriter.CreateLoopInfo(soundToPlay.isLooped, soundToPlay.loopStartPoint,
+                                (long)channelBytes * channels, channels));
                         MessageBox.Show("File saved successfully!", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
@@ -187,22 +193,25 @@ namespace sb_explorer
                     //Create a new instance and start playing
                     StopSound();
                     _waveOut = new WaveOut();
+                    float pitch = audioFunctions.GetPitch(soundToPlay);
+                    float pan = audioFunctions.GetPan(soundToPlay);
+                    float volume = audioFunctions.GetVolume(soundToPlay);
                     IWaveProvider waveDataProv;
                     if (soundToPlay.PcmData.Length == 1)
                     {
                         RawSourceWaveStream left = null;
-                        waveDataProv = audioFunctions.CreateMonoLoopWav(ref left, soundToPlay.PcmData[0], soundToPlay);
+                        waveDataProv = audioFunctions.CreateMonoLoopWav(ref left, soundToPlay.PcmData[0], soundToPlay, pitch, pan, volume);
                         channelProviders = new[] { left };
                     }
                     else if (soundToPlay.PcmData.Length == 2)
                     {
                         RawSourceWaveStream left = null, right = null;
-                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref left, ref right, soundToPlay.PcmData, soundToPlay);
+                        waveDataProv = audioFunctions.CreateStereoLoopWav(ref left, ref right, soundToPlay.PcmData, soundToPlay, pitch, volume);
                         channelProviders = new[] { left, right };
                     }
                     else
                     {
-                        waveDataProv = audioFunctions.CreateMultiChannelWav(out channelProviders, soundToPlay.PcmData, soundToPlay, true);
+                        waveDataProv = audioFunctions.CreateMultiChannelWav(out channelProviders, soundToPlay.PcmData, soundToPlay, true, pitch, volume);
                     }
                     labelTotalTime.Text = GetDurationText(channelProviders[0].TotalTime);
                     _waveOut.Init(waveDataProv);
@@ -217,6 +226,20 @@ namespace sb_explorer
             if (_waveOut != null)
             {
                 _waveOut.Stop();
+                _waveOut.Dispose();
+                _waveOut = null;
+            }
+
+            if (channelProviders != null)
+            {
+                for (int channel = 0; channel < channelProviders.Length; channel++)
+                {
+                    if (channelProviders[channel] != null)
+                    {
+                        channelProviders[channel].Dispose();
+                    }
+                }
+                channelProviders = null;
             }
         }
 

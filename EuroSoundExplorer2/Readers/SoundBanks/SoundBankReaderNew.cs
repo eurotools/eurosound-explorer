@@ -18,8 +18,10 @@ namespace MusX.Readers
                 if (new string(reader.ReadChars(4)) != "SBNK") throw new InvalidDataException("Invalid EngineXT SBNK descriptor.");
                 bool bigEndian = headerData.IsBigEndian;
                 uint dataVersion = ReadV18UInt32(reader, bigEndian);
-                if (dataVersion != 18) throw new InvalidDataException("The EngineXT reader currently supports SBNK data version 18.");
-                ReadV18UInt32(reader, bigEndian); ReadV18UInt32(reader, bigEndian);
+                if (dataVersion != 18 && dataVersion != 21) throw new InvalidDataException("The EngineXT reader currently supports SBNK data versions 18 and 21.");
+                ReadV18UInt32(reader, bigEndian); // language
+                ReadV18UInt32(reader, bigEndian); // soundbank hash
+                if (dataVersion >= 21) ReadV18UInt32(reader, bigEndian); // memory-slot hash added in v21
 
                 uint sfxCount = ReadV18UInt32(reader, bigEndian); long sfxOffsetField = reader.BaseStream.Position; long sfxTable = ResolveRelative(sfxOffsetField, ReadV18Int32(reader, bigEndian));
                 ReadV18UInt32(reader, bigEndian); ReadV18Int32(reader, bigEndian);
@@ -32,9 +34,9 @@ namespace MusX.Readers
                 long wavDataStart = ReadV18Int32(reader, bigEndian); // physical file offset, unlike GAFRO pointers
 
                 Dictionary<long, short> waveIndices = new Dictionary<long, short>();
-                ReadV18WaveTable(reader, filePath, memoryTable, memoryCount, 0, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
-                ReadV18WaveTable(reader, filePath, streamTable, streamCount, 1, 0, 0, wavesList, waveIndices, bigEndian);
-                ReadV18WaveTable(reader, filePath, instantTable, instantCount, 2, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
+                ReadV18WaveTable(reader, filePath, memoryTable, memoryCount, WavType.Memory, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
+                ReadV18WaveTable(reader, filePath, streamTable, streamCount, WavType.Stream, 0, 0, wavesList, waveIndices, bigEndian);
+                ReadV18WaveTable(reader, filePath, instantTable, instantCount, WavType.InstantStream, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
 
                 for (int i = 0; i < sfxCount; i++)
                 {
@@ -51,7 +53,8 @@ namespace MusX.Readers
                     reader.ReadByte();
 
                     Sample sample = new Sample { HashCodeNumber = hash, IsV18 = true, V18RuntimeStatus = runtimeStatus, V18InfoFlags = infoFlags, V18ParameterAddress = parameter, V18PoolAddress = pool, V18ElementCount = (byte)elementCount };
-                    if (CanRead(reader, parameter, 32))
+                    int parameterSize = dataVersion >= 21 ? 36 : 32;
+                    if (CanRead(reader, parameter, parameterSize))
                     {
                         reader.BaseStream.Position = parameter;
                         uint flags = ReadV18UInt32(reader, bigEndian);
@@ -63,11 +66,13 @@ namespace MusX.Readers
                         sample.V18Ducker = ReadV18UInt16(reader, bigEndian);
                         sample.V18CullingGroup = ReadV18UInt16(reader, bigEndian);
                         sample.V18Oscillator = ReadV18UInt16(reader, bigEndian);
+                        if (dataVersion >= 21) sample.V18Controller = ReadV18UInt16(reader, bigEndian);
                         sample.V18DuckerOffset = ReadV18Int16(reader, bigEndian);
                         sample.V18ReverbSend = reader.ReadByte();
                         sample.V18MultiTapSend = reader.ReadByte();
                         sample.V18PingPongSend = reader.ReadByte();
                         sample.V18LowPass = reader.ReadByte();
+                        if (dataVersion >= 21) { reader.ReadByte(); reader.ReadByte(); } // high-pass and amplitude modulation
                         sample.V18VolumeRolloff = reader.ReadSByte();
                         sample.V18MaxItems = reader.ReadByte();
                         sample.V18Priority = reader.ReadByte();
@@ -76,7 +81,8 @@ namespace MusX.Readers
                         sample.V18Doppler = reader.ReadByte();
                         sample.V18TriggerChance = reader.ReadByte();
                         sample.V18ChorusSend = reader.ReadByte();
-                        sample.V18Controller = ReadV18UInt16(reader, bigEndian);
+                        if (dataVersion >= 21) { reader.ReadByte(); reader.ReadByte(); } // noise level and padding
+                        else sample.V18Controller = ReadV18UInt16(reader, bigEndian);
 
                         // Legacy projection used by list columns and older auxiliary forms.
                         sample.GroupHashCode = unchecked((short)sample.V18MixGroup);
@@ -131,9 +137,9 @@ namespace MusX.Readers
             }
         }
 
-        private static void ReadV18WaveTable(BinaryReader reader, string filePath, long table, uint count, int wavType, long wavDataStart, uint wavDataSize, List<SampleData> waves, Dictionary<long, short> indices, bool bigEndian)
+        private static void ReadV18WaveTable(BinaryReader reader, string filePath, long table, uint count, WavType wavType, long wavDataStart, uint wavDataSize, List<SampleData> waves, Dictionary<long, short> indices, bool bigEndian)
         {
-            int entrySize = wavType == 1 ? 24 : wavType == 2 ? 32 : 28;
+            int entrySize = wavType == WavType.Stream ? 24 : wavType == WavType.InstantStream ? 32 : 28;
             for (int i = 0; i < count; i++)
             {
                 long entry = table + i * (long)entrySize;
@@ -145,16 +151,19 @@ namespace MusX.Readers
                 ushort frequency = ReadV18UInt16(reader, bigEndian);
                 byte flags = reader.ReadByte();
                 byte channels = reader.ReadByte();
+                WavType encodedWavType = (WavType)((flags >> 4) & 3);
+                if (encodedWavType != wavType)
+                    throw new InvalidDataException(string.Format("SBNK WAV 0x{0:X8} has WavType {1}, but is stored in the {2} table.", wavHash, (int)encodedWavType, wavType));
                 uint dataOffset;
                 uint dataSize;
                 uint loopOffset;
-                if (wavType == 0)
+                if (wavType == WavType.Memory)
                 {
                     dataOffset = (uint)Math.Max(0, wavDataStart + ReadV18Int32(reader, bigEndian));
                     dataSize = ReadV18UInt32(reader, bigEndian);
                     loopOffset = ReadV18UInt32(reader, bigEndian);
                 }
-                else if (wavType == 1)
+                else if (wavType == WavType.Stream)
                 {
                     uint fileEnd = ReadV18UInt32(reader, bigEndian);
                     loopOffset = ReadV18UInt32(reader, bigEndian);
@@ -171,12 +180,12 @@ namespace MusX.Readers
                 }
 
                 EuroSoundAudioCodec codec = CodecFromV18Value(flags & 7);
-                string audioPath = wavType == 0 ? filePath : FindV18StreamFile(filePath, wavHash);
+                string audioPath = wavType == WavType.Memory ? filePath : FindV18StreamFile(filePath, wavHash);
                 uint referenceOffset = dataOffset;
                 uint referenceSize = dataSize;
                 uint loopStartSample = loopOffset;
                 uint loopEndByteOffset = 0;
-                if (wavType != 0 && !string.IsNullOrEmpty(audioPath))
+                if (wavType != WavType.Memory && !string.IsNullOrEmpty(audioPath))
                 {
                     referenceOffset = 0x800;
                     long available = Math.Max(0, new FileInfo(audioPath).Length - referenceOffset);
@@ -187,7 +196,7 @@ namespace MusX.Readers
                     try
                     {
                         StreambankHeader streamHeader = new StreamBankReader().ReadStreamBankHeader(audioPath, string.Empty);
-                        if (streamHeader.FileVersion == 18)
+                        if (streamHeader.FileVersion == 18 || streamHeader.FileVersion == 21)
                         {
                             if (streamHeader.FileLength2 <= referenceSize) referenceSize = streamHeader.FileLength2;
                             if (streamHeader.LoopStartSample != uint.MaxValue) loopStartSample = streamHeader.LoopStartSample;
@@ -196,7 +205,7 @@ namespace MusX.Readers
                     }
                     catch (InvalidDataException) { }
                 }
-                if (wavType == 1)
+                if (wavType == WavType.Stream)
                 {
                     dataOffset = referenceOffset;
                     dataSize = referenceSize;
@@ -205,7 +214,7 @@ namespace MusX.Readers
                 SampleData wave = new SampleData
                 {
                     WavHashCode = wavHash,
-                    StorageType = wavType == 0 ? "Memory" : wavType == 1 ? "Stream" : "Instant Stream",
+                    StorageType = wavType,
                     Flags = (uint)(((flags >> 3) & 1) != 0 ? 1 : 0),
                     Address = dataOffset,
                     SampleSize = dataSize,
@@ -213,9 +222,9 @@ namespace MusX.Readers
                     Frequency = frequency,
                     Channels = channels,
                     TotalSamples = sampleCount,
-                    LoopStartOffset = wavType != 0 ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
+                    LoopStartOffset = wavType != WavType.Memory ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
                     OriginalLoopOffset = loopOffset,
-                    LoopStartSample = wavType != 0 ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
+                    LoopStartSample = wavType != WavType.Memory ? loopStartSample : V18SfxLoopOffsetToSamples(codec, loopOffset, channels),
                     LoopEndByteOffset = loopEndByteOffset,
                     AudioReference = audioReference
                 };

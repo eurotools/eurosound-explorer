@@ -17,6 +17,8 @@ namespace MusX.Objects
         public List<MusicMarkerHeader> MusicHeaders = new List<MusicMarkerHeader>();
         public List<MusicMarkerCounts> MusicMarkerCounts = new List<MusicMarkerCounts>();
         public List<MusicMarkerListEntry> MusicMarkerLists = new List<MusicMarkerListEntry>();
+        // Version 6 XB2_ stores the final marker positions as a separate u32 array.
+        public List<uint> MarkerPositions = new List<uint>();
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------

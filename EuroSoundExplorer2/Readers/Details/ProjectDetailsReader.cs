@@ -1,4 +1,5 @@
 using MusX.Objects;
+using System;
 using System.IO;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             ProjectDetailsHeader headerData = new ProjectDetailsHeader(commonHeader);
 
-            if (headerData.FileVersion == 18)
+            if (headerData.FileVersion == 18 || headerData.FileVersion == 21)
             {
                 headerData.MemoryStart = 0x800;
                 headerData.MemoryLength = headerData.FileSize > 0x800 ? headerData.FileSize - 0x800 : 0;
@@ -45,6 +46,12 @@ namespace MusX.Readers
 
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
+                if (headerData.FileVersion == 21)
+                {
+                    ReadProjectFileVersion21(BReader, headerData, projectData);
+                    return projectData;
+                }
+
                 if (headerData.FileVersion == 18)
                 {
                     ReadProjectFileVersion18(BReader, headerData, projectData);
@@ -56,6 +63,10 @@ namespace MusX.Readers
                     ReadProjectFileVersion6(BReader, headerData, projectData);
                     return projectData;
                 }
+
+                // Some v1/v201 projects publish only the four-byte empty payload.
+                if (headerData.MemoryLength < 16 || headerData.MemoryStart > BReader.BaseStream.Length - 16)
+                    return projectData;
 
                 //Read Offsets and count
                 BReader.BaseStream.Seek(headerData.MemoryStart, SeekOrigin.Begin);
@@ -196,6 +207,144 @@ namespace MusX.Readers
             ReadOscillators(reader, project, oscillatorTable, oscillatorCount, bigEndian);
         }
 
+        private static void ReadProjectFileVersion21(BinaryReader reader, ProjectDetailsHeader header, ProjectDetails project)
+        {
+            reader.BaseStream.Position = 0x800;
+            if (ReadFourCC(reader) != "ESPD") throw new InvalidDataException("MusX Project Details has no ESPD descriptor.");
+            bool bigEndian = header.IsBigEndian;
+            uint version = ReadUInt32(reader, bigEndian);
+            if (version != 21) throw new InvalidDataException(string.Format("Expected ESPD 21 but found ESPD {0}.", version));
+
+            project.PublishCount = ReadUInt32(reader, bigEndian);
+            project.OutputCount = ReadUInt32(reader, bigEndian);
+            uint espdSize = ReadUInt32(reader, bigEndian);
+            project.ListenerVelocitySmoothing = ReadSingle(reader, bigEndian);
+            project.StreamHeapSize0 = ReadUInt32(reader, bigEndian);
+            project.StreamHeapSize1 = ReadUInt32(reader, bigEndian);
+
+            uint memoryCount = ReadUInt32(reader, bigEndian); long memoryTable = ReadRelativeTarget(reader, bigEndian);
+            uint effectsCount = ReadUInt32(reader, bigEndian); long effectsTable = ReadRelativeTarget(reader, bigEndian);
+            uint mixCount = ReadUInt32(reader, bigEndian); long mixTable = ReadRelativeTarget(reader, bigEndian);
+            uint duckerCount = ReadUInt32(reader, bigEndian); long duckerTable = ReadRelativeTarget(reader, bigEndian);
+            uint cullingCount = ReadUInt32(reader, bigEndian); long cullingTable = ReadRelativeTarget(reader, bigEndian);
+            uint soundbankCount = ReadUInt32(reader, bigEndian); long soundbankTable = ReadRelativeTarget(reader, bigEndian);
+            uint oscillatorCount = ReadUInt32(reader, bigEndian); long oscillatorTable = ReadRelativeTarget(reader, bigEndian);
+            uint gameVarCount = ReadUInt32(reader, bigEndian); long gameVarTable = ReadRelativeTarget(reader, bigEndian);
+            uint controllerCount = ReadUInt32(reader, bigEndian); long controllerTable = ReadRelativeTarget(reader, bigEndian);
+            uint eventCount = ReadUInt32(reader, bigEndian); long eventTable = ReadRelativeTarget(reader, bigEndian);
+            uint tagCount = ReadUInt32(reader, bigEndian); long tagTable = ReadRelativeTarget(reader, bigEndian);
+            uint spreadsheetCount = ReadUInt32(reader, bigEndian); long spreadsheetTable = ReadRelativeTarget(reader, bigEndian);
+
+            long availablePayload = Math.Max(0, reader.BaseStream.Length - 0x800);
+            if (espdSize != 0 && espdSize > availablePayload)
+                throw new InvalidDataException("ESPD 21 declares a size larger than the available MusX payload.");
+
+            project.EffectsCount = checked((int)effectsCount);
+            project.MixGroupsCount = checked((int)mixCount);
+            project.DuckersCount = checked((int)duckerCount);
+            project.CullingGroupsCount = checked((int)cullingCount);
+            project.OscillatorsCount = checked((int)oscillatorCount);
+            project.GameVarsCount = checked((int)gameVarCount);
+            project.ControllersCount = checked((int)controllerCount);
+            project.EventsCount = checked((int)eventCount);
+            project.TagsCount = checked((int)tagCount);
+            project.SpreadsheetsCount = checked((int)spreadsheetCount);
+
+            ReadMemoryMapsV21(reader, project, memoryTable, memoryCount, bigEndian);
+            ReadSoundbankLookups(reader, project, soundbankTable, soundbankCount, bigEndian);
+            ReadEffects(reader, project, effectsTable, effectsCount, bigEndian);
+            ReadMixGroups(reader, project, mixTable, mixCount, bigEndian);
+            ReadDuckers(reader, project, duckerTable, duckerCount, bigEndian);
+            ReadCullingGroups(reader, project, cullingTable, cullingCount, bigEndian);
+            ReadOscillators(reader, project, oscillatorTable, oscillatorCount, bigEndian);
+            ReadFixedRuntimeTable(reader, project, gameVarTable, gameVarCount, 12, "Game Variable", bigEndian);
+            ReadControllersV21(reader, project, controllerTable, controllerCount, bigEndian);
+            ReadFixedRuntimeTable(reader, project, eventTable, eventCount, 32, "Event", bigEndian);
+            ReadFixedRuntimeTable(reader, project, tagTable, tagCount, 4, "Tag", bigEndian);
+            ReadFixedRuntimeTable(reader, project, spreadsheetTable, spreadsheetCount, 12, "Spreadsheet", bigEndian);
+        }
+
+        private static void ReadMemoryMapsV21(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            const int MapBytes = 68;
+            if (!CanRead(reader, table, 4 + count * (long)MapBytes)) return;
+            reader.BaseStream.Position = table;
+            project.MaximumMemoryMapSize = ReadInt32(reader, bigEndian);
+            for (uint mapIndex = 0; mapIndex < count; mapIndex++)
+            {
+                ProjectMemoryMap map = new ProjectMemoryMap { Name = string.Format("0x{0:X8}", ReadUInt32(reader, bigEndian)) };
+                for (int slot = 0; slot < 8; slot++)
+                {
+                    uint slotHash = ReadUInt32(reader, bigEndian);
+                    uint sizeAndHeap = ReadUInt32(reader, bigEndian);
+                    int size = checked((int)(sizeAndHeap & 0x7fffffff));
+                    if (slotHash == 0 && size == 0) continue;
+                    map.SlotSizes.Add(size);
+                    project.memorySlotsData.Add(new ProjectSlots { SlotNumber = unchecked((int)slotHash), MemorySize = size, Quantity = (sizeAndHeap & 0x80000000) == 0 ? 1 : 0 });
+                }
+                project.memoryMapsData.Add(map);
+            }
+            project.MemmorySlotsCount = project.memorySlotsData.Count;
+        }
+
+        private static void ReadSoundbankLookups(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 12L)) return;
+            project.SoundBanksCount = checked((int)count);
+            project.SoundBanksOffset = checked((int)table);
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 12L;
+                int bankHash = ReadInt32(reader, bigEndian);
+                int mapHash = ReadInt32(reader, bigEndian);
+                int slotHash = ReadInt32(reader, bigEndian);
+                project.soundBanksData.Add(new ProjectSoundBank { HashCode = bankHash, SlotNumber = slotHash });
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Soundbank Lookup", HashCode = unchecked((uint)bankHash), Details = string.Format("Memory map 0x{0:X8}, slot 0x{1:X8}", mapHash, slotHash) });
+            }
+        }
+
+        private static void ReadFixedRuntimeTable(BinaryReader reader, ProjectDetails project, long table, uint count, int stride, string type, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * (long)stride)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * (long)stride;
+                uint hash = ReadUInt32(reader, bigEndian);
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = type, HashCode = hash, Details = string.Format("{0}-byte ESPD 21 record", stride) });
+            }
+        }
+
+        private static void ReadPointerRuntimeTable(BinaryReader reader, ProjectDetails project, long table, uint count, string type, bool bigEndian)
+        {
+            if (!CanRead(reader, table, count * 8L)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * 8L;
+                uint hash = ReadUInt32(reader, bigEndian);
+                long data = ReadRelativeTarget(reader, bigEndian);
+                project.runtimeObjects.Add(new ProjectRuntimeObject { Type = type, HashCode = hash, Details = string.Format("Data at 0x{0:X}", data) });
+            }
+        }
+
+        private static void ReadControllersV21(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
+        {
+            const int ControllerInfoBytes = 12;
+            if (!CanRead(reader, table, count * (long)ControllerInfoBytes)) return;
+            for (uint i = 0; i < count; i++)
+            {
+                reader.BaseStream.Position = table + i * (long)ControllerInfoBytes;
+                uint hash = ReadUInt32(reader, bigEndian);
+                uint elementCount = ReadUInt32(reader, bigEndian);
+                long elementTable = ReadRelativeTarget(reader, bigEndian);
+                project.runtimeObjects.Add(new ProjectRuntimeObject
+                {
+                    Type = "Controller",
+                    HashCode = hash,
+                    Details = string.Format("{0} elements, table at 0x{1:X}", elementCount, elementTable)
+                });
+            }
+        }
+
         private static long ReadRelativeTarget(BinaryReader reader, bool bigEndian)
         {
             long field = reader.BaseStream.Position;
@@ -286,11 +435,15 @@ namespace MusX.Readers
 
         private static void ReadOscillators(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
         {
-            if (!CanRead(reader, table, count * 36L)) return;
-            string[] names = { "Pitch", "Volume", "LowPass", "Morph", "Angle" };
+            bool version21 = project.FormatVersion >= 21;
+            int stride = version21 ? 40 : 36;
+            if (!CanRead(reader, table, count * (long)stride)) return;
+            string[] names = version21
+                ? new[] { "Pitch", "Volume", "LowPass", "HighPass", "Morph", "Angle" }
+                : new[] { "Pitch", "Volume", "LowPass", "Morph", "Angle" };
             for (uint i = 0; i < count; i++)
             {
-                reader.BaseStream.Position = table + i * 36L;
+                reader.BaseStream.Position = table + i * (long)stride;
                 uint hash = ReadUInt32(reader, bigEndian);
                 System.Text.StringBuilder details = new System.Text.StringBuilder();
                 for (int component = 0; component < names.Length; component++)
@@ -302,7 +455,7 @@ namespace MusX.Readers
                     ushort release = ReadUInt16(reader, bigEndian);
                     details.AppendFormat("{0}: wave {1}, amp {2}, rate {3}ms, release {4}ms", names[component], waveType, amplitude, rate, release);
                 }
-                ReadUInt16(reader, bigEndian);
+                if (!version21) ReadUInt16(reader, bigEndian);
                 project.runtimeObjects.Add(new ProjectRuntimeObject { Type = "Oscillator", HashCode = hash, Details = details.ToString() });
             }
         }

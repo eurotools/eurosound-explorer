@@ -34,6 +34,9 @@
         //-------------------------------------------------------------------------------------------------------------------------------
         public short[] Decode(byte[] adpcmData)
         {
+            if (adpcmData == null) throw new System.ArgumentNullException("adpcmData");
+            if ((adpcmData.Length % 36) != 0) throw new System.IO.InvalidDataException("Xbox ADPCM data contains a truncated 36-byte block.");
+
             int blockCount = adpcmData.Length / 36;
             int numSamples = blockCount * 64;
             short[] outBuff = new short[numSamples];
@@ -67,8 +70,7 @@
                     valpred = (short)(adpcmData[inp++] | (sbyte)adpcmData[inp++] << 8);
                     index = adpcmData[inp]; inp += 2;
 
-                    if (index > 88)
-                        index = 0;
+                    if (index > 88) throw new System.IO.InvalidDataException("Invalid Xbox ADPCM step index: " + index + ".");
                 }
 
                 inputbuffer = adpcmData[inp];

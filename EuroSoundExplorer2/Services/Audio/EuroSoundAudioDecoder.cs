@@ -16,25 +16,35 @@ namespace sb_explorer.Services.Audio
             channelCount = Math.Max(1, Math.Min(8, channelCount));
 
             byte[][] channels;
+            uint vagLoopStartSample = uint.MaxValue;
             switch (codec)
             {
                 case EuroSoundAudioCodec.Pcm16:
                     channels = DeinterleavePcm16(encodedData, channelCount);
                     break;
                 case EuroSoundAudioCodec.EurocomImaAdpcm:
-                    channels = DecodeBlockInterleaved(encodedData, channelCount, 32, delegate(byte[] data)
+                    byte[] imaData = engineXt18
+                        ? NormalizeEngineXtIma(encodedData, channelCount, sampleCount)
+                        : encodedData;
+                    channels = DecodeBlockInterleaved(imaData, channelCount, 32, delegate(byte[] data)
                     {
                         return audioFunctions.ShortArrayToByteArray(new Eurocom_ImaAdpcm().Decode(data));
                     });
                     break;
                 case EuroSoundAudioCodec.SonyVagAdpcm:
-                    channels = DecodeBlockInterleaved(encodedData, channelCount, 16, delegate(byte[] data)
+                    byte[] vagBlocks = encodedData;
+                    if (!engineXt18)
                     {
-                        // The legacy decoder expects a 16-byte container prefix. EngineXT stores raw VAG blocks.
-                        byte[] prefixed = new byte[data.Length + 16];
-                        Buffer.BlockCopy(data, 0, prefixed, 16, data.Length);
+                        if (encodedData.Length < 16) throw new System.IO.InvalidDataException("EuroSound VAG data has no 16-byte prefix.");
+                        vagBlocks = new byte[encodedData.Length - 16];
+                        Buffer.BlockCopy(encodedData, 16, vagBlocks, 0, vagBlocks.Length);
+                    }
+                    channels = DecodeBlockInterleaved(vagBlocks, channelCount, 16, delegate(byte[] data)
+                    {
                         uint loop = uint.MaxValue;
-                        return new SonyAdpcm().Decode(prefixed, ref loop);
+                        byte[] pcm = new SonyAdpcm().DecodeRaw(data, ref loop);
+                        if (vagLoopStartSample == uint.MaxValue && loop != uint.MaxValue) vagLoopStartSample = loop / 2;
+                        return pcm;
                     });
                     break;
                 case EuroSoundAudioCodec.DspAdpcm:
@@ -46,6 +56,12 @@ namespace sb_explorer.Services.Audio
                     byte[] mono = Decode(codec, encodedData, audioFunctions, dspCoeffs, selectedSample);
                     channels = mono == null ? new byte[0][] : new[] { mono };
                     break;
+            }
+
+            if (codec == EuroSoundAudioCodec.SonyVagAdpcm && selectedSample != null && selectedSample.IsLooped && vagLoopStartSample != uint.MaxValue)
+            {
+                selectedSample.LoopStartOffset = vagLoopStartSample;
+                selectedSample.LoopStartSample = vagLoopStartSample;
             }
 
             if (sampleCount != 0)
@@ -125,6 +141,45 @@ namespace sb_explorer.Services.Audio
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
+        private static byte[] NormalizeEngineXtIma(byte[] source, int channels, uint sampleCount)
+        {
+            const int BlockBytes = 32;
+            const int SamplesPerBlock = 56;
+            channels = Math.Max(1, channels);
+            long blocksPerChannel = sampleCount == 0 ? 0 : (sampleCount + SamplesPerBlock - 1L) / SamplesPerBlock;
+            long expectedLong = blocksPerChannel * BlockBytes * channels;
+            int expectedBytes = expectedLong > int.MaxValue ? source.Length : (int)expectedLong;
+            if (expectedBytes <= 0 || expectedBytes > source.Length)
+                expectedBytes = source.Length - source.Length % (BlockBytes * channels);
+
+            int alignment = FindImaAlignment(source, expectedBytes, channels);
+            if (alignment < 0)
+                throw new System.IO.InvalidDataException("EngineXT stream does not contain a valid aligned Eurocom IMA ADPCM block sequence.");
+
+            int available = source.Length - alignment;
+            int length = Math.Min(expectedBytes, available);
+            length -= length % (BlockBytes * channels);
+            byte[] normalized = new byte[length];
+            Buffer.BlockCopy(source, alignment, normalized, 0, length);
+            return normalized;
+        }
+
+        private static int FindImaAlignment(byte[] source, int wantedBytes, int channels)
+        {
+            int blockSet = 32 * Math.Max(1, channels);
+            for (int alignment = 0; alignment < Math.Min(blockSet, source.Length); alignment++)
+            {
+                int bytes = Math.Min(wantedBytes, source.Length - alignment);
+                bytes -= bytes % blockSet;
+                bool valid = bytes > 0;
+                for (int offset = alignment; valid && offset < alignment + bytes; offset += 32)
+                    valid = offset + 2 < source.Length && source[offset + 2] <= 88;
+                if (valid) return alignment;
+            }
+            return -1;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         private static byte[][] DeinterleavePcm16(byte[] source, int channels)
         {
             int frameBytes = checked(channels * 2);
@@ -145,15 +200,20 @@ namespace sb_explorer.Services.Audio
             for (int channel = 0; channel < channels; channel++)
             {
                 int start = channel * regionBytes;
-                if (regionBytes < 96) { result[channel] = new byte[0]; continue; }
+                if (regionBytes < 64) { result[channel] = new byte[0]; continue; }
+                bool hasNgcaHeader = source[start] == (byte)'N' && source[start + 1] == (byte)'G' &&
+                    source[start + 2] == (byte)'C' && source[start + 3] == (byte)'A';
+                int coefficientOffset = hasNgcaHeader ? 0x0c : 0x1c;
+                int payloadOffset = hasNgcaHeader ? 0x40 : 0x60;
+                if (regionBytes < payloadOffset) { result[channel] = new byte[0]; continue; }
                 short[] coefficients = new short[16];
                 for (int i = 0; i < coefficients.Length; i++)
                 {
-                    int p = start + 0x1c + i * 2;
+                    int p = start + coefficientOffset + i * 2;
                     coefficients[i] = unchecked((short)((source[p] << 8) | source[p + 1]));
                 }
-                byte[] payload = new byte[regionBytes - 96];
-                Buffer.BlockCopy(source, start + 96, payload, 0, payload.Length);
+                byte[] payload = new byte[regionBytes - payloadOffset];
+                Buffer.BlockCopy(source, start + payloadOffset, payload, 0, payload.Length);
                 result[channel] = audioFunctions.ShortArrayToByteArray(new DspAdpcm().Decode(payload, coefficients));
             }
             return result;

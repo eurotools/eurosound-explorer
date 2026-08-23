@@ -72,6 +72,8 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private void Configuration_ProjectFolderChanged()
         {
+            ProjectConfigurationDetector.Apply(Configuration, AppState.ProjectProfiles);
+            pnlSettings.RefreshSettings();
             pnlSoundBankFiles.LoadData();
         }
 

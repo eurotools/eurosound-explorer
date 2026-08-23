@@ -3,6 +3,14 @@
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
+    public enum WavType
+    {
+        Unknown = 0,
+        Memory = 1,
+        Stream = 2,
+        InstantStream = 3
+    }
+
     public class SampleData
     {
         private byte[] encodedData;
@@ -22,7 +30,7 @@
         public uint TotalSamples;
         public uint Duration;
         public uint WavHashCode;
-        public string StorageType;
+        public WavType StorageType;
         public AudioDataReference AudioReference;
         public byte[] EncodedData
         {

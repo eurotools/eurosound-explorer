@@ -17,6 +17,13 @@ using static sb_explorer.Enumerations;
 
 namespace sb_explorer.Services
 {
+    internal enum ProjectSampleStorageMode
+    {
+        InMemory = 0,
+        Stream = 1,
+        InstantStream = 2
+    }
+
     public enum EuroSoundProjectDecompilerMode
     {
         Create,
@@ -1060,7 +1067,7 @@ namespace sb_explorer.Services
             values.AddRange(samples.Select(sample => sample.FileSizeBytes.ToString(CultureInfo.InvariantCulture)));
             values.AddRange(samples.Select(sample => sample.ModifiedDate.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)));
             values.AddRange(samples.Select(sample => "True"));
-            values.AddRange(samples.Select(sample => sample.IsStream ? "True" : "False"));
+            values.AddRange(samples.Select(sample => ((int)sample.StorageMode).ToString(CultureInfo.InvariantCulture)));
 
             for (int i = 0; i < platformCount; i++)
             {
@@ -2461,7 +2468,17 @@ namespace sb_explorer.Services
                 Add(relativePath, frequency, null, isStream, fullPath);
             }
 
+            public void Add(string relativePath, int frequency, string platform, ProjectSampleStorageMode storageMode, string fullPath)
+            {
+                AddCore(relativePath, frequency, platform, storageMode, fullPath);
+            }
+
             public void Add(string relativePath, int frequency, string platform, bool isStream, string fullPath)
+            {
+                AddCore(relativePath, frequency, platform, isStream ? ProjectSampleStorageMode.Stream : ProjectSampleStorageMode.InMemory, fullPath);
+            }
+
+            private void AddCore(string relativePath, int frequency, string platform, ProjectSampleStorageMode storageMode, string fullPath)
             {
                 if (string.IsNullOrWhiteSpace(relativePath))
                 {
@@ -2491,7 +2508,7 @@ namespace sb_explorer.Services
                 {
                     entry.PlatformFrequencies[GetProjectPlatformName(platform)] = entry.Frequency;
                 }
-                entry.IsStream = entry.IsStream || isStream;
+                if (storageMode > entry.StorageMode) entry.StorageMode = storageMode;
                 entry.FileSizeBytes = (int)Math.Min(fileInfo.Length, int.MaxValue);
                 entry.ModifiedDate = TruncateToSeconds(fileInfo.LastWriteTime);
             }
@@ -2527,7 +2544,7 @@ namespace sb_explorer.Services
 
             public string RelativePath { get; set; }
             public int Frequency { get; set; }
-            public bool IsStream { get; set; }
+            public ProjectSampleStorageMode StorageMode { get; set; }
             public int FileSizeBytes { get; set; }
             public DateTime ModifiedDate { get; set; }
             public Dictionary<string, int> PlatformFrequencies { get; private set; }
@@ -2698,7 +2715,7 @@ namespace sb_explorer.Services
 
                 if (!writeWavs)
                 {
-                    AddSampleCatalogEntry(relativeWavPath, bestSample, sampleKey, false, wavPath);
+                    AddSampleCatalogEntry(relativeWavPath, bestSample, sampleKey, wavPath);
                     return;
                 }
 
@@ -2714,13 +2731,18 @@ namespace sb_explorer.Services
                     decodedData.Channels,
                     Math.Max(1, (int)decodedData.SampleRate),
                     CreateSampleLoopInfo(bestSample.SampleData, decodedData.Channels));
-                AddSampleCatalogEntry(relativeWavPath, bestSample, sampleKey, false, wavPath);
+                AddSampleCatalogEntry(relativeWavPath, bestSample, sampleKey, wavPath);
             }
 
-            private void AddSampleCatalogEntry(string relativeWavPath, BestSampleData bestSample, string sampleKey, bool isStream, string wavPath)
+            private void AddSampleCatalogEntry(string relativeWavPath, BestSampleData bestSample, string sampleKey, string wavPath)
             {
                 int frequency = Math.Max(1, (int)bestSample.SampleData.Frequency);
-                sampleCatalog?.Add(relativeWavPath, frequency, bestSample.SoundBank.Header.Platform, isStream, wavPath);
+                ProjectSampleStorageMode storageMode = bestSample.SampleData.StorageType == WavType.InstantStream
+                    ? ProjectSampleStorageMode.InstantStream
+                    : bestSample.SampleData.StorageType == WavType.Stream
+                        ? ProjectSampleStorageMode.Stream
+                        : ProjectSampleStorageMode.InMemory;
+                sampleCatalog?.Add(relativeWavPath, frequency, bestSample.SoundBank.Header.Platform, storageMode, wavPath);
 
                 Dictionary<string, int> platformFrequencies;
                 if (!platformFrequenciesBySfxAndRef.TryGetValue(sampleKey, out platformFrequencies))
@@ -2730,7 +2752,7 @@ namespace sb_explorer.Services
 
                 foreach (KeyValuePair<string, int> platformFrequency in platformFrequencies)
                 {
-                    sampleCatalog?.Add(relativeWavPath, platformFrequency.Value, platformFrequency.Key, isStream, wavPath);
+                    sampleCatalog?.Add(relativeWavPath, platformFrequency.Value, platformFrequency.Key, storageMode, wavPath);
                 }
             }
 

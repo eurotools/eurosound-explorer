@@ -16,7 +16,7 @@ namespace MusX.Readers
             MusicDetails projectData = new MusicDetails();
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-                BReader.BaseStream.Seek(0x20, SeekOrigin.Begin);
+                BReader.BaseStream.Seek(sfxHeaderData.EndOffset, SeekOrigin.Begin);
                 projectData.MinHashCode = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
                 projectData.MaxHashCode = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
 

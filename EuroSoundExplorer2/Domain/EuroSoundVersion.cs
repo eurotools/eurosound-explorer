@@ -7,7 +7,9 @@ namespace sb_explorer
         EuroSound450 = 450,
         EuroSound510 = 510,
         EuroSound610 = 610,
-        EngineXT18 = 1800
+        EngineXT15 = 1500,
+        EngineXT18 = 1800,
+        EngineXT21 = 2100
     }
 
     public static class EuroSoundVersions
@@ -18,7 +20,9 @@ namespace sb_explorer
             4,
             5,
             6,
+            15,
             18,
+            21,
             201
         };
 
@@ -37,6 +41,10 @@ namespace sb_explorer
                     return EuroSoundVersion.EuroSound610;
                 case 18:
                     return EuroSoundVersion.EngineXT18;
+                case 15:
+                    return EuroSoundVersion.EngineXT15;
+                case 21:
+                    return EuroSoundVersion.EngineXT21;
                 default:
                     return EuroSoundVersion.Unknown;
             }

@@ -54,7 +54,7 @@ namespace sb_explorer
 
                     //Create item and add it to list
                     string codec = waveData.AudioReference == null ? "Unknown" : waveData.AudioReference.Codec.ToString();
-                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, memorySize, sampleSize, waveData.Frequency.ToString(), binaryLoopOffset, loopSample, waveData.Duration.ToString(), codec, waveData.Channels.ToString(), waveData.TotalSamples.ToString(), string.Format("0x{0:X8}", waveData.WavHashCode), waveData.StorageType ?? string.Empty })
+                    ListViewItem listViewItem2 = new ListViewItem(new string[] { (index).ToString(), waveData.Flags.ToString(), addressOffset, memorySize, sampleSize, waveData.Frequency.ToString(), binaryLoopOffset, loopSample, waveData.Duration.ToString(), codec, waveData.Channels.ToString(), waveData.TotalSamples.ToString(), string.Format("0x{0:X8}", waveData.WavHashCode), waveData.StorageType.ToString() })
                     {
                         ImageIndex = 0,
                         Tag = index

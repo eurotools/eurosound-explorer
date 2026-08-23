@@ -113,7 +113,7 @@ namespace sb_explorer
             // 
             // ColumnVersion
             // 
-            this.ColumnVersion.HeaderText = "Version";
+            this.ColumnVersion.HeaderText = "MusX / SBNK Version";
             this.ColumnVersion.Name = "ColumnVersion";
             this.ColumnVersion.ReadOnly = true;
             // 

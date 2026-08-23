@@ -25,17 +25,19 @@ namespace sb_explorer.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateMonoLoopWav(ref RawSourceWaveStream provider, byte[] _pcmData, SoundFile _soundToPlay)
+        internal IWaveProvider CreateMonoLoopWav(ref RawSourceWaveStream provider, byte[] _pcmData, SoundFile _soundToPlay,
+            float pitch, float pan, float volume)
         {
+            _pcmData = (byte[])_pcmData.Clone();
             if (_soundToPlay.loopEndPoint > 0)
             {
                 Array.Resize(ref _pcmData, Math.Min(_soundToPlay.loopEndPoint * 2, _pcmData.Length));
             }
 
-            provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, pitch), 16, 1));
             LoopStream loop = new LoopStream(provider, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
-            PanningSampleProvider panProvider = new PanningSampleProvider(loop.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
+            PanningSampleProvider panProvider = new PanningSampleProvider(loop.ToSampleProvider()) { Pan = pan };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = volume };
 
             return volumeProvider.ToWaveProvider();
         }
@@ -44,27 +46,32 @@ namespace sb_explorer.Classes
         internal IWaveProvider CreateMonoWav(ref RawSourceWaveStream provider, byte[] _pcmData, SoundFile _soundToPlay)
         {
             provider = new RawSourceWaveStream(new MemoryStream(_pcmData), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
-            PanningSampleProvider panProvider = new PanningSampleProvider(provider.ToSampleProvider()) { Pan = GetPan(_soundToPlay) };
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(panProvider) { Volume = GetVolume(_soundToPlay) };
+            // PanningSampleProvider always produces stereo.  This non-looping path
+            // is also used when exporting a mono source, so keep its single channel.
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(provider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
 
             return volumeProvider.ToWaveProvider();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateStereoLoopWav(ref RawSourceWaveStream providerLeft, ref RawSourceWaveStream providerRight, byte[][] _pcmData, SoundFile _soundToPlay)
+        internal IWaveProvider CreateStereoLoopWav(ref RawSourceWaveStream providerLeft, ref RawSourceWaveStream providerRight,
+            byte[][] _pcmData, SoundFile _soundToPlay, float pitch, float volume)
         {
+            byte[] leftData = (byte[])_pcmData[0].Clone();
+            byte[] rightData = (byte[])_pcmData[1].Clone();
             if (_soundToPlay.loopEndPoint > 0)
             {
-                Array.Resize(ref _pcmData[0], Math.Min(_soundToPlay.loopEndPoint * 2, _pcmData[0].Length));
-                Array.Resize(ref _pcmData[1], Math.Min(_soundToPlay.loopEndPoint * 2, _pcmData[1].Length));
+                Array.Resize(ref leftData, Math.Min(_soundToPlay.loopEndPoint * 2, leftData.Length));
+                Array.Resize(ref rightData, Math.Min(_soundToPlay.loopEndPoint * 2, rightData.Length));
             }
 
-            providerLeft = new RawSourceWaveStream(new MemoryStream(_pcmData[0]), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            int frequency = SemitonesToFreq((int)_soundToPlay.sampleRate, pitch);
+            providerLeft = new RawSourceWaveStream(new MemoryStream(leftData), new WaveFormat(frequency, 16, 1));
             LoopStream loopLeft = new LoopStream(providerLeft, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
-            providerRight = new RawSourceWaveStream(new MemoryStream(_pcmData[1]), new WaveFormat(SemitonesToFreq((int)_soundToPlay.sampleRate, GetPitch(_soundToPlay)), 16, 1));
+            providerRight = new RawSourceWaveStream(new MemoryStream(rightData), new WaveFormat(frequency, 16, 1));
             LoopStream loopRight = new LoopStream(providerRight, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
             MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { loopLeft, loopRight }, 2);
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = GetVolume(_soundToPlay) };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = volume };
 
             return volumeProvider.ToWaveProvider();
         }
@@ -81,13 +88,14 @@ namespace sb_explorer.Classes
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        internal IWaveProvider CreateMultiChannelWav(out RawSourceWaveStream[] providers, byte[][] pcmData, SoundFile sound, bool loop)
+        internal IWaveProvider CreateMultiChannelWav(out RawSourceWaveStream[] providers, byte[][] pcmData, SoundFile sound,
+            bool loop, float pitch, float volume)
         {
             if (pcmData == null || pcmData.Length == 0) throw new ArgumentException("PCM channel data is empty.", "pcmData");
             int channelCount = Math.Min(8, pcmData.Length);
             providers = new RawSourceWaveStream[channelCount];
             IWaveProvider[] inputs = new IWaveProvider[channelCount];
-            int frequency = SemitonesToFreq((int)sound.sampleRate, GetPitch(sound));
+            int frequency = SemitonesToFreq((int)sound.sampleRate, pitch);
             for (int channel = 0; channel < channelCount; channel++)
             {
                 byte[] data = pcmData[channel] ?? new byte[0];
@@ -99,7 +107,7 @@ namespace sb_explorer.Classes
                     : providers[channel];
             }
             MultiplexingWaveProvider multiplexed = new MultiplexingWaveProvider(inputs, channelCount);
-            return new VolumeSampleProvider(multiplexed.ToSampleProvider()) { Volume = GetVolume(sound) }.ToWaveProvider();
+            return new VolumeSampleProvider(multiplexed.ToSampleProvider()) { Volume = volume }.ToWaveProvider();
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

@@ -33,7 +33,7 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             SoundbankHeader headerData = new SoundbankHeader(commonHeader);
 
-            if (headerData.FileVersion == 18)
+            if (headerData.FileVersion == 18 || headerData.FileVersion == 21)
             {
                 using (EuroSoundBinaryReader reader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), headerData.IsBigEndian))
                 {
@@ -88,7 +88,7 @@ namespace MusX.Readers
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ReadSoundBank(string filePath, SoundbankHeader headerData, SortedDictionary<uint, Sample> samplesDictionary, List<SampleData> wavesList, List<uint> duplicatedHashCodes)
         {
-            if (headerData.FileVersion == 18)
+            if (headerData.FileVersion == 18 || headerData.FileVersion == 21)
             {
                 SoundBankReaderNew.ReadSoundbankV18(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
                 return;

@@ -16,9 +16,16 @@ namespace MusX.Readers
             SoundDetails projectData = new SoundDetails();
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-                BReader.BaseStream.Seek(0x20, SeekOrigin.Begin);
-                projectData.MinHashCode = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
-                projectData.MaxHashCode = BytesFunctions.FlipData(BReader.ReadUInt32(), sfxHeaderData.IsBigEndian);
+                if (sfxHeaderData.EndOffset < 0 || sfxHeaderData.EndOffset > BReader.BaseStream.Length - 8)
+                {
+                    projectData.sfxItems = new SoundDetailsData[0];
+                    return projectData;
+                }
+                BReader.BaseStream.Seek(sfxHeaderData.EndOffset, SeekOrigin.Begin);
+                // These two range values are publisher metadata and remain little-endian
+                // on GC/Wii; the following per-SFX records use the platform endian.
+                projectData.MinHashCode = BReader.ReadUInt32();
+                projectData.MaxHashCode = BReader.ReadUInt32();
 
                 if (sfxHeaderData.FileVersion == 18)
                 {

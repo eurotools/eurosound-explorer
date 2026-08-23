@@ -255,7 +255,7 @@ namespace sb_explorer
                     byte[] ImaData = streamSample.EncodedData;
 
                     //Show Results
-                    bool isV18Interleaved = GetDisplayedStreamHeader(parentForm).FileVersion == 18;
+                    bool isV18Interleaved = GetDisplayedStreamHeader(parentForm).FileVersion == 15 || GetDisplayedStreamHeader(parentForm).FileVersion == 18 || GetDisplayedStreamHeader(parentForm).FileVersion == 21;
                     bool invalid = audioFunctions.CheckIfEurocomImaIsInvalid(ImaData, (int)streamSample.Channels);
                     if (invalid && isV18Interleaved && streamSample.Frequency == 0)
                     {
@@ -344,12 +344,12 @@ namespace sb_explorer
                 soundToPlay.PcmData = decodedAudio.Channels;
                 // Individual EngineXT streams have no legacy BaseVolume field.
                 // The descriptor leaves it at zero, which must not mute preview playback.
-                soundToPlay.volume = headerData.FileVersion == 18
+                soundToPlay.volume = headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21
                     ? 1.0f
                     : selectedSample.BaseVolume / 100.0f;
                 soundToPlay.sampleRate = decodedAudio.SampleRate;
                 soundToPlay.channels = (uint)decodedAudio.Channels.Length;
-                if (headerData.FileVersion == 18)
+                if (headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21)
                 {
                     int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
                     soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);

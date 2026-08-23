@@ -139,7 +139,7 @@ namespace MusX.Readers
             // In EngineXT the SBNK descriptor already supplies the count and
             // ReadSfxHeader exposes its 16-byte pointer-table span here. The
             // first value at SFXStart is an SFX hash, not a legacy count.
-            if (sbData.FileVersion == 18)
+            if (sbData.FileVersion == 18 || sbData.FileVersion == 21)
             {
                 return checked((int)(sbData.SFXLenght / 16));
             }

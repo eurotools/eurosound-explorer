@@ -20,6 +20,8 @@
         public uint LoopEndByteOffset;
         public uint SampleCount;
         public uint LoopStartSample;
+        public uint Channels;
+        public uint Frequency;
 
         //-------------------------------------------------------------------------------------------------------------------------------
         public StreambankHeader(SfxCommonHeader commonHeader = null)

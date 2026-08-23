@@ -51,7 +51,7 @@ namespace sb_explorer
                 ? selectedSample.AudioReference.Codec
                 : EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.SoundBank);
             return EuroSoundAudioDecoder.DecodeChannels(codec, selectedSample.EncodedData, audioFunctions, selectedSample.DspCoeffs,
-                selectedSample, (int)Math.Max(1, selectedSample.Channels), selectedSample.Frequency, selectedSample.TotalSamples, headerData.FileVersion == 18);
+                selectedSample, (int)Math.Max(1, selectedSample.Channels), selectedSample.Frequency, selectedSample.TotalSamples, IsEngineXt(headerData.FileVersion));
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace sb_explorer
             uint frequency = selectedSample.Frequency == 0 ? fallbackFrequency : selectedSample.Frequency;
             int channels = (int)Math.Max(1, selectedSample.Channels);
             return EuroSoundAudioDecoder.DecodeChannels(codec, selectedSample.EncodedData, audioFunctions, null, null,
-                channels, frequency, selectedSample.SampleCount, headerData.FileVersion == 18);
+                channels, frequency, selectedSample.SampleCount, IsEngineXt(headerData.FileVersion));
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static FileType GetFileType(int hashCode, int selectedVersion, string filePath, Title selectedTitle)
         {
-            if (selectedVersion == 18)
+            if (IsEngineXt(selectedVersion))
             {
                 string payloadMagic = ReadPayloadMagic(filePath, 0x800);
                 if (payloadMagic == "SBNK") return FileType.SoundbankFile;
@@ -136,9 +136,14 @@ namespace sb_explorer
             if (selectedVersion == 201)
             {
                 int sectionHashCode = (hashCode & 0x00F00000) >> 20;
+                int legacySectionHashCode = (hashCode & 0x0000F000) >> 12;
                 if (sectionHashCode == 0xE)
                 {
                     return FileType.MusicFile;
+                }
+                else if (legacySectionHashCode == 0xC && (new FileInfo(filePath).Length <= 0x1000))
+                {
+                    return FileType.ProjectDetails;
                 }
                 else if (filePath.IndexOf("stream") >= 0 || hashCode == 0x0000FFFF)
                 {
@@ -203,6 +208,11 @@ namespace sb_explorer
 
             }
             return FileType.Unknown;
+        }
+
+        private static bool IsEngineXt(int fileVersion)
+        {
+            return fileVersion == 15 || fileVersion == 18 || fileVersion == 21;
         }
 
         private static string ReadPayloadMagic(string filePath, long offset)

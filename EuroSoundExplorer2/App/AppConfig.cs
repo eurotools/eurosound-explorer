@@ -14,9 +14,9 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         private Platform _PlatformSelected;
         private Title _TitleSelected;
-        private string _SoundhFile, _ProjectFolder;
+        private string _SoundhFile, _ProjectFolder, _ProjectTitle;
         private uint _StreamsFrequency = 22050;
-        private int _FileVersion = 201;
+        private int _FileVersion;
 
         public event Action SoundhFileChanged;
         public event Action ProjectFolderChanged;
@@ -33,20 +33,11 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         [DisplayName("File Version")]
         [Category("EngineX")]
-        [TypeConverter(typeof(FileVersions))]
+        [ReadOnly(true)]
         public int FileVersion
         {
             get { return _FileVersion; }
             set { _FileVersion = value; }
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
-        [DisplayName("EuroSound Version")]
-        [Category("EngineX")]
-        [ReadOnly(true)]
-        public EuroSoundVersion EuroSoundVersion
-        {
-            get { return EuroSoundVersions.FromFileVersion(FileVersion); }
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -64,8 +55,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        [DisplayName("Platform")]
-        [Category("Project")]
+        [Browsable(false)]
         public Platform PlatformSelected
         {
             get { return _PlatformSelected; }
@@ -81,46 +71,20 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         [DisplayName("Title")]
         [Category("Project")]
+        public string ProjectTitle
+        {
+            get { return _ProjectTitle; }
+            set { _ProjectTitle = value; }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        [Browsable(false)]
         public Title TitleSelected
         {
             get { return _TitleSelected; }
             set
             {
                 _TitleSelected = value;
-                switch (value)
-                {
-                    case Title.Buffy:
-                        FileVersion = 201;
-                        break;
-                    case Title.Sphinx:
-                        FileVersion = 201;
-                        break;
-                    case Title.Athens:
-                        FileVersion = 1;
-                        break;
-                    case Title.Spyro:
-                        FileVersion = 4;
-                        break;
-                    case Title.Robots:
-                        FileVersion = 5;
-                        break;
-                    case Title.Predator:
-                        FileVersion = 5;
-                        break;
-                    case Title.BatmanBegins:
-                        FileVersion = 6;
-                        break;
-                    case Title.IceAge2:
-                        FileVersion = 6;
-                        break;
-                    case Title.DemoX:
-                        FileVersion = 6;
-                        break;
-                    case Title.GForce:
-                        FileVersion = 18;
-                        break;
-                }
-
                 //Check Exceptions
                 StreamsFrequency = GetDefaultStreamsFrequency(PlatformSelected, value);
             }

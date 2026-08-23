@@ -33,7 +33,9 @@ namespace MusX.Readers
                 LoopStartSample = headerData.LoopStartSample,
                 LoopStartByteOffset = headerData.LoopStartByteOffset,
                 LoopEndByteOffset = headerData.LoopEndByteOffset,
-                AudioReference = new AudioDataReference { FilePath = filePath, Offset = headerData.FileStart2, Size = headerData.FileLength2, Codec = codec, Frequency = 0, Channels = 1 }
+                Frequency = headerData.Frequency,
+                Channels = Math.Max(1u, headerData.Channels),
+                AudioReference = new AudioDataReference { FilePath = filePath, Offset = headerData.FileStart2, Size = headerData.FileLength2, Codec = codec, Frequency = headerData.Frequency, Channels = (int)Math.Max(1u, headerData.Channels) }
             };
             ResolveV18Metadata(filePath, sample, headerData.Platform);
             streamedSamples.Add(sample);

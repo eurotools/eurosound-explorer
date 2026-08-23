@@ -47,6 +47,31 @@ namespace AudioDecoders
         //-------------------------------------------------------------------------------------------------------------------------------
         public byte[] Decode(byte[] vagData, ref uint loopOffset)
         {
+            return Decode(vagData, 16, ref loopOffset);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        public byte[] DecodeRaw(byte[] vagData, ref uint loopOffset)
+        {
+            return Decode(vagData, 0, ref loopOffset);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private byte[] Decode(byte[] vagData, int dataOffset, ref uint loopOffset)
+        {
+            if (vagData == null)
+            {
+                throw new ArgumentNullException("vagData");
+            }
+            if (dataOffset < 0 || dataOffset > vagData.Length)
+            {
+                throw new InvalidDataException("Invalid VAG data offset.");
+            }
+            if ((vagData.Length - dataOffset) % 16 != 0)
+            {
+                throw new InvalidDataException("VAG data contains a truncated ADPCM block.");
+            }
+
             byte[] pcmData;
 
             using (BinaryReader VagReader = new BinaryReader(new MemoryStream(vagData, false)))
@@ -55,8 +80,7 @@ namespace AudioDecoders
             {
                 double hist_1 = 0.0, hist_2 = 0.0;
 
-                //Skip header
-                VagReader.BaseStream.Seek(16, SeekOrigin.Begin);
+                VagReader.BaseStream.Seek(dataOffset, SeekOrigin.Begin);
 
                 //Start decoding
                 while (VagReader.BaseStream.Position < VagReader.BaseStream.Length)
@@ -71,44 +95,49 @@ namespace AudioDecoders
                         sample = VagReader.ReadBytes(14)
                     };
 
+                    if (vc.predict < 0 || vc.predict >= VAGLut.GetLength(0))
+                    {
+                        throw new InvalidDataException("Invalid VAG predictor index: " + vc.predict + ".");
+                    }
+                    if (vc.shift < 0 || vc.shift > 12)
+                    {
+                        throw new InvalidDataException("Invalid VAG shift value: " + vc.shift + ".");
+                    }
+
                     if (vc.flags == (byte)VAGFlag.VAGF_PLAYBACK_END)
                     {
                         break;
                     }
-                    else if (vc.flags == (byte)VAGFlag.VAGF_LOOP_START)
+
+                    if (vc.flags == (byte)VAGFlag.VAGF_LOOP_START)
                     {
                         loopOffset = (uint)PCMStream.Length;
                     }
-                    else
+
+                    int[] samples = new int[VAG_SAMPLE_NIBBL];
+
+                    // expand 4bit -> 8bit
+                    for (int j = 0; j < VAG_SAMPLE_BYTES; j++)
                     {
-                        int[] samples = new int[VAG_SAMPLE_NIBBL];
+                        samples[j * 2] = vc.sample[j] & 0xF;
+                        samples[j * 2 + 1] = (vc.sample[j] & 0xF0) >> 4;
+                    }
 
-                        // expand 4bit -> 8bit
-                        for (int j = 0; j < VAG_SAMPLE_BYTES; j++)
+                    //Decode samples
+                    for (int j = 0; j < VAG_SAMPLE_NIBBL; j++)
+                    {
+                        // shift 4 bits to top range of int16_t
+                        int s = samples[j] << 12;
+                        if ((s & 0x8000) != 0)
                         {
-                            samples[j * 2] = vc.sample[j] & 0xF;
-                            samples[j * 2 + 1] = (vc.sample[j] & 0xF0) >> 4;
+                            s = (int)(s | 0xFFFF0000);
                         }
 
-                        //Decode samples
-                        for (int j = 0; j < VAG_SAMPLE_NIBBL; j++)
-                        {
-                            // shift 4 bits to top range of int16_t
-                            int s = samples[j] << 12;
-                            if ((s & 0x8000) != 0)
-                            {
-                                s = (int)(s | 0xFFFF0000);
-                            }
+                        double sample = (s >> vc.shift) + hist_1 * VAGLut[vc.predict, 0] + hist_2 * VAGLut[vc.predict, 1];
+                        hist_2 = hist_1;
+                        hist_1 = sample;
 
-                            /* swy: don't overflow the LUT array access; limit the max allowed index */
-                            sbyte predict = Math.Min(vc.predict, (sbyte)(VAGLut.GetLength(0) - 1));
-
-                            double sample = (s >> vc.shift) + hist_1 * VAGLut[predict, 0] + hist_2 * VAGLut[predict, 1];
-                            hist_2 = hist_1;
-                            hist_1 = sample;
-
-                            PCMWriter.Write((short)(Math.Min(short.MaxValue, Math.Max(sample, short.MinValue))));
-                        }
+                        PCMWriter.Write((short)(Math.Min(short.MaxValue, Math.Max(sample, short.MinValue))));
                     }
                 }
                 pcmData = PCMStream.ToArray();

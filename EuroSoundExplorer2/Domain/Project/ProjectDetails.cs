@@ -68,6 +68,46 @@ namespace MusX.Objects
         [Category("EngineXT v18")]
         public int OscillatorsCount { get; set; }
 
+        [DisplayName("Stream Heap 0 Size")]
+        [Category("MusX / ESPD")]
+        public uint StreamHeapSize0 { get; set; }
+
+        [DisplayName("Stream Heap 1 Size")]
+        [Category("MusX / ESPD")]
+        public uint StreamHeapSize1 { get; set; }
+
+        [DisplayName("Publish Count")]
+        [Category("MusX / ESPD")]
+        public uint PublishCount { get; set; }
+
+        [DisplayName("Output Count")]
+        [Category("MusX / ESPD")]
+        public uint OutputCount { get; set; }
+
+        [DisplayName("Listener Velocity Smoothing")]
+        [Category("MusX / ESPD")]
+        public float ListenerVelocitySmoothing { get; set; }
+
+        [DisplayName("Game Variables Count")]
+        [Category("MusX / ESPD")]
+        public int GameVarsCount { get; set; }
+
+        [DisplayName("Controllers Count")]
+        [Category("MusX / ESPD")]
+        public int ControllersCount { get; set; }
+
+        [DisplayName("Events Count")]
+        [Category("MusX / ESPD")]
+        public int EventsCount { get; set; }
+
+        [DisplayName("Tags Count")]
+        [Category("MusX / ESPD")]
+        public int TagsCount { get; set; }
+
+        [DisplayName("Spreadsheets Count")]
+        [Category("MusX / ESPD")]
+        public int SpreadsheetsCount { get; set; }
+
         public List<ProjectSoundBank> soundBanksData = new List<ProjectSoundBank>();
         public List<ProjectSlots> memorySlotsData = new List<ProjectSlots>();
         public List<ProjectMemoryMap> memoryMapsData = new List<ProjectMemoryMap>();

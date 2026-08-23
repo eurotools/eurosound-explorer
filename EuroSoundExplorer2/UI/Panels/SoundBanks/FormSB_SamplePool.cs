@@ -353,7 +353,7 @@ namespace sb_explorer
                         soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                     }
                     soundToPlay.channels = (uint)decodedAudio.Channels.Length;
-                    if (parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion == 18)
+                    if (parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion == 18 || parentForm.pnlSoundBankFiles.SoundBankHeaderData.FileVersion == 21)
                     {
                         int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
                         soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);
@@ -397,7 +397,7 @@ namespace sb_explorer
                             soundToPlay.panningOffset = float.Parse(selectedItem.SubItems[6].Text) / 100;
                         }
                         soundToPlay.channels = (uint)decodedAudio.Channels.Length;
-                        if (headerData.FileVersion == 18)
+                        if (headerData.FileVersion == 18 || headerData.FileVersion == 21)
                         {
                             int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
                             soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);
