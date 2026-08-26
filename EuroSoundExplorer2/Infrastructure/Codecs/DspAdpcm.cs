@@ -167,9 +167,23 @@ namespace AudioDecoders
                 container[offset + 2] != (byte)'C' || container[offset + 3] != (byte)'A')
                 throw new System.IO.InvalidDataException("NGCA DSP ADPCM requires a valid 0x40-byte NGCA channel header.");
             short[] coefficients = LegacyDspAdpcm.ReadBigEndianCoefficients(container, offset + 0x0c);
-            byte[] payload = new byte[length - HeaderSize];
+            uint nibbleCount = ReadBigEndianUInt32(container, offset + 4);
+            long declaredPayloadLength = (nibbleCount + 1L) / 2L;
+            int availablePayloadLength = length - HeaderSize;
+            int payloadLength = declaredPayloadLength <= 0 || declaredPayloadLength > availablePayloadLength
+                ? availablePayloadLength
+                : checked((int)declaredPayloadLength);
+            byte[] payload = new byte[payloadLength];
             Buffer.BlockCopy(container, offset + HeaderSize, payload, 0, payload.Length);
             return new DspAdpcm().Decode(payload, coefficients);
+        }
+
+        private static uint ReadBigEndianUInt32(byte[] source, int offset)
+        {
+            return ((uint)source[offset] << 24) |
+                   ((uint)source[offset + 1] << 16) |
+                   ((uint)source[offset + 2] << 8) |
+                   source[offset + 3];
         }
     }
 

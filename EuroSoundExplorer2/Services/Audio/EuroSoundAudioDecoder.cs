@@ -56,6 +56,10 @@ namespace sb_explorer.Services.Audio
                 case EuroSoundAudioCodec.DspAdpcmNgca:
                     channels = DecodeEngineXtDsp(encodedData, channelCount, audioFunctions, true);
                     break;
+                case EuroSoundAudioCodec.Vorbis:
+                    return EngineXtVorbisDecoder.Decode(encodedData, sampleCount);
+                case EuroSoundAudioCodec.Xma:
+                    return EngineXtXmaDecoder.Decode(encodedData, channelCount, sampleRate, sampleCount);
                 default:
                     byte[] mono = Decode(codec, encodedData, audioFunctions, dspCoeffs, selectedSample);
                     channels = mono == null ? new byte[0][] : new[] { mono };
@@ -72,7 +76,20 @@ namespace sb_explorer.Services.Audio
             {
                 int wantedBytes = sampleCount > int.MaxValue / 2 ? int.MaxValue : checked((int)sampleCount * 2);
                 for (int i = 0; i < channels.Length; i++)
-                    if (channels[i] != null && channels[i].Length > wantedBytes) Array.Resize(ref channels[i], wantedBytes);
+                {
+                    if (channels[i] == null) continue;
+                    if (channels[i].Length > wantedBytes)
+                    {
+                        Array.Resize(ref channels[i], wantedBytes);
+                    }
+                    else if (wantedBytes - channels[i].Length <= 112 * 2)
+                    {
+                        // Encoded banks are sector/block aligned. Their declared
+                        // PCM count can include at most two final partial IMA blocks.
+                        // Preserve that exact duration with silent tail samples.
+                        Array.Resize(ref channels[i], wantedBytes);
+                    }
+                }
             }
 
             return new DecodedAudio { Channels = channels, SampleRate = sampleRate, SampleCount = sampleCount };
@@ -101,7 +118,12 @@ namespace sb_explorer.Services.Audio
                 case EuroSoundAudioCodec.SonyVagAdpcm:
                     SonyAdpcm vagDecoder = new SonyAdpcm();
                     uint vagLoopStartOffset = selectedSample == null ? 0 : uint.MaxValue;
-                    byte[] decodedData = vagDecoder.Decode(encodedData, ref vagLoopStartOffset);
+                    bool hasVagHeader = encodedData.Length >= 16 &&
+                        encodedData[0] == (byte)'V' && encodedData[1] == (byte)'A' &&
+                        encodedData[2] == (byte)'G' && encodedData[3] == (byte)'p';
+                    byte[] decodedData = hasVagHeader
+                        ? vagDecoder.Decode(encodedData, ref vagLoopStartOffset)
+                        : vagDecoder.DecodeRaw(encodedData, ref vagLoopStartOffset);
                     if (selectedSample != null && selectedSample.IsLooped && vagLoopStartOffset != uint.MaxValue)
                     {
                         selectedSample.LoopStartOffset = vagLoopStartOffset / 2;
@@ -122,6 +144,9 @@ namespace sb_explorer.Services.Audio
                 case EuroSoundAudioCodec.XboxAdpcm:
                     XboxAdpcm xboxDecoder = new XboxAdpcm();
                     return audioFunctions.ShortArrayToByteArray(xboxDecoder.Decode(encodedData));
+
+                case EuroSoundAudioCodec.Vorbis:
+                    return EngineXtVorbisDecoder.DecodeInterleaved(encodedData);
 
                 default:
                     return null;
@@ -205,14 +230,43 @@ namespace sb_explorer.Services.Audio
         //-------------------------------------------------------------------------------------------------------------------------------
         private static byte[][] DecodeEngineXtDsp(byte[] source, int channels, AudioFunctions audioFunctions, bool ngca)
         {
+            if (ngca)
+            {
+                return DecodeNgcaChannels(source, channels, audioFunctions);
+            }
+
             int regionBytes = source.Length / channels;
             byte[][] result = new byte[channels][];
             for (int channel = 0; channel < channels; channel++)
             {
                 int start = channel * regionBytes;
-                short[] decoded = ngca
-                    ? new NgcaDspAdpcm().Decode(source, start, regionBytes)
-                    : new LegacyDspAdpcm().Decode(source, start, regionBytes);
+                short[] decoded = new LegacyDspAdpcm().Decode(source, start, regionBytes);
+                result[channel] = audioFunctions.ShortArrayToByteArray(decoded);
+            }
+            return result;
+        }
+
+        private static byte[][] DecodeNgcaChannels(byte[] source, int channels, AudioFunctions audioFunctions)
+        {
+            int[] starts = new int[channels];
+            int found = 0;
+            for (int offset = 0; offset <= source.Length - NgcaDspAdpcm.HeaderSize && found < channels; offset++)
+            {
+                if (source[offset] == (byte)'N' && source[offset + 1] == (byte)'G' &&
+                    source[offset + 2] == (byte)'C' && source[offset + 3] == (byte)'A')
+                {
+                    starts[found++] = offset;
+                    offset += NgcaDspAdpcm.HeaderSize - 1;
+                }
+            }
+            if (found != channels)
+                throw new System.IO.InvalidDataException(string.Format("Expected {0} NGCA channel header(s), found {1}.", channels, found));
+
+            byte[][] result = new byte[channels][];
+            for (int channel = 0; channel < channels; channel++)
+            {
+                int end = channel + 1 < channels ? starts[channel + 1] : source.Length;
+                short[] decoded = new NgcaDspAdpcm().Decode(source, starts[channel], end - starts[channel]);
                 result[channel] = audioFunctions.ShortArrayToByteArray(decoded);
             }
             return result;

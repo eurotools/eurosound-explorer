@@ -16,6 +16,24 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             StreambankHeader headerData = new StreambankHeader(commonHeader);
 
+            if (headerData.FileVersion == 10)
+            {
+                EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(10, headerData.Platform, EuroSoundBankType.StreamBank);
+                bool isMusicEffect = IsMusX10MusicEffect(headerData.FileHashCode);
+                headerData.FileStart1 = GetCodecType(codec);
+                headerData.CodecType = headerData.FileStart1;
+                headerData.Channels = isMusicEffect ? 2u : 1u;
+                headerData.Frequency = 22050;
+                bool hasVagPrefix = codec == EuroSoundAudioCodec.SonyVagAdpcm && !isMusicEffect;
+                headerData.FileStart2 = hasVagPrefix ? 0x810u : 0x800u;
+                headerData.FileLength2 = GetMusX10AudioLength(filePath, headerData.FileStart2, codec, checked((int)headerData.Channels));
+                headerData.SampleCount = EuroSoundCodecMatrix.EncodedByteCountToSamples(codec, headerData.FileLength2, checked((int)headerData.Channels));
+                headerData.LoopStartByteOffset = uint.MaxValue;
+                headerData.LoopEndByteOffset = uint.MaxValue;
+                headerData.LoopStartSample = uint.MaxValue;
+                return headerData;
+            }
+
             if (headerData.FileVersion == 21)
             {
                 // EngineXT v21 DAT5 descriptors are little-endian even on Wii.
@@ -114,6 +132,11 @@ namespace MusX.Readers
         //-------------------------------------------------------------------------------------------------------------------------------
         public void ReadStreamBank(string filePath, StreambankHeader headerData, List<StreamSample> streamedSamples)
         {
+            if (headerData.FileVersion == 10)
+            {
+                StreamBankReaderNew.ReadStreamFileV18(filePath, headerData, streamedSamples);
+                return;
+            }
             if (headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21)
             {
                 StreamBankReaderNew.ReadStreamFileV18(filePath, headerData, streamedSamples);
@@ -128,6 +151,59 @@ namespace MusX.Readers
             {
                 StreamBankReaderNew newReader = new StreamBankReaderNew();
                 newReader.ReadStreamFile(filePath, headerData, streamedSamples);
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        internal static uint GetCodecType(EuroSoundAudioCodec codec)
+        {
+            switch (codec)
+            {
+                case EuroSoundAudioCodec.EurocomImaAdpcm: return 1;
+                case EuroSoundAudioCodec.SonyVagAdpcm: return 2;
+                case EuroSoundAudioCodec.DspAdpcmLegacy:
+                case EuroSoundAudioCodec.DspAdpcmNgca: return 3;
+                case EuroSoundAudioCodec.Pcm16: return 4;
+                case EuroSoundAudioCodec.Vorbis: return 5;
+                case EuroSoundAudioCodec.Xma: return 6;
+                default: return 0;
+            }
+        }
+
+        private static bool IsMusX10MusicEffect(uint hashCode)
+        {
+            // EngineX compares hashes without the platform-specific top byte.
+            // Section 6 contains the stereo _mus_mfx assets.
+            return (hashCode & 0x00F00000u) == 0x00600000u;
+        }
+
+        internal static uint GetMusX10AudioLength(string filePath, uint audioOffset, EuroSoundAudioCodec codec, int channels)
+        {
+            int blockSize = codec == EuroSoundAudioCodec.EurocomImaAdpcm ? 32 : 16;
+            int blockSetSize = blockSize * Math.Max(1, channels);
+            using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                long available = Math.Max(0, stream.Length - audioOffset);
+                int tailLength = (int)Math.Min(0x1000, available);
+                byte[] tail = new byte[tailLength];
+                stream.Position = stream.Length - tailLength;
+                int read = 0;
+                while (read < tail.Length)
+                {
+                    int count = stream.Read(tail, read, tail.Length - read);
+                    if (count == 0) break;
+                    read += count;
+                }
+
+                int padding = 0;
+                for (int index = read - 1; index >= 0 && tail[index] == 0xAB; index--)
+                {
+                    padding++;
+                }
+
+                long payloadLength = Math.Max(0, available - padding);
+                payloadLength -= payloadLength % blockSetSize;
+                return payloadLength <= 0 ? 0u : (uint)Math.Min(uint.MaxValue, payloadLength);
             }
         }
     }

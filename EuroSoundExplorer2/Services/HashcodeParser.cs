@@ -101,6 +101,14 @@ namespace sb_explorer.Classes
             {
                 label = HashCodes[(int)hashCode];
             }
+            else
+            {
+                uint engineXHashCode = 0x2D000000u | (hashCode & 0x00FFFFFFu);
+                if (HashCodes.ContainsKey(unchecked((int)engineXHashCode)))
+                {
+                    label = HashCodes[unchecked((int)engineXHashCode)];
+                }
+            }
 
             return label;
         }
@@ -108,7 +116,9 @@ namespace sb_explorer.Classes
         //-------------------------------------------------------------------------------------------------------------------------------
         public bool HashcodeIsListed(uint hashCode)
         {
-            return HashCodes.ContainsKey((int)hashCode);
+            if (HashCodes.ContainsKey((int)hashCode)) return true;
+            uint engineXHashCode = 0x2D000000u | (hashCode & 0x00FFFFFFu);
+            return HashCodes.ContainsKey(unchecked((int)engineXHashCode));
         }
 
         public string GetMusicHashCodeLabel(uint hashCode)

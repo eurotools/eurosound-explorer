@@ -59,6 +59,9 @@
     <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="NVorbis">
+      <HintPath>..\packages\NVorbis.0.8.5\lib\NVorbis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -83,6 +86,8 @@
     <Compile Include="Classes\Enumerations.cs" />
     <Compile Include="UI\Formatting\DisplayValueFormatter.cs" />
     <Compile Include="Services\Audio\EuroSoundAudioDecoder.cs" />
+    <Compile Include="Services\Audio\EngineXtXmaDecoder.cs" />
+    <Compile Include="Services\Audio\EngineXtVorbisDecoder.cs" />
     <Compile Include="Services\Audio\DecodedAudio.cs" />
     <Compile Include="Services\Audio\EuroSoundMarkerLoopResolver.cs" />
     <Compile Include="Services\Audio\EuroSoundWaveWriter.cs" />

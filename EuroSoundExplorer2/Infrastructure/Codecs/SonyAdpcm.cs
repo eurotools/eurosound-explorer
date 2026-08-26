@@ -85,6 +85,21 @@ namespace AudioDecoders
                 //Start decoding
                 while (VagReader.BaseStream.Position < VagReader.BaseStream.Length)
                 {
+                    long blockPosition = VagReader.BaseStream.Position;
+                    if (vagData.Length - blockPosition >= 16)
+                    {
+                        bool isSectorPadding = true;
+                        for (int paddingIndex = 0; paddingIndex < 16; paddingIndex++)
+                        {
+                            if (vagData[blockPosition + paddingIndex] != 0xAB)
+                            {
+                                isSectorPadding = false;
+                                break;
+                            }
+                        }
+                        if (isSectorPadding) break;
+                    }
+
                     //Read chunk data
                     byte DecodingCoefficent = VagReader.ReadByte();
                     VAGChunk vc = new VAGChunk

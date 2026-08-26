@@ -14,6 +14,36 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             StreambankHeader headerData = new StreambankHeader(commonHeader);
 
+            if (headerData.FileVersion == 10)
+            {
+                EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(
+                    10,
+                    headerData.Platform,
+                    EuroSoundBankType.MusicBank);
+
+                headerData.FileStart1 = 0;
+                headerData.FileLength1 = 0;
+                headerData.FileStart2 = 0x800;
+                headerData.FileLength2 = StreamBankReader.GetMusX10AudioLength(
+                    filePath,
+                    headerData.FileStart2,
+                    codec,
+                    2);
+                headerData.CodecType = StreamBankReader.GetCodecType(codec);
+                headerData.Channels = 2;
+                headerData.Frequency = EuroSoundCodecMatrix.IsXbox360Platform(headerData.Platform)
+                    ? 44100u
+                    : 32000u;
+                headerData.SampleCount = EuroSoundCodecMatrix.EncodedByteCountToSamples(
+                    codec,
+                    headerData.FileLength2,
+                    2);
+                headerData.LoopStartByteOffset = uint.MaxValue;
+                headerData.LoopEndByteOffset = uint.MaxValue;
+                headerData.LoopStartSample = uint.MaxValue;
+                return headerData;
+            }
+
             using (EuroSoundBinaryReader BReader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), headerData.IsBigEndian))
             {
                 BReader.Seek(headerData.EndOffset, SeekOrigin.Begin);
@@ -44,6 +74,21 @@ namespace MusX.Readers
         public MusicSample ReadMusicBank(string filePath, StreambankHeader headerData)
         {
             MusicSample musicObj = null;
+            if (headerData.FileVersion == 10)
+            {
+                EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(
+                    10,
+                    headerData.Platform,
+                    EuroSoundBankType.MusicBank);
+                int interleaveBlockSize = codec == EuroSoundAudioCodec.EurocomImaAdpcm ? 32 : 16;
+
+                MusicBankReaderNew piratesReader = new MusicBankReaderNew();
+                return piratesReader.ReadMusicFileV10(
+                    filePath,
+                    headerData,
+                    interleaveBlockSize);
+            }
+
             if (headerData.FileVersion == 201 || headerData.FileVersion == 1)
             {
                 MusicBankReaderOld oldReader = new MusicBankReaderOld();

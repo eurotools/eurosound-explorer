@@ -10,6 +10,40 @@ namespace MusX.Readers
     public class MusicBankReaderNew
     {
         //-------------------------------------------------------------------------------------------------------------------------------
+        internal MusicSample ReadMusicFileV10(string filePath, StreambankHeader headerData, int interleaveBlockSize)
+        {
+            MusicSample musicData = new MusicSample
+            {
+                StartMarkersCount = 0,
+                MarkersCount = 0,
+                StartMarkerOffset = 0,
+                MarkerOffset = 0,
+                BaseVolume = 100,
+                AudioOffset = headerData.FileStart2,
+                AudioSize = headerData.FileLength2
+            };
+
+            EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(
+                headerData.FileVersion,
+                headerData.Platform,
+                EuroSoundBankType.MusicBank);
+            AudioDataReference audioReference = new AudioDataReference
+            {
+                FilePath = filePath,
+                Offset = musicData.AudioOffset,
+                Size = musicData.AudioSize,
+                Codec = codec,
+                Frequency = headerData.Frequency,
+                Channels = 2,
+                InterleaveBlockSize = interleaveBlockSize
+            };
+
+            musicData.AudioReferences[0] = audioReference;
+            musicData.AudioReferences[1] = audioReference;
+            return musicData;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
         internal MusicSample ReadMusicFile(string filePath, StreambankHeader headerData, int interleave_block_size)
         {
             MusicSample musicDat = null;

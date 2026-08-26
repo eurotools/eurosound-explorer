@@ -16,7 +16,7 @@ namespace MusX.Readers
             SfxCommonHeader commonHeader = ReadCommonHeader(filePath, platform);
             ProjectDetailsHeader headerData = new ProjectDetailsHeader(commonHeader);
 
-            if (headerData.FileVersion == 18 || headerData.FileVersion == 21)
+            if (headerData.FileVersion == 10 || headerData.FileVersion == 18 || headerData.FileVersion == 21)
             {
                 headerData.MemoryStart = 0x800;
                 headerData.MemoryLength = headerData.FileSize > 0x800 ? headerData.FileSize - 0x800 : 0;
@@ -58,7 +58,7 @@ namespace MusX.Readers
                     return projectData;
                 }
 
-                if (headerData.FileVersion == 6)
+                if (headerData.FileVersion == 6 || headerData.FileVersion == 10)
                 {
                     ReadProjectFileVersion6(BReader, headerData, projectData);
                     return projectData;
@@ -563,11 +563,18 @@ namespace MusX.Readers
                     }
                     BReader.BaseStream.Seek(GetChunkEnd(chunkStart, chunkSize, formEnd), SeekOrigin.Begin);
                 }
-                else if (chunkId == "NAME")
+                else if (chunkId == "NAME" || chunkId == "MMAP")
                 {
+                    uint memoryMapHashCode = 0;
+                    uint memoryMapNameSize = chunkSize;
+                    if (chunkId == "MMAP" && chunkSize >= 4)
+                    {
+                        memoryMapHashCode = BReader.ReadUInt32();
+                        memoryMapNameSize -= 4;
+                    }
                     ProjectMemoryMap memoryMap = new ProjectMemoryMap
                     {
-                        Name = ReadChunkString(BReader, chunkSize)
+                        Name = ReadChunkString(BReader, memoryMapNameSize)
                     };
                     BReader.BaseStream.Seek(GetChunkEnd(chunkStart, chunkSize, formEnd), SeekOrigin.Begin);
 
@@ -579,7 +586,10 @@ namespace MusX.Readers
 
                         if (slotChunkId == "SLOT")
                         {
-                            ReadSlotSizes(BReader, slotChunkSize, memoryMap);
+                            if (chunkId == "MMAP")
+                                ReadVersion10SlotSizes(BReader, slotChunkSize, memoryMap, projectData);
+                            else
+                                ReadSlotSizes(BReader, slotChunkSize, memoryMap);
                             BReader.BaseStream.Seek(GetChunkEnd(slotChunkStart, slotChunkSize, formEnd), SeekOrigin.Begin);
                         }
                         else
@@ -589,11 +599,38 @@ namespace MusX.Readers
                     }
 
                     AddMemoryMap(projectData, memoryMap);
+                    if (memoryMapHashCode != 0)
+                    {
+                        projectData.runtimeObjects.Add(new ProjectRuntimeObject
+                        {
+                            Type = "MemoryMap",
+                            HashCode = memoryMapHashCode,
+                            Details = memoryMap.Name
+                        });
+                    }
                 }
                 else
                 {
                     BReader.BaseStream.Seek(GetChunkEnd(chunkStart, chunkSize, formEnd), SeekOrigin.Begin);
                 }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static void ReadVersion10SlotSizes(BinaryReader reader, uint chunkSize, ProjectMemoryMap memoryMap, ProjectDetails projectData)
+        {
+            uint pairCount = chunkSize / 8;
+            for (int i = 0; i < pairCount; i++)
+            {
+                uint slotHashCode = reader.ReadUInt32();
+                int slotSize = reader.ReadInt32();
+                memoryMap.SlotSizes.Add(slotSize);
+                projectData.runtimeObjects.Add(new ProjectRuntimeObject
+                {
+                    Type = "MemorySlot",
+                    HashCode = slotHashCode,
+                    Details = slotSize.ToString()
+                });
             }
         }
 

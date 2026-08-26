@@ -112,7 +112,11 @@ namespace sb_explorer
                 Spare = sampleData.Spare,
                 InnerRadius = sampleData.InnerRadius,
                 OuterRadius = sampleData.OuterRadius,
-                Flags = sampleData.Flags
+                Flags = sampleData.Flags,
+                PlayType = GetPlayTypeDescription(sampleData.PlayType),
+                V10Flags = "0x" + sampleData.V10Flags.ToString("X8"),
+                InstanceCulling = GetLegacyInstanceCullingDescription(sampleData),
+                GroupCulling = GetLegacyGroupCullingDescription(sampleData)
             };
             if (fileVersion >= 4 && fileVersion <= 6)
             {
@@ -127,8 +131,53 @@ namespace sb_explorer
             {
                 gridObj.TrackingType = GetTrackingTypeDescription(sampleData.TrackingType);
             }
+            else if (fileVersion == 10)
+            {
+                checkedListBox1.Items.Clear();
+                checkedListBox1.Items.AddRange(new string[]
+                {
+                    "MaxReject",
+                    "UnPausable",
+                    "IgnoreMasterVolume",
+                    "Legacy MultiSample (superseded by PlayType)",
+                    "Legacy RandomPick (superseded by PlayType)",
+                    "Legacy Shuffled (superseded by PlayType)",
+                    "Loop",
+                    "Legacy Polyphonic (superseded by PlayType)",
+                    "UnderWater",
+                    "PauseInstant",
+                    "HasSubSfx",
+                    "StealOnLouder",
+                    "TreatLikeMusic",
+                    "KillMeOwnGroup",
+                    "GroupStealReject",
+                    "OneInstancePerFrame",
+                    "Extended flag 16",
+                    "Extended flag 17",
+                    "Extended flag 18",
+                    "Extended flag 19",
+                    "Extended flag 20",
+                    "Extended flag 21",
+                    "Extended flag 22",
+                    "Extended flag 23",
+                    "Extended flag 24",
+                    "Extended flag 25",
+                    "Extended flag 26",
+                    "Extended flag 27",
+                    "Extended flag 28",
+                    "Extended flag 29",
+                    "Extended flag 30",
+                    "Extended flag 31"
+                });
+            }
             else
             {
+                if (fileVersion == 10)
+                {
+                    gridObj.TrackingType = "Stored in MUSX 10 flags (not the legacy TrackingType enum)";
+                }
+                else
+                {
                 switch (sampleData.TrackingType)
                 {
                     case 0:
@@ -150,6 +199,7 @@ namespace sb_explorer
                         gridObj.TrackingType = sampleData.TrackingType.ToString();
                         break;
                 }
+                }
             }
 
             //Display
@@ -167,9 +217,10 @@ namespace sb_explorer
                 checkedListBox1.Items.AddRange(new string[] { "MaxReject", "UnPausable", "IgnoreMasterVolume", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInstant", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "KillMeOwnGroup", "GroupStealReject", "OneInstancePerFrame" });
             }
 
+            uint displayedFlags = fileVersion == 10 ? sampleData.V10Flags : sampleData.Flags;
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
-                checkedListBox1.SetItemChecked(i, Convert.ToBoolean((sampleData.Flags >> i) & 1));
+                checkedListBox1.SetItemChecked(i, Convert.ToBoolean((displayedFlags >> i) & 1));
             }
             for (int i = 0; i < checkedListBox2.Items.Count; i++)
             {
@@ -212,6 +263,46 @@ namespace sb_explorer
         private static string FormatObjectId(ushort id)
         {
             return id == 0 ? "(none)" : "0x" + id.ToString("X4") + " (" + id + ")";
+        }
+
+        private static string GetLegacyInstanceCullingDescription(Sample sample)
+        {
+            if (sample.MaxVoices <= 0)
+            {
+                return "None";
+            }
+
+            if ((sample.Flags & (1 << 0)) != 0)
+            {
+                return "Stop new";
+            }
+
+            if ((sample.Flags & (1 << 11)) != 0)
+            {
+                return "Steal quietest";
+            }
+
+            return "Stop oldest";
+        }
+
+        private static string GetLegacyGroupCullingDescription(Sample sample)
+        {
+            if (sample.GroupMaxChannels <= 0)
+            {
+                return "None";
+            }
+
+            if ((sample.Flags & (1 << 14)) != 0)
+            {
+                return "Stop new";
+            }
+
+            if ((sample.Flags & (1 << 13)) != 0)
+            {
+                return "Stop group";
+            }
+
+            return "Stop oldest";
         }
 
         private static string GetPlayTypeDescription(byte playType)

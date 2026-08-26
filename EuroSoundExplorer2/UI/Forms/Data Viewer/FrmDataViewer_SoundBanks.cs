@@ -80,13 +80,21 @@ namespace sb_explorer
                 TreeAdd(hashCode, nameof(item.Value.Priority), item.Value.Priority);
                 TreeAdd(hashCode, nameof(item.Value.Ducker), item.Value.Ducker);
                 TreeAdd(hashCode, nameof(item.Value.MasterVolume), item.Value.MasterVolume);
-                if (headerData.FileVersion > 3 && headerData.FileVersion < 10)
+                if ((headerData.FileVersion > 3 && headerData.FileVersion < 10) || headerData.FileVersion == 10)
                 {
                     TreeAdd(hashCode, nameof(item.Value.GroupHashCode), item.Value.GroupHashCode);
                     TreeAdd(hashCode, nameof(item.Value.GroupMaxChannels), item.Value.GroupMaxChannels);
                 }
                 TreeAdd(hashCode, nameof(item.Value.Flags), item.Value.Flags);
-                AddDecodedSfxFlags(hashCode, headerData.FileVersion, item.Value.Flags);
+                AddDecodedSfxFlags(hashCode, headerData.FileVersion,
+                    headerData.FileVersion == 10 ? item.Value.V10Flags : item.Value.Flags);
+                if (headerData.FileVersion == 10)
+                {
+                    TreeAdd(hashCode, nameof(item.Value.V10Flags), item.Value.V10Flags);
+                    TreeAdd(hashCode, nameof(item.Value.PlayType), item.Value.PlayType);
+                    TreeAdd(hashCode, nameof(item.Value.DopplerValue), item.Value.DopplerValue);
+                    TreeAdd(hashCode, nameof(item.Value.SFXDucker), item.Value.SFXDucker);
+                }
                 if (headerData.FileVersion > 4 && headerData.FileVersion < 10)
                 {
                     TreeAdd(hashCode, nameof(item.Value.UserFlags), item.Value.UserFlags);
@@ -115,6 +123,15 @@ namespace sb_explorer
                     TreeAdd(fileRef, nameof(sampleToPrint.VolumeOffset), sampleToPrint.VolumeOffset);
                     TreeAdd(fileRef, nameof(sampleToPrint.Pan), sampleToPrint.Pan);
                     TreeAdd(fileRef, nameof(sampleToPrint.PanOffset), sampleToPrint.PanOffset);
+                    if (headerData.FileVersion == 10)
+                    {
+                        TreeAdd(fileRef, nameof(sampleToPrint.ReferenceHashCode), sampleToPrint.ReferenceHashCode);
+                        TreeAdd(fileRef, nameof(sampleToPrint.MinDelay), sampleToPrint.MinDelay);
+                        TreeAdd(fileRef, nameof(sampleToPrint.MaxDelay), sampleToPrint.MaxDelay);
+                        TreeAdd(fileRef, nameof(sampleToPrint.DelayType), sampleToPrint.DelayType);
+                        TreeAdd(fileRef, nameof(sampleToPrint.IsReleaseElement), sampleToPrint.IsReleaseElement);
+                        TreeAdd(fileRef, nameof(sampleToPrint.Spare), sampleToPrint.Spare);
+                    }
                 }
             }
 
@@ -488,12 +505,50 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void AddDecodedSfxFlags(TreeNode parentNode, int fileVersion, ushort flags)
+        private void AddDecodedSfxFlags(TreeNode parentNode, int fileVersion, uint flags)
         {
             string[] flagNames;
             if (fileVersion == 201 || fileVersion == 1)
             {
                 flagNames = new string[] { "MaxReject", "Doppler", "IgnoreAge", "MultiSample", "RandomPick", "Shuffled", "Loop", "Polyphonic", "UnderWater", "PauseInNis", "HasSubSfx", "StealOnLouder", "TreatLikeMusic", "UserFlags14", "UserFlags15", "UserFlags16" };
+            }
+            else if (fileVersion == 10)
+            {
+                flagNames = new string[]
+                {
+                    "MaxReject",
+                    "UnPausable",
+                    "IgnoreMasterVolume",
+                    "LegacyMultiSample_SupersededByPlayType",
+                    "LegacyRandomPick_SupersededByPlayType",
+                    "LegacyShuffled_SupersededByPlayType",
+                    "Loop",
+                    "LegacyPolyphonic_SupersededByPlayType",
+                    "UnderWater",
+                    "PauseInstant",
+                    "HasSubSfx",
+                    "StealOnLouder",
+                    "TreatLikeMusic",
+                    "KillMeOwnGroup",
+                    "GroupStealReject",
+                    "OneInstancePerFrame",
+                    "ExtendedFlag16",
+                    "ExtendedFlag17",
+                    "ExtendedFlag18",
+                    "ExtendedFlag19",
+                    "ExtendedFlag20",
+                    "ExtendedFlag21",
+                    "ExtendedFlag22",
+                    "ExtendedFlag23",
+                    "ExtendedFlag24",
+                    "ExtendedFlag25",
+                    "ExtendedFlag26",
+                    "ExtendedFlag27",
+                    "ExtendedFlag28",
+                    "ExtendedFlag29",
+                    "ExtendedFlag30",
+                    "ExtendedFlag31"
+                };
             }
             else
             {
@@ -534,7 +589,7 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private bool FlagIsSet(ushort flags, int index)
+        private bool FlagIsSet(uint flags, int index)
         {
             return ((flags >> index) & 1) == 1;
         }

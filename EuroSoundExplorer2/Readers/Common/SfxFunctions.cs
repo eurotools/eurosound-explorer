@@ -52,11 +52,6 @@ namespace MusX.Readers
                 {
                     br.BaseStream.Seek(4, SeekOrigin.Current);
                     fileVersion = br.ReadInt32();
-                    if (fileVersion == 10 && br.BaseStream.Length >= 0x1c)
-                    {
-                        br.BaseStream.Seek(0x18, SeekOrigin.Begin);
-                        fileVersion = br.ReadInt32();
-                    }
                 }
             }
 
@@ -94,7 +89,7 @@ namespace MusX.Readers
                         headerData.Platform = Encoding.ASCII.GetString(BReader.ReadBytes(4));
                         headerData.IsBigEndian = EuroSoundCodecMatrix.IsBigEndianPlatform(headerData.Platform);
                         headerData.Timespan = BReader.ReadUInt32();
-                        headerData.FileVersion = BReader.ReadInt32();
+                        headerData.UsesAdpcm = BReader.ReadUInt32();
                         BReader.ReadUInt32();
                         headerData.EndOffset = 0x800;
                     }
@@ -136,6 +131,28 @@ namespace MusX.Readers
         //-------------------------------------------------------------------------------------------------------------------------------
         public int GetNumberOfSFXs(string filePath, SoundbankHeader sbData)
         {
+            if (sbData.FileVersion == 10)
+            {
+                int count = 0;
+                long position = sbData.SFXStart;
+                long end = position + sbData.SFXLenght;
+                using (BinaryReader reader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                {
+                    while (position + 12 <= end && position + 12 <= reader.BaseStream.Length)
+                    {
+                        reader.BaseStream.Position = position;
+                        if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "FORM") break;
+                        uint size = BytesFunctions.FlipData(reader.ReadUInt32(), sbData.IsBigEndian);
+                        if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "PARA") break;
+                        count++;
+                        long next = position + 8L + size;
+                        if (next <= position || next > end) break;
+                        position = next;
+                    }
+                }
+                return count;
+            }
+
             // In EngineXT the SBNK descriptor already supplies the count and
             // ReadSfxHeader exposes its 16-byte pointer-table span here. The
             // first value at SFXStart is an SFX hash, not a legacy count.

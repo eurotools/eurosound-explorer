@@ -71,7 +71,7 @@ namespace sb_explorer
             uint frequency = selectedSample.Frequency == 0 ? fallbackFrequency : selectedSample.Frequency;
             int channels = (int)Math.Max(1, selectedSample.Channels);
             return EuroSoundAudioDecoder.DecodeChannels(codec, selectedSample.EncodedData, audioFunctions, null, null,
-                channels, frequency, selectedSample.SampleCount, IsEngineXt(headerData.FileVersion));
+                channels, frequency, selectedSample.SampleCount, IsEngineXt(headerData.FileVersion) || headerData.FileVersion == 10);
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -109,6 +109,26 @@ namespace sb_explorer
         //-------------------------------------------------------------------------------------------------------------------------------
         internal static FileType GetFileType(int hashCode, int selectedVersion, string filePath, Title selectedTitle)
         {
+            if (selectedVersion == 10)
+            {
+                string name = Path.GetFileName(filePath) ?? string.Empty;
+                string formType = ReadPayloadMagic(filePath, 0x808);
+                if (name.IndexOf("projectdetails", StringComparison.OrdinalIgnoreCase) >= 0 || formType == "ES2P") return FileType.ProjectDetails;
+                if (name.IndexOf("musicmarkers", StringComparison.OrdinalIgnoreCase) >= 0 || formType == "MRKF") return FileType.MusicMarkers;
+                if (formType == "SBNK") return FileType.SoundbankFile;
+
+                // Pirates MUSX 10 stores the stereo music/MFX streams in hash
+                // section 6. The platform-dependent top byte (2D/ED) is not
+                // part of the section number.
+                int section = (hashCode >> 20) & 0xF;
+                if (section == 6 || name.IndexOf("_mus_mfx", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return FileType.MusicFile;
+                }
+
+                return FileType.StreamFile;
+            }
+
             if (IsEngineXt(selectedVersion))
             {
                 string payloadMagic = ReadPayloadMagic(filePath, 0x800);

@@ -15,6 +15,17 @@ namespace sb_explorer.Classes
         }
     }
 
+    [AttributeUsage(AttributeTargets.Property)]
+    internal sealed class ExactLegacyVersionAttribute : Attribute
+    {
+        public int Version { get; private set; }
+
+        public ExactLegacyVersionAttribute(int version)
+        {
+            Version = version;
+        }
+    }
+
     internal class SampleForPropGrid : ICustomTypeDescriptor
     {
         [Browsable(false)]
@@ -56,6 +67,14 @@ namespace sb_explorer.Classes
         public short OuterRadius { get; set; }
         [Category("Flags"), DisplayName("Flags")]
         public ushort Flags { get; set; }
+        [Category("Playback"), DisplayName("Play Type"), ExactLegacyVersion(10)]
+        public string PlayType { get; set; }
+        [Category("Flags"), DisplayName("MUSX 10 Flags"), ExactLegacyVersion(10)]
+        public string V10Flags { get; set; }
+        [Category("Playback"), DisplayName("Instance Culling"), ExactLegacyVersion(10)]
+        public string InstanceCulling { get; set; }
+        [Category("Playback"), DisplayName("Group Culling"), ExactLegacyVersion(10)]
+        public string GroupCulling { get; set; }
 
         AttributeCollection ICustomTypeDescriptor.GetAttributes() { return TypeDescriptor.GetAttributes(this, true); }
         string ICustomTypeDescriptor.GetClassName() { return TypeDescriptor.GetClassName(this, true); }
@@ -80,7 +99,10 @@ namespace sb_explorer.Classes
             foreach (PropertyDescriptor property in properties)
             {
                 MinimumLegacyVersionAttribute minimum = (MinimumLegacyVersionAttribute)property.Attributes[typeof(MinimumLegacyVersionAttribute)];
-                if (property.IsBrowsable && (minimum == null || (FileVersion >= minimum.Version && FileVersion <= 6)))
+                ExactLegacyVersionAttribute exact = (ExactLegacyVersionAttribute)property.Attributes[typeof(ExactLegacyVersionAttribute)];
+                bool minimumVisible = minimum == null || (FileVersion >= minimum.Version && FileVersion <= 6);
+                bool exactVisible = exact == null || FileVersion == exact.Version;
+                if (property.IsBrowsable && minimumVisible && exactVisible)
                     visible[count++] = property;
             }
             Array.Resize(ref visible, count);

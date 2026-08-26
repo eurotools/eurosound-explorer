@@ -14,7 +14,8 @@ namespace MusX
         DspAdpcmLegacy,
         DspAdpcmNgca,
         XboxAdpcm,
-        Xma
+        Xma,
+        Vorbis
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -60,6 +61,7 @@ namespace MusX
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly int[] Version201 = { 1, 201 };
         private static readonly int[] EurocomVersions = { 4, 5, 6 };
+        private static readonly int[] PiratesVersions = { 10 };
         private static readonly int[] EngineXtVersions = { 15, 18, 21 };
         private static readonly int[] EngineXtLegacyVersions = { 15, 18 };
         private static readonly int[] EngineXtNgcaVersions = { 21 };
@@ -67,6 +69,15 @@ namespace MusX
         //-------------------------------------------------------------------------------------------------------------------------------
         private static readonly CodecRule[] Rules =
         {
+            new CodecRule(PiratesVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.Xbox360, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.DspAdpcmNgca),
+            new CodecRule(PiratesVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
+            new CodecRule(PiratesVersions, EuroSoundBankType.MusicBank, EuroSoundPlatformGroup.GameCube, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Pc, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.StreamBank, EuroSoundPlatformGroup.Pc, EuroSoundAudioCodec.EurocomImaAdpcm),
             new CodecRule(EngineXtVersions, EuroSoundBankType.SoundBank, EuroSoundPlatformGroup.Ps2, EuroSoundAudioCodec.SonyVagAdpcm),

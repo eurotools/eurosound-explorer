@@ -47,10 +47,14 @@ namespace sb_explorer
                     string addressOffset = DisplayValueFormatter.FormatOffset(waveData.Address, hexOffsets);
                     string memorySize = DisplayValueFormatter.FormatSize(waveData.MemorySize, sizesWithUnits);
                     string sampleSize = DisplayValueFormatter.FormatSize(waveData.SampleSize, sizesWithUnits);
-                    string binaryLoopOffset = DisplayValueFormatter.FormatOffset(waveData.OriginalLoopOffset, hexOffsets);
-                    string loopSample = loopsAsSamples
-                        ? waveData.LoopStartSample.ToString()
-                        : DisplayValueFormatter.FormatOffset(waveData.OriginalLoopOffset, hexOffsets);
+                    string binaryLoopOffset = waveData.IsLooped
+                        ? DisplayValueFormatter.FormatOffset(waveData.OriginalLoopOffset, hexOffsets)
+                        : "None";
+                    string loopSample = waveData.IsLooped
+                        ? loopsAsSamples
+                            ? waveData.LoopStartSample.ToString()
+                            : DisplayValueFormatter.FormatOffset(waveData.OriginalLoopOffset, hexOffsets)
+                        : "None";
 
                     //Create item and add it to list
                     string codec = waveData.AudioReference == null ? "Unknown" : waveData.AudioReference.Codec.ToString();

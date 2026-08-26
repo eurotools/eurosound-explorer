@@ -7,6 +7,7 @@ namespace sb_explorer
         EuroSound450 = 450,
         EuroSound510 = 510,
         EuroSound610 = 610,
+        PiratesMusX10 = 1000,
         EngineXT15 = 1500,
         EngineXT18 = 1800,
         EngineXT21 = 2100
@@ -20,6 +21,7 @@ namespace sb_explorer
             4,
             5,
             6,
+            10,
             15,
             18,
             21,
@@ -39,6 +41,8 @@ namespace sb_explorer
                     return EuroSoundVersion.EuroSound510;
                 case 6:
                     return EuroSoundVersion.EuroSound610;
+                case 10:
+                    return EuroSoundVersion.PiratesMusX10;
                 case 18:
                     return EuroSoundVersion.EngineXT18;
                 case 15:

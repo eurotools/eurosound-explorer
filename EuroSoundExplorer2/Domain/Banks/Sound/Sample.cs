@@ -27,6 +27,11 @@ namespace MusX.Objects
         public short InnerRadius;
         public short OuterRadius;
 
+        // MUSX 10 replaces the legacy 16-bit flags plus adjacent legacy fields
+        // with one 32-bit flag word.
+        public uint V10Flags;
+        public byte PlayType;
+
         //Flags
         public ushort Flags;
         public ushort UserFlags;

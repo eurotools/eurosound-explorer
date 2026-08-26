@@ -19,6 +19,7 @@ namespace MusX.Readers
                 case 2: codec = EuroSoundAudioCodec.SonyVagAdpcm; break;
                 case 3: codec = headerData.FileVersion >= 21 ? EuroSoundAudioCodec.DspAdpcmNgca : EuroSoundAudioCodec.DspAdpcmLegacy; break;
                 case 4: codec = EuroSoundAudioCodec.Pcm16; break;
+                case 5: codec = EuroSoundAudioCodec.Vorbis; break;
                 case 6: codec = EuroSoundAudioCodec.Xma; break;
                 default: codec = EuroSoundAudioCodec.Unknown; break;
             }
@@ -39,7 +40,8 @@ namespace MusX.Readers
                 Channels = Math.Max(1u, headerData.Channels),
                 AudioReference = new AudioDataReference { FilePath = filePath, Offset = headerData.FileStart2, Size = headerData.FileLength2, Codec = codec, Frequency = headerData.Frequency, Channels = (int)Math.Max(1u, headerData.Channels) }
             };
-            ResolveV18Metadata(filePath, sample, headerData.Platform);
+            if (headerData.FileVersion == 15 || headerData.FileVersion == 18)
+                ResolveV18Metadata(filePath, sample, headerData.Platform);
             streamedSamples.Add(sample);
         }
 
