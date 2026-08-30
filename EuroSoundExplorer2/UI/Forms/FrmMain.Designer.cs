@@ -35,7 +35,6 @@ namespace sb_explorer
             this.MenuItem_File = new System.Windows.Forms.ToolStripDropDownButton();
             this.MenuItem_File_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_DecodeAudio = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItem_File_DecompileProject = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_DataViewer = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_GenerateSoundh = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_File_Separator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -115,7 +114,6 @@ namespace sb_explorer
             this.MenuItem_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem_File_Settings,
             this.MenuItem_File_DecodeAudio,
-            this.MenuItem_File_DecompileProject,
             this.MenuItem_File_DataViewer,
             this.MenuItem_File_GenerateSoundh,
             this.MenuItem_File_Separator1,
@@ -143,14 +141,6 @@ namespace sb_explorer
             this.MenuItem_File_DecodeAudio.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_File_DecodeAudio.Text = "Decode Audio File";
             this.MenuItem_File_DecodeAudio.Click += new System.EventHandler(this.MenuItem_File_DecodeAudio_Click);
-            //
-            // MenuItem_File_DecompileProject
-            //
-            this.MenuItem_File_DecompileProject.Name = "MenuItem_File_DecompileProject";
-            this.MenuItem_File_DecompileProject.Size = new System.Drawing.Size(217, 22);
-            this.MenuItem_File_DecompileProject.Text = "Decompile EuroSound Project";
-            this.MenuItem_File_DecompileProject.Click += new System.EventHandler(this.MenuItem_File_DecompileProject_Click);
-            // 
             // MenuItem_File_DataViewer
             // 
             this.MenuItem_File_DataViewer.Name = "MenuItem_File_DataViewer";
@@ -487,7 +477,6 @@ namespace sb_explorer
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Music_Markers;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_Settings;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DecodeAudio;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DecompileProject;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_DataViewer;
         private System.Windows.Forms.ToolStripSeparator MenuItem_File_Separator1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_File_ResetSettings;

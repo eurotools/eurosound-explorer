@@ -4,54 +4,6 @@
     <Profile Name="(Default)" />
   </Profiles>
   <Settings>
-    <Setting Name="DecompilerCompiledFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
-    </Setting>
-    <Setting Name="DecompilerProjectFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
-    </Setting>
-    <Setting Name="DecompilerOutputFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)"></Value>
-    </Setting>
-    <Setting Name="DecompilerMode" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="DecompilerExportSoundBanks" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerExportGroups" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerExportMusics" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerExportSfx" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerExportPlatformSamplePools" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceSfxParameters" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceSfxSamplePoolFiles" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceSfxSamplePoolModes" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceSfxSamplePoolControl" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceGroupDependencies" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceGroupParameters" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DecompilerReplaceSoundBankDependencies" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="ExplorerOffsetsHex" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

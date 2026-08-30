@@ -218,15 +218,6 @@ namespace sb_explorer
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        private void MenuItem_File_DecompileProject_Click(object sender, EventArgs e)
-        {
-            using (FrmEuroSoundProjectDecompiler projectDecompiler = new FrmEuroSoundProjectDecompiler())
-            {
-                projectDecompiler.ShowDialog();
-            }
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------------------
         private void MenuItem_File_DataViewer_Click(object sender, EventArgs e)
         {
             using (FrmDataViewer dataViewer = new FrmDataViewer())

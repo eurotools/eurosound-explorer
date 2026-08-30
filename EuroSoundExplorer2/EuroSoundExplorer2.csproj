@@ -156,12 +156,6 @@
     <Compile Include="UI\Forms\FrmEuroSoundSfxExportSection.Designer.cs">
       <DependentUpon>FrmEuroSoundSfxExportSection.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Forms\FrmEuroSoundProjectDecompiler.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Forms\FrmEuroSoundProjectDecompiler.Designer.cs">
-      <DependentUpon>FrmEuroSoundProjectDecompiler.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Forms\FrmFileRefUsage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -277,7 +271,6 @@
     <Compile Include="Services\EuroSoundSfxTextExporter.cs" />
     <Compile Include="Services\EuroSoundGroupExporter.cs" />
     <Compile Include="Services\EuroSoundProjectSoundBankLoader.cs" />
-    <Compile Include="Services\EuroSoundProjectDecompiler.cs" />
     <Compile Include="UI\Panels\Misc\FormSoundBankFiles.cs">
       <SubType>Form</SubType>
     </Compile>

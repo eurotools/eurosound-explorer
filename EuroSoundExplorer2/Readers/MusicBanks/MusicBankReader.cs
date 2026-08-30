@@ -80,7 +80,9 @@ namespace MusX.Readers
                     10,
                     headerData.Platform,
                     EuroSoundBankType.MusicBank);
-                int interleaveBlockSize = codec == EuroSoundAudioCodec.EurocomImaAdpcm ? 32 : 16;
+                int interleaveBlockSize = EuroSoundCodecMatrix.IsPs2Platform(headerData.Platform)
+                    ? 128
+                    : codec == EuroSoundAudioCodec.EurocomImaAdpcm ? 32 : 16;
 
                 MusicBankReaderNew piratesReader = new MusicBankReaderNew();
                 return piratesReader.ReadMusicFileV10(
