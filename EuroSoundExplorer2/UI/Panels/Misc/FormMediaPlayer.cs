@@ -274,7 +274,8 @@ namespace sb_explorer
             TimeSpan streamPos = TimeSpan.FromMilliseconds(timeline.TotalTime.TotalMilliseconds * trackBarPosition.Value / trackBarPosition.Maximum);
             for (int channel = 0; channelProviders != null && channel < channelProviders.Length; channel++)
             {
-                channelProviders[channel].CurrentTime = streamPos;
+                if (channelProviders[channel] != null)
+                    channelProviders[channel].CurrentTime = streamPos;
             }
             labelCurrentTime.Text = GetDurationText(streamPos);
         }

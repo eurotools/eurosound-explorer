@@ -243,7 +243,7 @@ namespace sb_explorer
 
         private static void ApplyLoopMetadata(SoundFile sound, SampleData sample, DecodedAudio decodedAudio, int fileVersion)
         {
-            if (fileVersion == 18 || fileVersion == 21)
+            if (fileVersion == 18 || fileVersion == 21 || sample.StorageType == WavType.Stream)
             {
                 int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
                 sound.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(sample, decodedSamples, out uint loopStart, out uint loopEnd);

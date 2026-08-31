@@ -514,6 +514,7 @@ namespace MusX.Readers
                 uint dataOffset;
                 uint dataSize;
                 uint loopOffset;
+                uint streamEndByteOffset = 0;
                 if (wavType == WavType.Memory)
                 {
                     dataOffset = (uint)Math.Max(0, wavDataStart + ReadV18Int32(reader, bigEndian));
@@ -526,6 +527,10 @@ namespace MusX.Readers
                     loopOffset = ReadV18UInt32(reader, bigEndian);
                     dataOffset = 0x800;
                     dataSize = fileEnd > 0x800 ? fileEnd - 0x800 : 0;
+                    // EngineXT's Wav_Stream accessors subtract ENGINEHEADERSIZE
+                    // before using these positions. Keep the resulting encoded
+                    // end position relative to the audio payload.
+                    streamEndByteOffset = dataSize;
                 }
                 else
                 {
@@ -537,27 +542,39 @@ namespace MusX.Readers
                 }
 
                 EuroSoundAudioCodec codec = CodecFromV18Value(flags & 7, dataVersion);
+                uint streamLoopStartSample = wavType == WavType.Stream
+                    ? V18StreamLoopOffsetToSamples(codec, loopOffset, dataOffset, channels)
+                    : 0;
                 string audioPath = wavType == WavType.Memory ? filePath : FindV18StreamFile(filePath, wavHash);
                 uint referenceOffset = dataOffset;
                 uint referenceSize = dataSize;
-                uint loopStartSample = loopOffset;
-                uint loopEndByteOffset = 0;
+                uint loopStartSample = wavType == WavType.Stream ? streamLoopStartSample : loopOffset;
+                uint loopEndByteOffset = wavType == WavType.Stream ? streamEndByteOffset : 0;
                 if (wavType != WavType.Memory && !string.IsNullOrEmpty(audioPath))
                 {
                     referenceOffset = 0x800;
                     long available = Math.Max(0, new FileInfo(audioPath).Length - referenceOffset);
-                    // Shipped v18 files use the physical stream file as authority. Some publishers
-                    // leave a source-WAV-derived end offset in SBNK, which must not include padding
-                    // or run beyond the individual MUSX stream.
-                    referenceSize = (uint)Math.Min(uint.MaxValue, available);
+                    // Wav_Stream::FileEndOffset is authoritative during playback.
+                    // The physical file can contain sector padding beyond that point.
+                    referenceSize = dataSize == 0
+                        ? (uint)Math.Min(uint.MaxValue, available)
+                        : (uint)Math.Min(dataSize, available);
                     try
                     {
                         StreambankHeader streamHeader = new StreamBankReader().ReadStreamBankHeader(audioPath, string.Empty);
-                        if (streamHeader.FileVersion == 18 || streamHeader.FileVersion == 21)
+                        if (streamHeader.FileVersion == 18 || streamHeader.FileVersion == 21 ||
+                            (streamHeader.FileVersion == 10 && (streamHeader.UsesAdpcm == 18 || streamHeader.UsesAdpcm == 21)))
                         {
-                            if (streamHeader.FileLength2 <= referenceSize) referenceSize = streamHeader.FileLength2;
-                            if (streamHeader.LoopStartSample != uint.MaxValue) loopStartSample = streamHeader.LoopStartSample;
-                            loopEndByteOffset = streamHeader.LoopEndByteOffset;
+                            // DAT5 is optional and is not consulted by EngineXT when
+                            // a stream is played through a soundbank. Use it only when
+                            // the SBNK record did not provide a usable value.
+                            if (dataSize == 0 && streamHeader.FileLength2 != 0)
+                                referenceSize = Math.Min(referenceSize, streamHeader.FileLength2);
+                            if ((loopOffset == 0 || loopOffset == uint.MaxValue) &&
+                                streamHeader.LoopStartSample != uint.MaxValue)
+                                loopStartSample = streamHeader.LoopStartSample;
+                            if (loopEndByteOffset == 0)
+                                loopEndByteOffset = streamHeader.LoopEndByteOffset;
                         }
                     }
                     catch (InvalidDataException) { }
@@ -720,6 +737,15 @@ namespace MusX.Readers
                 default:
                     return 0;
             }
+        }
+
+        private static uint V18StreamLoopOffsetToSamples(EuroSoundAudioCodec codec, uint fileOffset, uint dataOffset, int channels)
+        {
+            if (fileOffset == uint.MaxValue) return uint.MaxValue;
+            // Wav_Stream stores FileLoopOffset as an absolute file position.
+            // The codec receives a byte offset relative to FileStartOffset.
+            uint encodedOffset = fileOffset >= dataOffset ? fileOffset - dataOffset : fileOffset;
+            return EuroSoundCodecMatrix.EncodedByteCountToSamples(codec, encodedOffset, Math.Max(1, channels));
         }
 
         private static bool LooksLikeEurocomIma(string filePath, uint offset, uint size)

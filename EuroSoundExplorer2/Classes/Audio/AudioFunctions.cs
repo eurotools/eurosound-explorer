@@ -68,16 +68,38 @@ namespace sb_explorer.Classes
             }
 
             int frequency = SemitonesToFreq((int)_soundToPlay.sampleRate, pitch);
-            providerLeft = new RawSourceWaveStream(new MemoryStream(leftData), new WaveFormat(frequency, 16, 1));
-            LoopStream loopLeft = new LoopStream(providerLeft, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
-            providerRight = new RawSourceWaveStream(new MemoryStream(rightData), new WaveFormat(frequency, 16, 1));
-            LoopStream loopRight = new LoopStream(providerRight, (int)(_soundToPlay.loopStartPoint * 2)) { EnableLooping = _soundToPlay.isLooped, Position = _soundToPlay.startPos * 2 };
-            IWaveProvider balancedLeft = new VolumeSampleProvider(loopLeft.ToSampleProvider()) { Volume = GetLeftPanGain(pan) }.ToWaveProvider();
-            IWaveProvider balancedRight = new VolumeSampleProvider(loopRight.ToSampleProvider()) { Volume = GetRightPanGain(pan) }.ToWaveProvider();
-            MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new[] { balancedLeft, balancedRight }, 2);
-            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(waveProvider.ToSampleProvider()) { Volume = volume };
+            byte[] interleaved = InterleaveStereoPcm16(leftData, rightData, GetLeftPanGain(pan), GetRightPanGain(pan));
+            providerLeft = new RawSourceWaveStream(new MemoryStream(interleaved), new WaveFormat(frequency, 16, 2));
+            providerRight = null;
+            // Keep both channels in one provider so loopStart/loopEnd are crossed
+            // on the same PCM frame, matching EngineXT's single stream jump.
+            LoopStream loop = new LoopStream(providerLeft, checked((int)(_soundToPlay.loopStartPoint * 4L)))
+            {
+                EnableLooping = _soundToPlay.isLooped,
+                Position = _soundToPlay.startPos * 4L
+            };
+            VolumeSampleProvider volumeProvider = new VolumeSampleProvider(loop.ToSampleProvider()) { Volume = volume };
 
             return volumeProvider.ToWaveProvider();
+        }
+
+        private static byte[] InterleaveStereoPcm16(byte[] left, byte[] right, float leftGain, float rightGain)
+        {
+            int frames = Math.Min(left.Length, right.Length) / 2;
+            byte[] result = new byte[frames * 4];
+            for (int frame = 0; frame < frames; frame++)
+            {
+                short leftSample = BitConverter.ToInt16(left, frame * 2);
+                short rightSample = BitConverter.ToInt16(right, frame * 2);
+                short scaledLeft = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, (int)Math.Round(leftSample * leftGain)));
+                short scaledRight = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, (int)Math.Round(rightSample * rightGain)));
+                int destination = frame * 4;
+                result[destination] = (byte)scaledLeft;
+                result[destination + 1] = (byte)(scaledLeft >> 8);
+                result[destination + 2] = (byte)scaledRight;
+                result[destination + 3] = (byte)(scaledRight >> 8);
+            }
+            return result;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

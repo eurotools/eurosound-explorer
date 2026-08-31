@@ -344,12 +344,14 @@ namespace sb_explorer
                 soundToPlay.PcmData = decodedAudio.Channels;
                 // Individual EngineXT streams have no legacy BaseVolume field.
                 // The descriptor leaves it at zero, which must not mute preview playback.
-                soundToPlay.volume = headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21
+                bool isEngineXtStream = headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21 ||
+                    (headerData.FileVersion == 10 && (headerData.UsesAdpcm == 18 || headerData.UsesAdpcm == 21));
+                soundToPlay.volume = isEngineXtStream
                     ? 1.0f
                     : selectedSample.BaseVolume / 100.0f;
                 soundToPlay.sampleRate = decodedAudio.SampleRate;
                 soundToPlay.channels = (uint)decodedAudio.Channels.Length;
-                if (headerData.FileVersion == 15 || headerData.FileVersion == 18 || headerData.FileVersion == 21)
+                if (isEngineXtStream)
                 {
                     int decodedSamples = decodedAudio.Channels.Min(channel => channel.Length) / 2;
                     soundToPlay.isLooped = EuroSoundStreamLoopResolver.TryResolveV18(selectedSample, decodedSamples, out uint loopStart, out uint loopEnd);

@@ -51,7 +51,8 @@ namespace sb_explorer
                 ? selectedSample.AudioReference.Codec
                 : EuroSoundCodecMatrix.GetCodec(headerData.FileVersion, headerData.Platform, EuroSoundBankType.SoundBank);
             return EuroSoundAudioDecoder.DecodeChannels(codec, selectedSample.EncodedData, audioFunctions, selectedSample.DspCoeffs,
-                selectedSample, (int)Math.Max(1, selectedSample.Channels), selectedSample.Frequency, selectedSample.TotalSamples, IsEngineXt(headerData.FileVersion));
+                selectedSample, (int)Math.Max(1, selectedSample.Channels), selectedSample.Frequency, selectedSample.TotalSamples,
+                IsEngineXt(headerData.FileVersion) || (headerData.FileVersion == 10 && (headerData.UsesAdpcm == 18 || headerData.UsesAdpcm == 21)));
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
