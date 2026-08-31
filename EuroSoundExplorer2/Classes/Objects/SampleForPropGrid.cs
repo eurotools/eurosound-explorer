@@ -110,6 +110,44 @@ namespace sb_explorer.Classes
         }
     }
 
+    internal sealed class SampleV10VerifiedForPropGrid
+    {
+        [Category("Identity"), DisplayName("HashCode")]
+        public string HashCode { get; set; }
+
+        [Category("Probable (comparative evidence)"), DisplayName("Flags word (raw, probable)")]
+        public string ProbableFlags { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Ducker Length (probable)")]
+        public short ProbableDuckerLength { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Min Delay (probable)")]
+        public short ProbableMinDelay { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Max Delay (probable)")]
+        public short ProbableMaxDelay { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Group HashCode (probable)")]
+        public string ProbableGroupHashCode { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Reverb Send (probable)")]
+        public sbyte ProbableReverbSend { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Max Voices (probable)")]
+        public sbyte ProbableMaxVoices { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Priority (probable)")]
+        public sbyte ProbablePriority { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Ducker (probable)")]
+        public sbyte ProbableDucker { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Master Volume (probable)")]
+        public sbyte ProbableMasterVolume { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Group Max Channels (probable)")]
+        public sbyte ProbableGroupMaxChannels { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Play Type value (probable, undecoded)")]
+        public byte ProbablePlayType { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("Doppler value (probable)")]
+        public sbyte ProbableDoppler { get; set; }
+        [Category("Probable (comparative evidence)"), DisplayName("SFX Ducker (probable)")]
+        public sbyte ProbableSfxDucker { get; set; }
+
+        [Category("Raw data"), DisplayName("PARA/DATA bytes after HashCode")]
+        public string RawParameterData { get; set; }
+    }
+
     internal sealed class SampleV18ForPropGrid
     {
         [Category("SFXInfo"), DisplayName("GUID")]

@@ -81,6 +81,9 @@ namespace MusX.Readers
         {
             Sample sample = new Sample();
             sample.HashCodeNumber = NormalizeV10EngineXHashCode(ReadV10UInt32(reader, bigEndian));
+            long parameterDataStart = reader.BaseStream.Position;
+            sample.V10RawParameterData = reader.ReadBytes(24);
+            reader.BaseStream.Position = parameterDataStart;
             sample.V10Flags = ReadV10UInt32(reader, bigEndian);
             sample.Flags = unchecked((ushort)(sample.V10Flags & 0xffff));
             sample.DuckerLenght = ReadV10Int16(reader, bigEndian);
@@ -356,7 +359,7 @@ namespace MusX.Readers
                 if (new string(reader.ReadChars(4)) != "SBNK") throw new InvalidDataException("Invalid EngineXT SBNK descriptor.");
                 bool bigEndian = headerData.IsBigEndian;
                 uint dataVersion = ReadV18UInt32(reader, bigEndian);
-                if (dataVersion != 18 && dataVersion != 21) throw new InvalidDataException("The EngineXT reader currently supports SBNK data versions 18 and 21.");
+                if (dataVersion != 18 && dataVersion != 21 && dataVersion != 39) throw new InvalidDataException("The EngineXT reader currently supports SBNK data versions 18, 21 and 39.");
                 ReadV18UInt32(reader, bigEndian); // language
                 ReadV18UInt32(reader, bigEndian); // soundbank hash
                 if (dataVersion >= 21) ReadV18UInt32(reader, bigEndian); // memory-slot hash added in v21
@@ -365,26 +368,42 @@ namespace MusX.Readers
                 ReadV18UInt32(reader, bigEndian); ReadV18Int32(reader, bigEndian);
                 ReadV18UInt32(reader, bigEndian); ReadV18Int32(reader, bigEndian);
                 ReadV18UInt32(reader, bigEndian); ReadV18Int32(reader, bigEndian);
-                uint memoryCount = ReadV18UInt32(reader, bigEndian); long memoryOffsetField = reader.BaseStream.Position; long memoryTable = ResolveRelative(memoryOffsetField, ReadV18Int32(reader, bigEndian));
-                uint streamCount = ReadV18UInt32(reader, bigEndian); long streamOffsetField = reader.BaseStream.Position; long streamTable = ResolveRelative(streamOffsetField, ReadV18Int32(reader, bigEndian));
-                uint instantCount = ReadV18UInt32(reader, bigEndian); long instantOffsetField = reader.BaseStream.Position; long instantTable = ResolveRelative(instantOffsetField, ReadV18Int32(reader, bigEndian));
+                uint memoryCount = ReadV18UInt32(reader, bigEndian); long memoryOffsetField = reader.BaseStream.Position; int memoryOffset = ReadV18Int32(reader, bigEndian);
+                uint streamCount = ReadV18UInt32(reader, bigEndian); long streamOffsetField = reader.BaseStream.Position; int streamOffset = ReadV18Int32(reader, bigEndian);
+                uint instantCount = ReadV18UInt32(reader, bigEndian); long instantOffsetField = reader.BaseStream.Position; int instantOffset = ReadV18Int32(reader, bigEndian);
                 uint wavDataSize = ReadV18UInt32(reader, bigEndian);
                 long wavDataStart = ReadV18Int32(reader, bigEndian); // physical file offset, unlike GAFRO pointers
 
+                long memoryTable = ResolveRelative(memoryOffsetField, memoryOffset);
+                long streamTable = ResolveRelative(streamOffsetField, streamOffset);
+                long instantTable = ResolveRelative(instantOffsetField, instantOffset);
+
                 Dictionary<long, short> waveIndices = new Dictionary<long, short>();
-                ReadV18WaveTable(reader, filePath, memoryTable, memoryCount, WavType.Memory, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian, dataVersion);
-                ReadV18WaveTable(reader, filePath, streamTable, streamCount, WavType.Stream, 0, 0, wavesList, waveIndices, bigEndian, dataVersion);
-                ReadV18WaveTable(reader, filePath, instantTable, instantCount, WavType.InstantStream, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian, dataVersion);
+                if (dataVersion == 39)
+                {
+                    ReadV39WaveTable(reader, filePath, memoryTable, memoryCount, WavType.Memory, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian);
+                    // The v39 stream and instant-stream records have additional
+                    // variable layouts which are not the v18/v21 structures.
+                    // Do not expose guessed rows as valid WAV metadata; the
+                    // standalone DAT8 files remain available as stream banks.
+                }
+                else
+                {
+                    ReadV18WaveTable(reader, filePath, memoryTable, memoryCount, WavType.Memory, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian, dataVersion);
+                    ReadV18WaveTable(reader, filePath, streamTable, streamCount, WavType.Stream, 0, 0, wavesList, waveIndices, bigEndian, dataVersion);
+                    ReadV18WaveTable(reader, filePath, instantTable, instantCount, WavType.InstantStream, wavDataStart, wavDataSize, wavesList, waveIndices, bigEndian, dataVersion);
+                }
 
                 for (int i = 0; i < sfxCount; i++)
                 {
-                    const int SfxInfoSizeV18 = 16;
-                    long entry = sfxTable + i * (long)SfxInfoSizeV18;
-                    if (!CanRead(reader, entry, SfxInfoSizeV18)) break;
+                    int sfxInfoSize = dataVersion == 39 ? 20 : 16;
+                    long entry = sfxTable + i * (long)sfxInfoSize;
+                    if (!CanRead(reader, entry, sfxInfoSize)) break;
                     reader.BaseStream.Position = entry;
                     uint hash = ReadV18UInt32(reader, bigEndian);
                     long parameterField = reader.BaseStream.Position; long parameter = ResolveRelative(parameterField, ReadV18Int32(reader, bigEndian));
                     long poolField = reader.BaseStream.Position; long pool = ResolveRelative(poolField, ReadV18Int32(reader, bigEndian));
+                    if (dataVersion == 39) ReadV18UInt32(reader, bigEndian); // persistent runtime id
                     int elementCount = reader.ReadByte();
                     byte runtimeStatus = reader.ReadByte();
                     byte infoFlags = reader.ReadByte();
@@ -575,6 +594,113 @@ namespace MusX.Readers
             }
         }
 
+        private static void ReadV39WaveTable(BinaryReader reader, string filePath, long table, uint count, WavType wavType, long wavDataStart, uint wavDataSize, List<SampleData> waves, Dictionary<long, short> indices, bool bigEndian)
+        {
+            long entry = table;
+            for (uint index = 0; index < count; index++)
+            {
+                long recordStart = entry;
+                int minimumSize = 16;
+                if (!CanRead(reader, entry, minimumSize)) break;
+                reader.BaseStream.Position = entry;
+                uint wavHash = ReadV18UInt32(reader, bigEndian);
+                uint sampleCount = ReadV18UInt32(reader, bigEndian);
+                ushort frequency = ReadV18UInt16(reader, bigEndian);
+                byte flags = reader.ReadByte();
+                byte channelFlags = reader.ReadByte();
+                int channels = Math.Max(1, channelFlags & 7);
+                bool looped = (channelFlags & 8) != 0;
+                uint dataOffset = 0;
+                uint dataSize;
+                uint loopStart = uint.MaxValue;
+
+                if (wavType == WavType.Memory)
+                {
+                    bool extended = (flags & 7) == 6;
+                    if (extended)
+                    {
+                        if (!CanRead(reader, recordStart, 24)) break;
+                        loopStart = ReadV18UInt32(reader, bigEndian);
+                        ReadV18UInt32(reader, bigEndian); // encoded loop/end value
+                    }
+                    long dataInfoField = reader.BaseStream.Position;
+                    long dataInfo = ResolveRelative(dataInfoField, ReadV18Int32(reader, bigEndian));
+                    entry += extended ? 24 : 16;
+                    if (CanRead(reader, dataInfo, 8))
+                    {
+                        reader.BaseStream.Position = dataInfo;
+                        dataOffset = (uint)Math.Max(0, wavDataStart + ReadV18UInt32(reader, bigEndian));
+                        dataSize = ReadV18UInt32(reader, bigEndian);
+                    }
+                    else
+                    {
+                        dataOffset = (uint)Math.Max(0, wavDataStart);
+                        dataSize = 0;
+                    }
+                }
+                else if (wavType == WavType.Stream)
+                {
+                    dataSize = ReadV18UInt32(reader, bigEndian);
+                    entry += 16;
+                    if (looped && CanRead(reader, entry, 8))
+                    {
+                        reader.BaseStream.Position = entry;
+                        loopStart = ReadV18UInt32(reader, bigEndian);
+                        ReadV18UInt32(reader, bigEndian); // encoded loop/end value
+                        entry += 8;
+                    }
+                }
+                else
+                {
+                    if (!CanRead(reader, recordStart, 28)) break;
+                    ReadV18UInt32(reader, bigEndian); // physical/end value
+                    loopStart = ReadV18UInt32(reader, bigEndian);
+                    dataOffset = (uint)Math.Max(0, wavDataStart + ReadV18Int32(reader, bigEndian));
+                    dataSize = ReadV18UInt32(reader, bigEndian);
+                    entry += 28;
+                }
+
+                EuroSoundAudioCodec codec = CodecFromV18Value(flags & 7, 39);
+                if (wavType != WavType.Stream)
+                {
+                    // Disney's Xenon v39 uses value 6 for its big-endian
+                    // Eurocom IMA blocks, not for XMA as v18/v21 do.
+                    codec = LooksLikeEurocomIma(filePath, dataOffset, dataSize)
+                        ? EuroSoundAudioCodec.EurocomImaAdpcm
+                        : codec;
+                }
+                string audioPath = wavType == WavType.Stream ? FindV18StreamFile(filePath, wavHash) : filePath;
+                uint referenceOffset = wavType == WavType.Stream ? 0x800u : dataOffset;
+                uint referenceSize = dataSize;
+                if (wavType == WavType.Stream && !string.IsNullOrEmpty(audioPath))
+                {
+                    long available = Math.Max(0, new FileInfo(audioPath).Length - referenceOffset);
+                    referenceSize = (uint)Math.Min(uint.MaxValue, available);
+                }
+
+                SampleData wave = new SampleData
+                {
+                    WavHashCode = wavHash,
+                    StorageType = wavType,
+                    Flags = looped ? 1u : 0u,
+                    Address = referenceOffset,
+                    SampleSize = referenceSize,
+                    MemorySize = referenceSize,
+                    Frequency = frequency,
+                    Channels = (uint)channels,
+                    TotalSamples = sampleCount,
+                    Duration = frequency == 0 ? 0 : (uint)Math.Min(uint.MaxValue, sampleCount * 1000UL / frequency),
+                    OriginalLoopOffset = looped && loopStart != uint.MaxValue ? loopStart : 0,
+                    LoopStartSample = looped && loopStart != uint.MaxValue ? loopStart : 0,
+                    LoopStartOffset = looped && loopStart != uint.MaxValue ? loopStart : 0,
+                    AudioReference = string.IsNullOrEmpty(audioPath) ? null : new AudioDataReference { FilePath = audioPath, Offset = referenceOffset, Size = referenceSize, Codec = codec, Frequency = frequency, Channels = channels }
+                };
+                // Pool references point at the beginning of the WAV record.
+                indices[recordStart] = (short)waves.Count;
+                waves.Add(wave);
+            }
+        }
+
         private static uint V18SfxLoopOffsetToSamples(EuroSoundAudioCodec codec, uint offset, int channels)
         {
             if (offset == uint.MaxValue) return 0;
@@ -594,6 +720,35 @@ namespace MusX.Readers
                 default:
                     return 0;
             }
+        }
+
+        private static bool LooksLikeEurocomIma(string filePath, uint offset, uint size)
+        {
+            if (size == 0 || (size & 31) != 0) return false;
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    if (offset > stream.Length || size > stream.Length - offset) return false;
+                    stream.Position = offset;
+                    int blocks = (int)Math.Min(64u, size / 32u);
+                    byte[] header = new byte[4];
+                    for (int block = 0; block < blocks; block++)
+                    {
+                        if (stream.Read(header, 0, header.Length) != header.Length)
+                            return false;
+                        bool guard = header[0] == 0xAB && header[1] == 0xAB && header[2] == 0xAB && header[3] == 0xAB;
+                        // Byte 2 is the IMA step index. Xenon v39 uses byte 3
+                        // for block state, whereas older little-endian banks
+                        // normally leave it at zero. Allocator guard blocks are
+                        // removed by the decoder and do not disqualify the WAV.
+                        if (!guard && header[2] > 88) return false;
+                        stream.Position += 28;
+                    }
+                    return blocks != 0;
+                }
+            }
+            catch (IOException) { return false; }
         }
 
         private static EuroSoundAudioCodec CodecFromV18Value(int value, uint dataVersion)

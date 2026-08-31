@@ -112,10 +112,19 @@ namespace sb_explorer
             if (selectedVersion == 10)
             {
                 string name = Path.GetFileName(filePath) ?? string.Empty;
+                string payloadMagic = ReadPayloadMagic(filePath, 0x800);
                 string formType = ReadPayloadMagic(filePath, 0x808);
-                if (name.IndexOf("projectdetails", StringComparison.OrdinalIgnoreCase) >= 0 || formType == "ES2P") return FileType.ProjectDetails;
+                if (payloadMagic == "ESPD" || name.IndexOf("projectdetails", StringComparison.OrdinalIgnoreCase) >= 0 || formType == "ES2P") return FileType.ProjectDetails;
                 if (name.IndexOf("musicmarkers", StringComparison.OrdinalIgnoreCase) >= 0 || formType == "MRKF") return FileType.MusicMarkers;
-                if (formType == "SBNK") return FileType.SoundbankFile;
+                // Pirates v10 wraps SBNK in FORM (type at 0x808), while later
+                // EngineX v39 publishers place the SBNK descriptor directly at 0x800.
+                if (payloadMagic == "SBNK" || formType == "SBNK") return FileType.SoundbankFile;
+                if (ReadPayloadMagic(filePath, 0x40) == "DAT8") return FileType.StreamFile;
+
+                // Retain useful classification for encrypted/stripped Disney Universe
+                // payloads whose descriptor is not visible.
+                if (name.IndexOf("_sb_", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.SoundbankFile;
+                if (name.IndexOf("_str_", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.StreamFile;
 
                 // Pirates MUSX 10 stores the stereo music/MFX streams in hash
                 // section 6. The platform-dependent top byte (2D/ED) is not
@@ -227,6 +236,12 @@ namespace sb_explorer
             {
 
             }
+            // Some shipped files have their complete MUSX header encrypted. Their
+            // publisher-generated names still carry an unambiguous bank kind.
+            string fallbackName = Path.GetFileName(filePath) ?? string.Empty;
+            if (fallbackName.IndexOf("projectdetails", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.ProjectDetails;
+            if (fallbackName.IndexOf("_sb_", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.SoundbankFile;
+            if (fallbackName.IndexOf("_str_", StringComparison.OrdinalIgnoreCase) >= 0) return FileType.StreamFile;
             return FileType.Unknown;
         }
 

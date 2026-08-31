@@ -190,6 +190,17 @@ namespace sb_explorer.Services
 
         private static List<string> BuildParametersLines(EuroSoundVersion version, Sample sample, IDictionary<uint, EuroSoundSfxRadiusData> soundDetailsRadii, string masterSamplesFolder, List<string> existingLines)
         {
+            if (version == EuroSoundVersion.PiratesMusX10)
+            {
+                // The MUSX 10 PARA layout is known, but the legacy EuroSound
+                // names for its fields are not verified. Never manufacture
+                // labelled #SFXParameters from those bytes. If an original
+                // source file already has this section, preserve it verbatim.
+                return existingLines == null
+                    ? new List<string>()
+                    : GetSectionLines(existingLines, ParametersSection);
+            }
+
             EuroSoundSfxRadiusData radiusData = version == EuroSoundVersion.EuroSound357 ? null : GetRadiusData(sample.HashCodeNumber, soundDetailsRadii);
             int duckerLength = GetOriginalDuckerLength(sample, radiusData, masterSamplesFolder, existingLines);
             List<string> lines = new List<string>
@@ -247,6 +258,28 @@ namespace sb_explorer.Services
             }
 
             return lines;
+        }
+
+        private static List<string> GetSectionLines(List<string> lines, string sectionMarker)
+        {
+            List<string> sectionLines = new List<string>();
+            int startIndex = FindSectionStart(lines, sectionMarker);
+            if (startIndex < 0)
+            {
+                return sectionLines;
+            }
+
+            int endIndex = FindSectionEnd(lines, startIndex + 1);
+            if (endIndex < 0)
+            {
+                endIndex = lines.Count;
+            }
+
+            for (int i = startIndex + 1; i < endIndex; i++)
+            {
+                sectionLines.Add(lines[i]);
+            }
+            return sectionLines;
         }
 
         private static List<string> BuildSamplePoolFilesLines(Sample sample, List<string> existingLines, IList<string> samplePoolFileNames)

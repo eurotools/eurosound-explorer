@@ -37,6 +37,32 @@
             if (adpcmData == null) throw new System.ArgumentNullException("adpcmData");
             if ((adpcmData.Length % 32) != 0) throw new System.IO.InvalidDataException("Eurocom IMA ADPCM data contains a truncated 32-byte block.");
 
+            // Some EngineXT allocators leave 0xAB guard blocks between 0x800-byte
+            // sectors. They are storage padding, not IMA frames. Handle them at
+            // codec level as well as in the multichannel path so exports and the
+            // legacy mono preview cannot accidentally feed index 0xAB to IMA.
+            int guardBlocks = 0;
+            for (int offset = 0; offset < adpcmData.Length; offset += 32)
+            {
+                bool guard = true;
+                for (int i = 0; i < 32 && guard; i++) guard = adpcmData[offset + i] == 0xAB;
+                if (guard) guardBlocks++;
+            }
+            if (guardBlocks != 0)
+            {
+                byte[] compact = new byte[adpcmData.Length - guardBlocks * 32];
+                int destination = 0;
+                for (int offset = 0; offset < adpcmData.Length; offset += 32)
+                {
+                    bool guard = true;
+                    for (int i = 0; i < 32 && guard; i++) guard = adpcmData[offset + i] == 0xAB;
+                    if (guard) continue;
+                    System.Buffer.BlockCopy(adpcmData, offset, compact, destination, 32);
+                    destination += 32;
+                }
+                adpcmData = compact;
+            }
+
             int numSamples = adpcmData.Length * 56 / 32;
             short[] outBuff = new short[numSamples];
             int inp;           		/* Input buffer pointer */

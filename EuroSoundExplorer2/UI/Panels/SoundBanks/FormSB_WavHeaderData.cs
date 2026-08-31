@@ -202,7 +202,18 @@ namespace sb_explorer
                 SampleData selectedSample = wavesList[(short)listView1.SelectedItems[0].Tag];
 
                 //Create object music
-                DecodedAudio decodedAudio = GenericMethods.DecodeSfxSampleChannels(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData);
+                DecodedAudio decodedAudio;
+                try
+                {
+                    decodedAudio = GenericMethods.DecodeSfxSampleChannels(selectedSample, audioFunctions, parentForm.pnlSoundBankFiles.SoundBankHeaderData);
+                }
+                catch (System.Exception exception) when (exception is InvalidDataException || exception is System.InvalidOperationException)
+                {
+                    MessageBox.Show(this,
+                        "This sample could not be decoded with the currently supported codec layout." + System.Environment.NewLine + System.Environment.NewLine + exception.Message,
+                        "Audio decoding failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 if (decodedAudio != null && decodedAudio.Channels.Length > 0)
                 {
                     SoundFile soundToPlay = new SoundFile();

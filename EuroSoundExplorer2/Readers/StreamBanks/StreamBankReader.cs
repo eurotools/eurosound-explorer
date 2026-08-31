@@ -18,7 +18,88 @@ namespace MusX.Readers
 
             if (headerData.FileVersion == 10)
             {
+                using (EuroSoundBinaryReader reader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), false))
+                {
+                    reader.Seek(0x40, SeekOrigin.Begin);
+                    string descriptor = System.Text.Encoding.ASCII.GetString(reader.ReadBytes(4));
+                    if (descriptor == "DAT8")
+                    {
+                        uint audioSize = reader.ReadUInt32();
+                        uint datCodec = reader.ReadUInt32();
+                        uint frequency = reader.ReadUInt32();
+                        uint channels = reader.ReadUInt32();
+                        uint flags = reader.ReadUInt32();
+                        headerData.LoopStartByteOffset = reader.ReadUInt32();
+                        headerData.LoopEndByteOffset = reader.ReadUInt32();
+                        headerData.SampleCount = reader.ReadUInt32();
+                        headerData.LoopStartSample = reader.ReadUInt32();
+                        headerData.FileStart1 = datCodec;
+                        headerData.FileLength1 = flags;
+                        headerData.CodecType = datCodec;
+                        headerData.StreamFlags = flags;
+                        headerData.Channels = Math.Max(1u, channels);
+                        headerData.Frequency = frequency;
+                        headerData.FileStart2 = 0x800;
+                        headerData.FileLength2 = Math.Min(audioSize, (uint)Math.Max(0, reader.BaseStream.Length - 0x800));
+                        return headerData;
+                    }
+
+                    if (descriptor == "DAT5")
+                    {
+                        // Spider-Man keeps the outer MusX version at 10 and the
+                        // SBNK version at 21. Its standalone streams carry the
+                        // v21 DAT5 descriptor, including their real rate and
+                        // channel count, despite not having FileVersion 21.
+                        uint audioSize = reader.ReadUInt32();
+                        uint channels = reader.ReadUInt32();
+                        uint frequency = reader.ReadUInt32();
+                        uint streamCodec = reader.ReadUInt32();
+                        uint flags = reader.ReadUInt32();
+                        headerData.LoopStartByteOffset = reader.ReadUInt32();
+                        headerData.LoopEndByteOffset = reader.ReadUInt32();
+                        headerData.SampleCount = reader.ReadUInt32();
+                        headerData.LoopStartSample = reader.ReadUInt32();
+                        headerData.FileStart1 = streamCodec;
+                        headerData.FileLength1 = flags;
+                        headerData.CodecType = streamCodec;
+                        headerData.StreamFlags = flags;
+                        headerData.Channels = Math.Max(1u, channels);
+                        headerData.Frequency = frequency;
+                        headerData.FileStart2 = 0x800;
+                        headerData.FileLength2 = Math.Min(audioSize, (uint)Math.Max(0, reader.BaseStream.Length - 0x800));
+                        return headerData;
+                    }
+
+                    // G-Force keeps the MusX container version at 10, while its
+                    // stream descriptor uses the earlier EngineXT v18 layout.
+                    // It has no DAT8 tag: the descriptor starts directly at 0x30.
+                    // Do this structural check before falling back to the older
+                    // Pirates MusX 10 defaults (notably its fixed 22050 Hz rate).
+                    if (TryReadEngineXtV18StreamDescriptor(reader, headerData))
+                        return headerData;
+                }
                 EuroSoundAudioCodec codec = EuroSoundCodecMatrix.GetCodec(10, headerData.Platform, EuroSoundBankType.StreamBank);
+
+                if (headerData.UsesAdpcm == 21)
+                {
+                    // Some large Spider-Man streams omit DAT5 and mirror the
+                    // beginning of their encoded payload in the header sector.
+                    // The common MusX header still identifies SBNK v21; leave
+                    // rate/channels/sample count unresolved so the associated
+                    // SBNK WAV record remains authoritative.
+                    headerData.FileStart1 = GetCodecType(codec);
+                    headerData.CodecType = headerData.FileStart1;
+                    headerData.Channels = 1;
+                    headerData.Frequency = 0;
+                    headerData.FileStart2 = 0x800;
+                    headerData.FileLength2 = GetMusX10AudioLength(filePath, headerData.FileStart2, codec, 1);
+                    headerData.SampleCount = 0;
+                    headerData.LoopStartByteOffset = uint.MaxValue;
+                    headerData.LoopEndByteOffset = uint.MaxValue;
+                    headerData.LoopStartSample = uint.MaxValue;
+                    return headerData;
+                }
+
                 bool isMusicEffect = IsMusX10MusicEffect(headerData.FileHashCode);
                 headerData.FileStart1 = GetCodecType(codec);
                 headerData.CodecType = headerData.FileStart1;
@@ -127,6 +208,50 @@ namespace MusX.Readers
             }
 
             return headerData;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------
+        private static bool TryReadEngineXtV18StreamDescriptor(EuroSoundBinaryReader reader, StreambankHeader headerData)
+        {
+            const uint AudioStart = 0x800;
+            if (reader.BaseStream.Length < AudioStart || reader.BaseStream.Length < 0x50)
+                return false;
+
+            reader.Seek(0x30, SeekOrigin.Begin);
+            uint codec = reader.ReadUInt32();
+            uint flags = reader.ReadUInt32();
+            uint loopStart = reader.ReadUInt32();
+            uint loopEnd = reader.ReadUInt32();
+            uint sampleCount = reader.ReadUInt32();
+            uint loopStartSample = reader.ReadUInt32();
+            uint audioSize = reader.ReadUInt32();
+            uint loopStartCopy = reader.ReadUInt32();
+
+            long available = reader.BaseStream.Length - AudioStart;
+            int alignment = codec == 6 ? 0x800 : codec == 1 ? 32 : codec == 4 ? 2 : 16;
+            bool loopStartValid = loopStart == uint.MaxValue || loopStart <= audioSize;
+            bool loopEndValid = loopEnd == uint.MaxValue || loopEnd <= audioSize;
+            bool copyValid = loopStartCopy == uint.MaxValue || loopStartCopy <= audioSize;
+            if (codec < 1 || codec > 6 || audioSize == 0 || audioSize > available ||
+                sampleCount == 0 || (audioSize % alignment) != 0 ||
+                !loopStartValid || !loopEndValid || !copyValid)
+                return false;
+
+            headerData.CodecType = codec;
+            headerData.StreamFlags = flags;
+            headerData.LoopStartByteOffset = loopStart == uint.MaxValue ? loopStartCopy : loopStart;
+            headerData.LoopEndByteOffset = loopEnd;
+            headerData.SampleCount = sampleCount;
+            headerData.LoopStartSample = loopStartSample;
+            headerData.FileStart1 = codec;
+            headerData.FileLength1 = flags;
+            headerData.FileStart2 = AudioStart;
+            headerData.FileLength2 = audioSize;
+            // Frequency and channel count live in the associated SBNK v18 WAV
+            // record and are resolved by StreamBankReaderNew.
+            headerData.Frequency = 0;
+            headerData.Channels = 1;
+            return true;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------

@@ -62,6 +62,30 @@ namespace sb_explorer
                 {
                     AddViewerError(string.Format("SFX hashcode 0x{0:X8} is not listed in Sound.h", item.Key));
                 }
+                if (headerData.FileVersion == 10)
+                {
+                    TreeNode probable = new TreeNode("ProbableFields (comparative evidence)");
+                    hashCode.Nodes.Add(probable);
+                    TreeAdd(probable, "FlagsWordRaw", item.Value.V10Flags);
+                    TreeAdd(probable, nameof(item.Value.DuckerLenght), item.Value.DuckerLenght);
+                    TreeAdd(probable, nameof(item.Value.MinDelay), item.Value.MinDelay);
+                    TreeAdd(probable, nameof(item.Value.MaxDelay), item.Value.MaxDelay);
+                    TreeAdd(probable, nameof(item.Value.GroupHashCode), item.Value.GroupHashCode);
+                    TreeAdd(probable, nameof(item.Value.ReverbSend), item.Value.ReverbSend);
+                    TreeAdd(probable, nameof(item.Value.MaxVoices), item.Value.MaxVoices);
+                    TreeAdd(probable, nameof(item.Value.Priority), item.Value.Priority);
+                    TreeAdd(probable, nameof(item.Value.Ducker), item.Value.Ducker);
+                    TreeAdd(probable, nameof(item.Value.MasterVolume), item.Value.MasterVolume);
+                    TreeAdd(probable, nameof(item.Value.GroupMaxChannels), item.Value.GroupMaxChannels);
+                    TreeAdd(probable, "PlayTypeRaw", item.Value.PlayType);
+                    TreeAdd(probable, nameof(item.Value.DopplerValue), item.Value.DopplerValue);
+                    TreeAdd(probable, nameof(item.Value.SFXDucker), item.Value.SFXDucker);
+                    TreeAdd(hashCode, "RawParameterData", item.Value.V10RawParameterData == null
+                        ? string.Empty
+                        : System.BitConverter.ToString(item.Value.V10RawParameterData).Replace('-', ' '));
+                    AddV10PoolElements(hashCode, item.Value, waveData);
+                    continue;
+                }
                 TreeAdd(hashCode, nameof(item.Value.DuckerLenght), item.Value.DuckerLenght);
                 TreeAdd(hashCode, nameof(item.Value.MinDelay), item.Value.MinDelay);
                 TreeAdd(hashCode, nameof(item.Value.MaxDelay), item.Value.MaxDelay);
@@ -106,33 +130,7 @@ namespace sb_explorer
                     TreeAdd(hashCode, nameof(item.Value.SFXDucker), item.Value.SFXDucker);
                     TreeAdd(hashCode, nameof(item.Value.Spare), item.Value.Spare);
                 }
-                //Add Samples
-                TreeNode sfxPoolElements = new TreeNode("SFXPoolElements " + item.Value.samplesList.Count);
-                hashCode.Nodes.Add(sfxPoolElements);
-                foreach (SampleInfo sampleToPrint in item.Value.samplesList)
-                {
-                    TreeNode fileRef = new TreeNode(string.Format("s16 {0} = {1} (0x{1:X4})", nameof(sampleToPrint.FileRef), sampleToPrint.FileRef));
-                    sfxPoolElements.Nodes.Add(fileRef);
-                    if (!FlagIsSet(item.Value.Flags, 10) && sampleToPrint.FileRef >= waveData.Count)
-                    {
-                        AddViewerError(string.Format("SFX 0x{0:X8} references missing sample FileRef {1}", item.Key, sampleToPrint.FileRef));
-                    }
-                    TreeAdd(fileRef, nameof(sampleToPrint.Pitch), sampleToPrint.Pitch);
-                    TreeAdd(fileRef, nameof(sampleToPrint.PitchOffset), sampleToPrint.PitchOffset);
-                    TreeAdd(fileRef, nameof(sampleToPrint.Volume), sampleToPrint.Volume);
-                    TreeAdd(fileRef, nameof(sampleToPrint.VolumeOffset), sampleToPrint.VolumeOffset);
-                    TreeAdd(fileRef, nameof(sampleToPrint.Pan), sampleToPrint.Pan);
-                    TreeAdd(fileRef, nameof(sampleToPrint.PanOffset), sampleToPrint.PanOffset);
-                    if (headerData.FileVersion == 10)
-                    {
-                        TreeAdd(fileRef, nameof(sampleToPrint.ReferenceHashCode), sampleToPrint.ReferenceHashCode);
-                        TreeAdd(fileRef, nameof(sampleToPrint.MinDelay), sampleToPrint.MinDelay);
-                        TreeAdd(fileRef, nameof(sampleToPrint.MaxDelay), sampleToPrint.MaxDelay);
-                        TreeAdd(fileRef, nameof(sampleToPrint.DelayType), sampleToPrint.DelayType);
-                        TreeAdd(fileRef, nameof(sampleToPrint.IsReleaseElement), sampleToPrint.IsReleaseElement);
-                        TreeAdd(fileRef, nameof(sampleToPrint.Spare), sampleToPrint.Spare);
-                    }
-                }
+                AddLegacyPoolElements(hashCode, item, waveData);
             }
 
             //Print SFX Waves List
@@ -271,6 +269,37 @@ namespace sb_explorer
             for (int i = 0; i < fileData.projectMusicBanks.Length; i++)
             {
                 TreeAdd(musicBanksNode, "HashCode", fileData.projectMusicBanks[i]);
+            }
+        }
+
+
+        private void AddV10PoolElements(TreeNode parent, Sample sample, List<SampleData> waveData)
+        {
+            TreeNode pool = new TreeNode("SFXPoolElements " + sample.samplesList.Count);
+            parent.Nodes.Add(pool);
+            foreach (SampleInfo element in sample.samplesList)
+            {
+                TreeNode node = new TreeNode(string.Format("ReferenceHashCode = 0x{0:X8}", element.ReferenceHashCode));
+                pool.Nodes.Add(node);
+            }
+        }
+
+        private void AddLegacyPoolElements(TreeNode parent, KeyValuePair<uint, Sample> item, List<SampleData> waveData)
+        {
+            TreeNode pool = new TreeNode("SFXPoolElements " + item.Value.samplesList.Count);
+            parent.Nodes.Add(pool);
+            foreach (SampleInfo element in item.Value.samplesList)
+            {
+                TreeNode fileRef = new TreeNode(string.Format("s16 {0} = {1} (0x{1:X4})", nameof(element.FileRef), element.FileRef));
+                pool.Nodes.Add(fileRef);
+                if (!FlagIsSet(item.Value.Flags, 10) && element.FileRef >= waveData.Count)
+                    AddViewerError(string.Format("SFX 0x{0:X8} references missing sample FileRef {1}", item.Key, element.FileRef));
+                TreeAdd(fileRef, nameof(element.Pitch), element.Pitch);
+                TreeAdd(fileRef, nameof(element.PitchOffset), element.PitchOffset);
+                TreeAdd(fileRef, nameof(element.Volume), element.Volume);
+                TreeAdd(fileRef, nameof(element.VolumeOffset), element.VolumeOffset);
+                TreeAdd(fileRef, nameof(element.Pan), element.Pan);
+                TreeAdd(fileRef, nameof(element.PanOffset), element.PanOffset);
             }
         }
 

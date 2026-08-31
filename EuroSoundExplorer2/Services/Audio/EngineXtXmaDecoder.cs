@@ -28,7 +28,17 @@ namespace sb_explorer.Services.Audio
             try
             {
                 WriteXmaWave(inputPath, encodedData, channelCount, sampleRate, sampleCount);
-                RunFfmpeg(ffmpegPath, inputPath, outputPath);
+                try
+                {
+                    RunFfmpeg(ffmpegPath, inputPath, outputPath);
+                }
+                catch (InvalidDataException)
+                {
+                    // Older EngineX publishers (including Disney Universe) use
+                    // legacy XMA1 packets rather than XMA2WAVEFORMATEX.
+                    WriteXma1Wave(inputPath, encodedData, channelCount, sampleRate);
+                    RunFfmpeg(ffmpegPath, inputPath, outputPath);
+                }
 
                 byte[] interleavedPcm = File.ReadAllBytes(outputPath);
                 byte[][] channels = DeinterleavePcm16(interleavedPcm, channelCount, sampleCount);
@@ -98,6 +108,44 @@ namespace sb_explorer.Services.Audio
                 {
                     writer.Write((byte)0);
                 }
+            }
+        }
+
+        private static void WriteXma1Wave(string outputPath, byte[] encodedData, int channelCount, uint sampleRate)
+        {
+            int packetCount = (encodedData.Length + XmaPacketSize - 1) / XmaPacketSize;
+            int paddedDataLength = checked(packetCount * XmaPacketSize);
+            const int FormatChunkSize = 32;
+            int riffSize = checked(4 + 8 + FormatChunkSize + 8 + paddedDataLength);
+
+            using (FileStream stream = File.Create(outputPath))
+            using (BinaryWriter writer = new BinaryWriter(stream, Encoding.ASCII))
+            {
+                writer.Write(Encoding.ASCII.GetBytes("RIFF"));
+                writer.Write(riffSize);
+                writer.Write(Encoding.ASCII.GetBytes("WAVE"));
+                writer.Write(Encoding.ASCII.GetBytes("fmt "));
+                writer.Write(FormatChunkSize);
+
+                writer.Write((ushort)0x0165); // WAVE_FORMAT_XMA
+                writer.Write((ushort)16);
+                writer.Write((ushort)0);      // encode options
+                writer.Write((ushort)0);      // largest skip
+                writer.Write((ushort)1);      // one interleaved XMA stream
+                writer.Write((byte)0);        // no loop repetitions
+                writer.Write((byte)2);        // legacy XMA encoder version
+                writer.Write(CalculateAverageBytesPerSecond(sampleRate, channelCount));
+                writer.Write(sampleRate);
+                writer.Write(0u);             // loop start bit offset
+                writer.Write(0u);             // loop end bit offset
+                writer.Write((byte)0);        // subframe data
+                writer.Write((byte)channelCount);
+                writer.Write((ushort)BuildChannelMask(channelCount));
+
+                writer.Write(Encoding.ASCII.GetBytes("data"));
+                writer.Write(paddedDataLength);
+                writer.Write(encodedData);
+                for (int index = encodedData.Length; index < paddedDataLength; index++) writer.Write((byte)0);
             }
         }
 

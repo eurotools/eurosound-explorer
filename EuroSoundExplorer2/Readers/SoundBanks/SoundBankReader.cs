@@ -35,7 +35,14 @@ namespace MusX.Readers
 
             if (headerData.FileVersion == 10)
             {
-                SoundBankReaderNew.ReadSoundbankHeaderV10(filePath, headerData);
+                if (HasDescriptor(filePath, "SBNK"))
+                {
+                    ReadEngineXtSoundbankHeader(filePath, headerData);
+                }
+                else
+                {
+                    SoundBankReaderNew.ReadSoundbankHeaderV10(filePath, headerData);
+                }
                 return headerData;
             }
 
@@ -96,7 +103,14 @@ namespace MusX.Readers
         {
             if (headerData.FileVersion == 10)
             {
-                SoundBankReaderNew.ReadSoundbankV10(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
+                if (HasDescriptor(filePath, "SBNK"))
+                {
+                    SoundBankReaderNew.ReadSoundbankV18(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
+                }
+                else
+                {
+                    SoundBankReaderNew.ReadSoundbankV10(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
+                }
                 return;
             }
 
@@ -114,6 +128,43 @@ namespace MusX.Readers
             {
                 SoundBankReaderNew newReader = new SoundBankReaderNew();
                 newReader.ReadSoundbank(filePath, headerData, samplesDictionary, wavesList, duplicatedHashCodes);
+            }
+        }
+
+        private static bool HasDescriptor(string filePath, string descriptor)
+        {
+            using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                if (stream.Length < 0x804) return false;
+                stream.Position = 0x800;
+                byte[] bytes = new byte[4];
+                return stream.Read(bytes, 0, bytes.Length) == bytes.Length &&
+                    Encoding.ASCII.GetString(bytes) == descriptor;
+            }
+        }
+
+        private static void ReadEngineXtSoundbankHeader(string filePath, SoundbankHeader headerData)
+        {
+            using (EuroSoundBinaryReader reader = new EuroSoundBinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), headerData.IsBigEndian))
+            {
+                reader.Seek(0x800, SeekOrigin.Begin);
+                if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "SBNK") throw new InvalidDataException("EngineXT soundbank has no SBNK descriptor.");
+                uint descriptorVersion = reader.ReadUInt32();
+                reader.ReadUInt32(); reader.ReadUInt32();
+                if (descriptorVersion >= 21) reader.ReadUInt32();
+                uint sfxCount = reader.ReadUInt32(); long field = reader.BaseStream.Position; int rel = reader.ReadInt32();
+                headerData.SFXStart = checked((uint)(field + rel));
+                headerData.SFXLenght = checked(sfxCount * (descriptorVersion == 39 ? 20u : 16u));
+                reader.ReadUInt32(); reader.ReadInt32();
+                reader.ReadUInt32(); reader.ReadInt32();
+                reader.ReadUInt32(); reader.ReadInt32();
+                uint memoryCount = reader.ReadUInt32(); long memoryField = reader.BaseStream.Position; int memoryRel = reader.ReadInt32();
+                headerData.SampleInfoStart = checked((uint)(memoryField + memoryRel));
+                headerData.SampleInfoLenght = checked(memoryCount * 28);
+                reader.ReadUInt32(); reader.ReadInt32();
+                reader.ReadUInt32(); reader.ReadInt32();
+                headerData.SampleDataLength = reader.ReadUInt32();
+                headerData.SampleDataStart = unchecked((uint)reader.ReadInt32());
             }
         }
     }

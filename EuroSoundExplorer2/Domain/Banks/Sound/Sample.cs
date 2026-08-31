@@ -31,6 +31,9 @@ namespace MusX.Objects
         // with one 32-bit flag word.
         public uint V10Flags;
         public byte PlayType;
+        // Exact bytes stored by the MUSX 10 PARA/DATA chunk after the hash.
+        // Keep these available for display without assigning unverified semantics.
+        public byte[] V10RawParameterData;
 
         //Flags
         public ushort Flags;

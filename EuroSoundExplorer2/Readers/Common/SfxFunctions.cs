@@ -133,6 +133,24 @@ namespace MusX.Readers
         {
             if (sbData.FileVersion == 10)
             {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    if (stream.Length >= 0x808)
+                    {
+                        stream.Position = 0x800;
+                        byte[] magic = new byte[4];
+                        if (stream.Read(magic, 0, magic.Length) == magic.Length && Encoding.ASCII.GetString(magic) == "SBNK")
+                        {
+                            byte[] versionBytes = new byte[4];
+                            if (stream.Read(versionBytes, 0, versionBytes.Length) == versionBytes.Length)
+                            {
+                                if (sbData.IsBigEndian) System.Array.Reverse(versionBytes);
+                                uint descriptorVersion = System.BitConverter.ToUInt32(versionBytes, 0);
+                                return checked((int)(sbData.SFXLenght / (descriptorVersion == 39 ? 20u : 16u)));
+                            }
+                        }
+                    }
+                }
                 int count = 0;
                 long position = sbData.SFXStart;
                 long end = position + sbData.SFXLenght;

@@ -86,6 +86,36 @@ namespace sb_explorer
                 return;
             }
 
+            if (fileVersion == 10)
+            {
+                propertyGrid1.Title = "SFX Parameters (verified / probable)";
+                propertyGrid1.propsGrid.SelectedObject = new SampleV10VerifiedForPropGrid
+                {
+                    HashCode = "0x" + sampleData.HashCodeNumber.ToString("X8"),
+                    ProbableFlags = "0x" + sampleData.V10Flags.ToString("X8"),
+                    ProbableDuckerLength = sampleData.DuckerLenght,
+                    ProbableMinDelay = sampleData.MinDelay,
+                    ProbableMaxDelay = sampleData.MaxDelay,
+                    ProbableGroupHashCode = "0x" + unchecked((ushort)sampleData.GroupHashCode).ToString("X4"),
+                    ProbableReverbSend = sampleData.ReverbSend,
+                    ProbableMaxVoices = sampleData.MaxVoices,
+                    ProbablePriority = sampleData.Priority,
+                    ProbableDucker = sampleData.Ducker,
+                    ProbableMasterVolume = sampleData.MasterVolume,
+                    ProbableGroupMaxChannels = sampleData.GroupMaxChannels,
+                    ProbablePlayType = sampleData.PlayType,
+                    ProbableDoppler = sampleData.DopplerValue,
+                    ProbableSfxDucker = sampleData.SFXDucker,
+                    RawParameterData = FormatBytes(sampleData.V10RawParameterData)
+                };
+                // The meaning of individual MUSX 10 flag bits and adjacent
+                // fields has not been verified, so do not label them as legacy
+                // parameters or user flags.
+                checkedListBox1.Items.Clear();
+                checkedListBox2.Items.Clear();
+                return;
+            }
+
             propertyGrid1.Title = "SFX Parameters";
             if (checkedListBox2.Items.Count == 0)
             {
@@ -263,6 +293,13 @@ namespace sb_explorer
         private static string FormatObjectId(ushort id)
         {
             return id == 0 ? "(none)" : "0x" + id.ToString("X4") + " (" + id + ")";
+        }
+
+        private static string FormatBytes(byte[] bytes)
+        {
+            return bytes == null || bytes.Length == 0
+                ? string.Empty
+                : BitConverter.ToString(bytes).Replace('-', ' ');
         }
 
         private static string GetLegacyInstanceCullingDescription(Sample sample)

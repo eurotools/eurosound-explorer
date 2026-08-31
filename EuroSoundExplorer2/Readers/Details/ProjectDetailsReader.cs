@@ -46,6 +46,12 @@ namespace MusX.Readers
 
             using (BinaryReader BReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
+                if (headerData.FileVersion == 10 && HasDescriptor(BReader, "ESPD"))
+                {
+                    ReadProjectFileVersion39(BReader, headerData, projectData);
+                    return projectData;
+                }
+
                 if (headerData.FileVersion == 21)
                 {
                     ReadProjectFileVersion21(BReader, headerData, projectData);
@@ -213,7 +219,8 @@ namespace MusX.Readers
             if (ReadFourCC(reader) != "ESPD") throw new InvalidDataException("MusX Project Details has no ESPD descriptor.");
             bool bigEndian = header.IsBigEndian;
             uint version = ReadUInt32(reader, bigEndian);
-            if (version != 21) throw new InvalidDataException(string.Format("Expected ESPD 21 but found ESPD {0}.", version));
+            if (version != 21 && version != 39) throw new InvalidDataException(string.Format("Expected ESPD 21 or 39 but found ESPD {0}.", version));
+            project.FormatVersion = checked((int)version);
 
             project.PublishCount = ReadUInt32(reader, bigEndian);
             project.OutputCount = ReadUInt32(reader, bigEndian);
@@ -262,6 +269,28 @@ namespace MusX.Readers
             ReadFixedRuntimeTable(reader, project, eventTable, eventCount, 32, "Event", bigEndian);
             ReadFixedRuntimeTable(reader, project, tagTable, tagCount, 4, "Tag", bigEndian);
             ReadFixedRuntimeTable(reader, project, spreadsheetTable, spreadsheetCount, 12, "Spreadsheet", bigEndian);
+        }
+
+        private static void ReadProjectFileVersion39(BinaryReader reader, ProjectDetailsHeader header, ProjectDetails project)
+        {
+            reader.BaseStream.Position = 0x800;
+            if (ReadFourCC(reader) != "ESPD") throw new InvalidDataException("MusX Project Details has no ESPD descriptor.");
+            bool bigEndian = header.IsBigEndian;
+            uint version = ReadUInt32(reader, bigEndian);
+            if (version != 39) throw new InvalidDataException(string.Format("Expected ESPD 39 but found ESPD {0}.", version));
+            project.FormatVersion = 39;
+            project.PublishCount = ReadUInt32(reader, bigEndian);
+            project.OutputCount = ReadUInt32(reader, bigEndian);
+            uint espdSize = ReadUInt32(reader, bigEndian);
+            project.ListenerVelocitySmoothing = ReadSingle(reader, bigEndian);
+            project.StreamHeapSize0 = ReadUInt32(reader, bigEndian);
+            project.StreamHeapSize1 = ReadUInt32(reader, bigEndian);
+            long availablePayload = Math.Max(0, reader.BaseStream.Length - 0x800);
+            if (espdSize != 0 && espdSize > availablePayload)
+                throw new InvalidDataException("ESPD 39 declares a size larger than the available MusX payload.");
+            // ESPD 39 inserts new project-wide configuration before its runtime
+            // tables. Keep the file browsable without projecting those tables
+            // through the incompatible ESPD 21 record layouts.
         }
 
         private static void ReadMemoryMapsV21(BinaryReader reader, ProjectDetails project, long table, uint count, bool bigEndian)
@@ -487,6 +516,16 @@ namespace MusX.Readers
         private static bool CanRead(BinaryReader reader, long position, long size)
         {
             return position >= 0 && size >= 0 && position <= reader.BaseStream.Length - size;
+        }
+
+        private static bool HasDescriptor(BinaryReader reader, string descriptor)
+        {
+            if (!CanRead(reader, 0x800, 4)) return false;
+            long position = reader.BaseStream.Position;
+            reader.BaseStream.Position = 0x800;
+            string value = Encoding.ASCII.GetString(reader.ReadBytes(4));
+            reader.BaseStream.Position = position;
+            return value == descriptor;
         }
 
         private static uint ReadUInt32(BinaryReader reader, bool bigEndian) { return BytesFunctions.FlipData(reader.ReadUInt32(), bigEndian); }

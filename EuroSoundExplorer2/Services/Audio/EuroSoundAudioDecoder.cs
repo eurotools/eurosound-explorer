@@ -187,6 +187,17 @@ namespace sb_explorer.Services.Audio
             if (expectedBytes <= 0 || expectedBytes > source.Length)
                 expectedBytes = source.Length - source.Length % (BlockBytes * channels);
 
+            // Xenon v39 soundbanks keep the allocator's 0xAB guard block at
+            // 0x800-byte boundaries inside a WAV allocation. It is not ADPCM
+            // and must be removed before decoding.
+            byte[] withoutGuards = RemoveEngineXtGuardBlocks(source);
+            if (withoutGuards.Length != source.Length)
+            {
+                source = withoutGuards;
+                expectedBytes = Math.Min(expectedBytes, source.Length);
+                expectedBytes -= expectedBytes % (BlockBytes * channels);
+            }
+
             int alignment = FindImaAlignment(source, expectedBytes, channels);
             if (alignment < 0)
                 throw new System.IO.InvalidDataException("EngineXT stream does not contain a valid aligned Eurocom IMA ADPCM block sequence.");
@@ -197,6 +208,31 @@ namespace sb_explorer.Services.Audio
             byte[] normalized = new byte[length];
             Buffer.BlockCopy(source, alignment, normalized, 0, length);
             return normalized;
+        }
+
+        private static byte[] RemoveEngineXtGuardBlocks(byte[] source)
+        {
+            const int BlockBytes = 32;
+            int guards = 0;
+            for (int offset = 0; offset + BlockBytes <= source.Length; offset += BlockBytes)
+            {
+                bool guard = true;
+                for (int i = 0; i < BlockBytes && guard; i++) guard = source[offset + i] == 0xAB;
+                if (guard) guards++;
+            }
+            if (guards == 0) return source;
+
+            byte[] result = new byte[source.Length - guards * BlockBytes];
+            int destination = 0;
+            for (int offset = 0; offset + BlockBytes <= source.Length; offset += BlockBytes)
+            {
+                bool guard = true;
+                for (int i = 0; i < BlockBytes && guard; i++) guard = source[offset + i] == 0xAB;
+                if (guard) continue;
+                Buffer.BlockCopy(source, offset, result, destination, BlockBytes);
+                destination += BlockBytes;
+            }
+            return result;
         }
 
         private static int FindImaAlignment(byte[] source, int wantedBytes, int channels)

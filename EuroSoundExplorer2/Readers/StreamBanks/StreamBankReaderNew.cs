@@ -40,8 +40,19 @@ namespace MusX.Readers
                 Channels = Math.Max(1u, headerData.Channels),
                 AudioReference = new AudioDataReference { FilePath = filePath, Offset = headerData.FileStart2, Size = headerData.FileLength2, Codec = codec, Frequency = headerData.Frequency, Channels = (int)Math.Max(1u, headerData.Channels) }
             };
-            if (headerData.FileVersion == 15 || headerData.FileVersion == 18)
+            if (headerData.FileVersion == 15 || headerData.FileVersion == 18 ||
+                (headerData.FileVersion == 10 && headerData.Frequency == 0))
                 ResolveV18Metadata(filePath, sample, headerData.Platform);
+            if (headerData.FileVersion == 10 && headerData.UsesAdpcm == 21 && sample.Frequency == 0)
+            {
+                // Orphan v21 Wii streams have neither DAT5 nor a referring SBNK
+                // WAV record. The shipped mono stream set uses the engine's
+                // 32 kHz default, so do not inherit an arbitrary UI setting.
+                sample.Frequency = 32000;
+                sample.SampleCount = EuroSoundCodecMatrix.EncodedByteCountToSamples(
+                    sample.AudioReference.Codec, sample.AudioSize, (int)Math.Max(1u, sample.Channels));
+                sample.AudioReference.Frequency = sample.Frequency;
+            }
             streamedSamples.Add(sample);
         }
 
@@ -85,6 +96,8 @@ namespace MusX.Readers
                         sample.Channels = Math.Max(1u, wave.Channels);
                         if (wave.TotalSamples != 0) sample.SampleCount = wave.TotalSamples;
                         if (wave.IsLooped && wave.LoopStartSample != uint.MaxValue) sample.LoopStartSample = wave.LoopStartSample;
+                        if (wave.AudioReference.Codec != EuroSoundAudioCodec.Unknown)
+                            sample.AudioReference.Codec = wave.AudioReference.Codec;
                         sample.AudioReference.Frequency = sample.Frequency;
                         sample.AudioReference.Channels = (int)sample.Channels;
                         return;
